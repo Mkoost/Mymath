@@ -1,57 +1,67 @@
-#if defined(MYMATH_QUATERNION_STATE) && (MYMATH_QUATERNION_STATE == 1)
-#ifndef MYMATH_QUATERNION
-#define MYMATH_QUATERNION
-
-#include <cmath>
+#pragma once
+// #include "../headers/quaternion.h"
 
 namespace mymath {
 
-	// ------------------------------------ CLASSES ------------------------------------
+
+	// ------------------------------------------------------------------>	 MATH FUNCTIONS / OPERATIONS
+
 
 	template<typename T>
-	class quaternion {
-	public:
-		T w, x, y, z;
+	T norm2(quaternion<T> q) {
+		return q.w * q.w + q.x * q.x + q.y * q.y + q.z * q.z;
+	}
 
-		quaternion<T>& operator+= (const quaternion<T>& q) {
-			x += q.x; y += q.y; w += q.w; z += q.z;
-			return *this;
-		}
+	template<typename T>
+	T norm(quaternion<T> q) {
+		return std::sqrt(norm2(q));
+	}
 
-		quaternion<T>& operator-= (const quaternion<T>& q) {
-			x -= q.x; y -= q.y; w -= q.w; z -= q.z;
-			return *this;
-		}
-		quaternion<T>& operator*= (const quaternion<T>& q) {
-			w = w * q.w + x * q.x + y * q.y + z * q.z;
-			x = w * q.x + x * q.w + y * q.z - z * q.y;
-			y = w * q.y + y * q.w + z * q.x - x * q.z;
-			z = w * q.z + z * q.w + x * q.y - y * q.x;
-			return *this;
-		};
+	template<typename T>
+	quaternion<T> conj(quaternion<T> q) {
+		return quaternion<T>{q.w, -q.x, -q.y, -q.z};
+	}
 
-		quaternion<T>& operator/= (const quaternion<T>& q) {
-			*this *= conj(q);
-			T tmp = norm2(q);
-			w /= tmp;
-			x /= tmp;
-			y /= tmp;
-			z /= tmp;
-			return *this;
-		}
+	template<typename T>
+	quaternion<T> inv(quaternion<T> q) {
+		return conj(q) / norm2(q);
+	}
 
+	// ------------------------------------------------------------------>	 CLASS METHODS 
+
+	template<typename T>
+	quaternion<T>& quaternion<T>::operator+= (const quaternion<T>& q) {
+		x += q.x; y += q.y; w += q.w; z += q.z;
+		return *this;
 	};
 
-	// ------------------------------------ QUATERTION CONSTS ------------------------------------
+	template<typename T>
+	quaternion<T>& quaternion<T>::operator-= (const quaternion<T>& q) {
+		x -= q.x; y -= q.y; w -= q.w; z -= q.z;
+		return *this;
+	};
 
-	const quaternion<double> I{ 0, 1, 0, 0 };
-	const quaternion<double> J{ 0, 0, 1, 0 };
-	const quaternion<double> K{ 0, 0, 0, 1 };
+	template<typename T>
+	quaternion<T>& quaternion<T>::operator*= (const quaternion<T>& q) {
+		w = w * q.w + x * q.x + y * q.y + z * q.z;
+		x = w * q.x + x * q.w + y * q.z - z * q.y;
+		y = w * q.y + y * q.w + z * q.x - x * q.z;
+		z = w * q.z + z * q.w + x * q.y - y * q.x;
+		return *this;
+	};
 
+	template<typename T>
+	quaternion<T>& quaternion<T>::operator/= (const quaternion<T>& q) {
+		*this *= conj(q);
+		T tmp = norm2(q);
+		w /= tmp;
+		x /= tmp;
+		y /= tmp;
+		z /= tmp;
+		return *this;
+	}
 
-
-	// ------------------------------------ OPERATORS ------------------------------------
-	
+	// ------------------------------------------------------------------>	 EXTERNAL OPERATIONS
 
 	// ------------------ QUATERTION PLUS ------------------
 
@@ -140,29 +150,4 @@ namespace mymath {
 		return inv(qr) * val;
 	}
 
-	// ------------------------------------ MATH FUNCTIONS / OPERATIONS  ------------------------------------
-
-	template<typename T>
-	T norm2(quaternion<T> q) {
-		return q.w * q.w + q.x * q.x + q.y * q.y + q.z * q.z;
-	}
-
-	template<typename T>
-	T norm(quaternion<T> q) {
-		return std::sqrt(norm2(q));
-	}
-
-	template<typename T>
-	quaternion<T> conj(quaternion<T> q) {
-		return quaternion<T>{q.w, -q.x, -q.y, -q.z};
-	}
-
-	template<typename T>
-	quaternion<T> inv(quaternion<T> q) {
-		return conj(q) / norm2(q);
-	}
-
 }
-
-#endif
-#endif

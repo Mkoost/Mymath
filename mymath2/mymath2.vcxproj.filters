@@ -18,10 +18,10 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="mymath\quaternion.h">
+    <ClCompile Include="mymath\headers\quaternion.h">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="mymath\matrix.h">
+    <ClCompile Include="mymath\headers\matrix.h">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,5 +32,13 @@
     <ClInclude Include="mymath\settings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="mymath\inline\quaternion_default.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="mymath\inline\matrix_default.inl">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

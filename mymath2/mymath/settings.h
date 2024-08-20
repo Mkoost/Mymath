@@ -1,4 +1,5 @@
-#ifndef MYMATH_INCLUDE_SETTINGS
+#pragma once
+
 #define MYMATH_INCLUDE_SETTINGS
 
 // Header includes if state equals 1
@@ -11,5 +12,4 @@
 
 #define MYMATH_MATRIX_S_MUL 1 
 
-#endif 
 

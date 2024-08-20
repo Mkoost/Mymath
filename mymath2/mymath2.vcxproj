@@ -128,12 +128,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="mymath\matrix.h" />
-    <ClCompile Include="mymath\quaternion.h" />
+    <ClCompile Include="mymath\headers\matrix.h" />
+    <ClCompile Include="mymath\headers\quaternion.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mymath\settings.h" />
     <ClInclude Include="mymath\mymath.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="mymath\inline\matrix_default.inl" />
+    <None Include="mymath\inline\quaternion_default.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
