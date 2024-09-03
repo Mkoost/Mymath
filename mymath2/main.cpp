@@ -1,23 +1,29 @@
 #include "mymath/mymath.h"
 #include <iostream>
-#include <memory>
-#include <chrono>     
 
+template<class T, size_t n, size_t m>
+void print(const mymath::matrix<T, n, m>& A) {
+	for (int i = 0; i != n; ++i) {
+		for (int j = 0; j != m; ++j)
+			std::cout << A[i][j] << " ";
+		std::cout << "\n";
+	}
+}
 
-using namespace std;
+template<class T>
+void print(const mymath::quaternion<T>& q) {
+	std::cout << q.w << " " << q.x << " " << q.y << " " << q.z;
+}
 
-
-using quat = mymath::quaternion<int>;
-using mat3 = mymath::matrix<int, 3, 3>;
 
 int main() {
-	mat3 m;
-	mat3::eve(m);
+	const mymath::imat3 B(0);
+	
+	mymath::imat3::fill(B);
 
-	for (int i = 0; i < 3; ++i) {
-		for (int j = 0; j < 3; ++j)
-			cout << m.values[i][j] << " ";
-		cout << endl;
-	}
+	mymath::iquat q{1, 1, 1, 1};
+
+	print(q);
+
 	return 0;
 }

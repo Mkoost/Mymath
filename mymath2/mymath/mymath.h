@@ -1,27 +1,14 @@
-#ifndef MYMATH
-#define MYMATH
+#pragma once
+#include <cmath>
+#include <memory>
+#include <iostream>
+#include <immintrin.h>
+#include <ammintrin.h>
 
 #include "settings.h"
 
+#include "./details/__expr.inl"
 
-#if defined(MYMATH_QUATERNION_STATE)
-#	include "headers/quaternion.h"
-#	if MYMATH_QUATERNION_STATE == 1
-#		include "inline/quaternion_default.inl"
-#	else
-#		include "inline/quaternion_default.inl"
-#	endif
-#endif
+#include "inline/quaternion.inl"
+#include "inline/matrix.inl"
 
-#if defined(MYMATH_MATRIX_STATE) && (MYMATH_MATRIX_STATE == 1)
-#	include "headers/matrix.h"
-#	if MYMATH_MATRIX_STATE == 1
-#		include "inline/matrix_default.inl"
-#	else
-#		include "inline/matrix_default.inl"
-#	endif
-#endif
-
-
-
-#endif

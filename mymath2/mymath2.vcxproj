@@ -136,8 +136,16 @@
     <ClInclude Include="mymath\mymath.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="mymath\inline\matrix_default.inl" />
-    <None Include="mymath\inline\quaternion_default.inl" />
+    <None Include="mymath\details\__expr.inl" />
+    <None Include="mymath\inline\matrix\class_methods_default.inl" />
+    <None Include="mymath\inline\matrix\external_operators_default.inl" />
+    <None Include="mymath\inline\matrix.inl" />
+    <None Include="mymath\inline\matrix\internal_classes_methods_default.inl" />
+    <None Include="mymath\inline\matrix\math_functions_default.inl" />
+    <None Include="mymath\inline\quaternion\class_methods_default.inl" />
+    <None Include="mymath\inline\quaternion\external_operators_default.inl" />
+    <None Include="mymath\inline\quaternion\math_functions_default.inl" />
+    <None Include="mymath\inline\quaternion.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

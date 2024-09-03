@@ -1,49 +1,86 @@
-#ifndef MYMATH_MATRIX
-#define MYMATH_MATRIX
-#include <cmath>
+#pragma once
+
+
+#define __GEN_MYMATH_MAT_PSEUDONYMS_10931(postfix, n, m) using dmat##postfix = matrix<double, n, m>; \
+ using fmat##postfix = matrix<float, n, m>; \
+using imat##postfix = matrix<int, n, m>; \
+using lmat##postfix = matrix<long, n, m>; \
+using llmat##postfix = matrix<long long, n, m>; \
+using umat##postfix = matrix<unsigned, n, m>; \
+using uimat##postfix = matrix<unsigned int, n, m>; \
+using ulmat##postfix = matrix<unsigned long, n, m>; \
+using ullmat##postfix = matrix<unsigned long long, n, m>;
+
+
+
 
 namespace mymath{
-
-
 	// ------------------------------------------------------------------>	 CLASSES
 
 	template<class T, size_t n, size_t m>
 	class matrix{ 
-	
-
-		class row {
-
+		
+		
+		struct row {
+			T* ptr;
+			T& operator[](size_t);
 		};
 
-		class const_row {
-
+		struct const_row {
+			T const * ptr;
+			T operator[](size_t) const;
 		};
 
-	public:
 		T values[n][m];
 
-		static matrix<T, n, m>& fill(matrix<T, n, m>&, const T& elem = 0);
+	public:
 
-		static matrix<T, n, m>& eve(matrix<T, n, m>&);
+		using iterator = typename T*;
+		using const_iterator = typename T const *;
 
-		matrix<T, n, m>& operator+=(const matrix<T, n, m>&);
+		matrix(const T& x);
 
-		matrix<T, n, m>& operator-=(const matrix<T, n, m>&);
+		constexpr iterator begin() noexcept;
+		constexpr iterator end() noexcept;
+#if 0
+		reverse_iterator rbegin();
+		reverse_iterator rend();
+#endif
 
-		matrix<T, n, m>& operator*=(const T&);
+		constexpr const_iterator  begin() const noexcept;
+		constexpr const_iterator end() const noexcept;
 
-		matrix<T, n, m>& operator/=(const T&);
+#if 0
+		reverse_const_iterator rbegin() const;
+		reverse_const_iterator rend() const;
+#endif
+
+		/* WARNING: Can change const object */
+		static const matrix<T, n, m>& fill(const matrix<T, n, m>&, const T& elem = 0);
+
+		/* WARNING: Can change const object */
+		static const matrix<T, n, m>& diag(const matrix<T, n, m>&, const T& elem = 1);
+
+		constexpr matrix<T, n, m>& operator+=(const matrix<T, n, m>&);
+
+		constexpr matrix<T, n, m>& operator-=(const matrix<T, n, m>&);
+
+		constexpr matrix<T, n, m>& operator*=(const T&);
+
+		constexpr matrix<T, n, m>& operator/=(const T&);
+
+		constexpr row operator[](size_t);
+
+		constexpr const_row operator[](size_t) const;
 	};
 
+	// ------------------------------------------------------------------>	 PSEUDONYMS
 
-	
-
-	
+	__GEN_MYMATH_MAT_PSEUDONYMS_10931(2, 2, 2)
+	__GEN_MYMATH_MAT_PSEUDONYMS_10931(3, 3, 3)
+	__GEN_MYMATH_MAT_PSEUDONYMS_10931(4, 4, 4)
+	__GEN_MYMATH_MAT_PSEUDONYMS_10931(5, 5, 5)
 
 }
 
-
-
-
-
-#endif
+#undef __GEN_MYMATH_MAT_PSEUDONYMS_10931
