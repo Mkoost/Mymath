@@ -32,12 +32,18 @@
     <ClInclude Include="mymath\settings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="mymath\headers\vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mymath\inline\vector.inl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="mymath\inline\quaternion.inl">
+    <None Include="mymath\inline\quaternion.inl.h">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="mymath\inline\matrix.inl">
+    <None Include="mymath\inline\matrix.inl.h">
       <Filter>Header Files</Filter>
     </None>
     <None Include="mymath\details\__expr.inl">
@@ -62,6 +68,27 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="mymath\inline\matrix\math_functions_default.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="mymath\details\__macroses.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="mymath\inline\vector\class_methods_default.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="mymath\inline\vector\external_operators_default.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="mymath\inline\vector\internal_classes_methods_default.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="mymath\inline\vector\math_functions_default.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="mymath\inline\utilities.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="mymath\inline\math_functions.inl">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>

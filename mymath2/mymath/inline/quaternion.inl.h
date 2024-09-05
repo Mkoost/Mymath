@@ -10,6 +10,4 @@
 #	else
 #error Unsupported MYMATH_QUATERNION_STATE state
 #	endif
-#else
-#error Unsupported MYMATH_QUATERNION_STATE state
 #endif

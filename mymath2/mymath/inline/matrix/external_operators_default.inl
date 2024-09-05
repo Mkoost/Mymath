@@ -83,6 +83,7 @@ namespace mymath {
 		return A;
 	}
 
+
 	// ------------------ MATRIX NUM DIV ------------------
 
 	template<class T, size_t n, size_t m>

@@ -132,20 +132,29 @@
     <ClCompile Include="mymath\headers\quaternion.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="mymath\headers\vector.h" />
+    <ClInclude Include="mymath\inline\vector.inl.h" />
     <ClInclude Include="mymath\settings.h" />
     <ClInclude Include="mymath\mymath.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="mymath\details\__expr.inl" />
+    <None Include="mymath\details\__macroses.inl" />
+    <None Include="mymath\inline\math_functions.inl" />
     <None Include="mymath\inline\matrix\class_methods_default.inl" />
     <None Include="mymath\inline\matrix\external_operators_default.inl" />
-    <None Include="mymath\inline\matrix.inl" />
+    <None Include="mymath\inline\matrix.inl.h" />
     <None Include="mymath\inline\matrix\internal_classes_methods_default.inl" />
     <None Include="mymath\inline\matrix\math_functions_default.inl" />
     <None Include="mymath\inline\quaternion\class_methods_default.inl" />
     <None Include="mymath\inline\quaternion\external_operators_default.inl" />
     <None Include="mymath\inline\quaternion\math_functions_default.inl" />
-    <None Include="mymath\inline\quaternion.inl" />
+    <None Include="mymath\inline\quaternion.inl.h" />
+    <None Include="mymath\inline\utilities.inl" />
+    <None Include="mymath\inline\vector\class_methods_default.inl" />
+    <None Include="mymath\inline\vector\external_operators_default.inl" />
+    <None Include="mymath\inline\vector\internal_classes_methods_default.inl" />
+    <None Include="mymath\inline\vector\math_functions_default.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,17 +1,5 @@
 #pragma once
-
-
-#define __GEN_MYMATH_MAT_PSEUDONYMS_10931(postfix, n, m) using dmat##postfix = matrix<double, n, m>; \
- using fmat##postfix = matrix<float, n, m>; \
-using imat##postfix = matrix<int, n, m>; \
-using lmat##postfix = matrix<long, n, m>; \
-using llmat##postfix = matrix<long long, n, m>; \
-using umat##postfix = matrix<unsigned, n, m>; \
-using uimat##postfix = matrix<unsigned int, n, m>; \
-using ulmat##postfix = matrix<unsigned long, n, m>; \
-using ullmat##postfix = matrix<unsigned long long, n, m>;
-
-
+#include <initializer_list>
 
 
 namespace mymath{
@@ -38,18 +26,29 @@ namespace mymath{
 		using iterator = typename T*;
 		using const_iterator = typename T const *;
 
-		matrix(const T& x);
+		matrix() = default;
+		matrix(const T&);
+
+		template<class U>
+		matrix(const matrix<U, n, m>&);
+
+		matrix(const std::initializer_list<T>&);
+		matrix(const std::initializer_list<std::initializer_list<T>>&);
 
 		constexpr iterator begin() noexcept;
 		constexpr iterator end() noexcept;
-#if 0
-		reverse_iterator rbegin();
-		reverse_iterator rend();
-#endif
 
 		constexpr const_iterator  begin() const noexcept;
 		constexpr const_iterator end() const noexcept;
+// TODO
+#if 0
+		reverse_iterator rbegin(); 
+		reverse_iterator rend();
+#endif
 
+
+
+// TODO
 #if 0
 		reverse_const_iterator rbegin() const;
 		reverse_const_iterator rend() const;
@@ -72,15 +71,20 @@ namespace mymath{
 		constexpr row operator[](size_t);
 
 		constexpr const_row operator[](size_t) const;
+
 	};
 
 	// ------------------------------------------------------------------>	 PSEUDONYMS
 
+	
+
+}
+
+#include "../details/__macroses.inl"
+
+namespace mymath{
 	__GEN_MYMATH_MAT_PSEUDONYMS_10931(2, 2, 2)
 	__GEN_MYMATH_MAT_PSEUDONYMS_10931(3, 3, 3)
 	__GEN_MYMATH_MAT_PSEUDONYMS_10931(4, 4, 4)
 	__GEN_MYMATH_MAT_PSEUDONYMS_10931(5, 5, 5)
-
 }
-
-#undef __GEN_MYMATH_MAT_PSEUDONYMS_10931

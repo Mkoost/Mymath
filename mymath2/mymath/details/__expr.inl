@@ -7,6 +7,10 @@ namespace mymath {
 			return a < b ? a : b;
 		}
 
-		  
+		template<class T>
+		constexpr const T& max(const T& a, const T& b) noexcept {
+			return a > b ? a : b;
+		}
+		 
 	}
 }

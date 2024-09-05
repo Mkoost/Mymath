@@ -21,7 +21,7 @@ namespace mymath {
 		fill(mat, 0);
 		T* ptr = reinterpret_cast<T*>(const_cast<matrix<T, n, m> *>(&mat)->values);
 		for (size_t i = 0; i != min(n, m); ++i) {
-			ptr[i + i * m] = some;
+			ptr[i * (m + 1)] = some;
 		}
 		return mat;
 	}
@@ -50,6 +50,33 @@ namespace mymath {
 	template<class T, size_t n, size_t m>
 	matrix<T, n, m>::matrix(const T& some){
 		fill(*this, some);
+	}
+
+	template<class T, size_t n, size_t m>
+	matrix<T, n, m>::matrix(const std::initializer_list<T>& list) {
+		size_t k = 0;
+		T* ptr = &values[0][0];
+		for (auto i : list) 
+			if (k != n * m){
+				ptr[k++] = i;
+			}
+
+		while (k != n * m)
+			ptr[k++] = 0;
+	}
+
+	template<class T, size_t n, size_t m>
+	matrix<T, n, m>::matrix(const std::initializer_list<std::initializer_list<T>>& list) {
+		size_t k = 0;
+		T* ptr = &values[0][0];
+		for (auto i : list)
+			for (auto j : i)
+			if (k != n * m) {
+				ptr[k++] = j;
+			}
+
+		while (k != n * m)
+			ptr[k++] = 0;
 	}
 
 	// ------------------ OPERATORS ------------------
