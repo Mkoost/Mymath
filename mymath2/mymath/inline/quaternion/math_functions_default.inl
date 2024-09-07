@@ -11,7 +11,7 @@ namespace mymath {
 	}
 
 	template<typename T>
-	T norm(quaternion<T> q) {
+	double norm(quaternion<T> q) {
 		return std::sqrt(norm2(q));
 	}
 

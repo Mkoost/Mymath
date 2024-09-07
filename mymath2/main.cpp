@@ -3,18 +3,20 @@
 
 
 int main() {	
-	mymath::imat3 A{
-		{1, 6, 1},
-		{1, 1, 3},
-		{3, 1, 3} };
-	mymath::ivec3 v{1, 1, 1};
 
-	mymath::ivec3 c;
+	using dvec1000 = mymath::vector<double, 1000>;
+	auto a = new dvec1000;
+	dvec1000::fill(*a);
 
-	mymath::multiply(v, A, &c);
+	auto b = new dvec1000;
+	dvec1000::fill(*b, 1);
 
-	mymath::utilities::print(c);
+	*a += *b;
 
+	mymath::utilities::print(*a);
+
+	delete a;
+	delete b;
 
 	return 0;
 }
