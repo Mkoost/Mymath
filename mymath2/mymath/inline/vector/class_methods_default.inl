@@ -17,6 +17,13 @@ namespace mymath {
 	}
 
 	// ------------------ METHODS ------------------
+	template<class T, size_t n>
+	template<class U>
+	vector<T, n>& vector<T, n>::copy(const vector<U, n>& A) {
+		for (size_t i = 0; i != n; ++i)
+			values[i] = A.values[i];
+		return *this;
+	};
 
 	template<class T, size_t n>
 	constexpr typename vector<T, n>::iterator vector<T, n>::begin() noexcept {
@@ -61,8 +68,7 @@ namespace mymath {
 	template<class T, size_t n>
 	template<class U>
 	vector<T, n>::vector(const vector<U, n>& vec) {
-		for (size_t i = 0; i != n; ++i)
-			values[i] = vec[i];
+		copy(vec);
 	};
 
 	// ------------------ OPERATORS ------------------

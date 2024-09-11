@@ -26,6 +26,9 @@ namespace mymath {
 
 		vector() = default;
 
+		template<class U>
+		vector<T, n>& copy(const vector<U, n>&);
+
 		/* WARNING: Can change const object */
 		static const vector<T, n>& fill(const vector<T, n>&, const T& elem = 0);
 

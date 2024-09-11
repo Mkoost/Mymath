@@ -2,21 +2,40 @@
 #include <iostream>
 
 
-int main() {	
+int main() {
 
-	using dvec1000 = mymath::vector<double, 1000>;
-	auto a = new dvec1000;
-	dvec1000::fill(*a);
+	mymath::matrix<float, 5, 5> A{
+		{1, 2, 3, 4, 5},
+		{5, 1, 2, 3, 4},
+		{4, 5, 1, 2, 3},
+		{3, 4, 5, 1, 2},
+		{2, 3, 4, 5, 1} };
+	
+	mymath::matrix<float, 5, 5> B{
+		{1, 2, 3, 4, 5},
+		{5, 1, 2, 3, 4},
+		{4, 5, 1, 2, 3},
+		{3, 4, 5, 1, 2},
+		{2, 3, 4, 5, 1} };
 
-	auto b = new dvec1000;
-	dvec1000::fill(*b, 1);
+	mymath::vector<float, 5> b = { 1, 1, 1, 1, 1 };
+	
+	auto x = mymath::qr_solve(A, b);
 
-	*a += *b;
+	mymath::utilities::print(A);
+	std::cout << "\n";
+	mymath::utilities::print(b);
+	std::cout << "\n";
+	
+	
+	auto y = mymath::multiply(B, *x);
 
-	mymath::utilities::print(*a);
+	mymath::utilities::print(*x);
+	std::cout << "\n";
+	mymath::utilities::print(*y);
+	std::cout << "\n" << mymath::norm(b - *y);
 
-	delete a;
-	delete b;
-
+	if (x) delete x;
+	if (y) delete y;
 	return 0;
 }

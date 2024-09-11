@@ -26,6 +26,17 @@ namespace mymath {
 		return mat;
 	}
 	// ------------------ METHODS ------------------
+
+	template<class T, size_t n, size_t m>
+	template<class U>
+	matrix<T, n, m>& matrix<T, n, m>::copy(const matrix<U, n, m>& A) {
+		T* ptr1 = (T*)values;
+		U* ptr2 = (U*)A.values[0][0];
+		for (size_t i = 0; i != n * m; ++i)
+			ptr1[i] = ptr2[i];
+		return *this;
+	};
+
 	template<class T, size_t n, size_t m>
 	constexpr typename matrix<T, n, m>::iterator matrix<T, n, m>::begin() noexcept {
 		return iterator(&values);
@@ -79,6 +90,11 @@ namespace mymath {
 			ptr[k++] = 0;
 	}
 
+	template<class T, size_t n, size_t m>
+	template<class U>
+	matrix<T, n, m>::matrix(const matrix<U, n, m>& A) {
+		copy(A);
+	}
 	// ------------------ OPERATORS ------------------
 
 	template<class T, size_t n, size_t m>

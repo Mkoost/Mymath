@@ -32,6 +32,9 @@ namespace mymath{
 		template<class U>
 		matrix(const matrix<U, n, m>&);
 
+		template<class U>
+		matrix<T, n, m>& copy(const matrix<U, n, m>&);
+
 		matrix(const std::initializer_list<T>&);
 		matrix(const std::initializer_list<std::initializer_list<T>>&);
 
