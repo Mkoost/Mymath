@@ -13,7 +13,7 @@
 ##  Функции 
 
 ### `print(const &T)` 
-Возможные реализации:
+Возможные заголовки:
 - `void print(const matrix&)`
 - `void print(const vector&)`
 - `void print(const quaternion&)`
