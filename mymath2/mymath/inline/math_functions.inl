@@ -46,9 +46,9 @@ namespace mymath {
 
 	template<class T, size_t n, size_t m>
 	vector<T, m>* vector_and_matrix_multiply_standart(
-		const vector<T, n>& a,
-		const matrix<T, n, m>& b,
-		vector<T, m>* c_ptr = nullptr) {
+		const vector<T, n>&		a,
+		const matrix<T, n, m>&  b,
+		vector<T, m>*		    c_ptr = nullptr) {
 
 		if (c_ptr == nullptr)
 			c_ptr = new vector<T, m>;
@@ -71,56 +71,59 @@ namespace mymath {
 	
 	template<class T, size_t n, size_t m>
 	vector<T, n>* multiply(
-		const vector<T, n>& a,
-		const matrix<T, n, m>& b,
-		vector<T, m>* c_ptr = nullptr) {
+		const vector<T, n>&     a,
+		const matrix<T, n, m>&  b,
+		vector<T, m>*			c_ptr = nullptr) {
 		return vector_and_matrix_multiply_standart(a, b, c_ptr);
 	}
 
 	template<class T, size_t n, typename tmp_T=double>
 	vector<T, n>* qr_solve(
-		matrix<T, n, n>& A,
-		vector<T, n>& b,
-		vector<T, n>* x_ptr = nullptr) {
-		bool f = false;
+		matrix<T, n, n>&	 A,
+		const vector<T, n>&  b,
+		vector<T, n>*		 x_ptr	    =  nullptr, 
+		matrix<T, n, n>*     triag_ptr  =  nullptr, 
+		tmp_T				 zero	    =  0e-15) {
+
+		char ptrs = 0;
+		
 		if (x_ptr == nullptr) {
 			x_ptr = new vector<T, n>;
-			f = true;
+			ptrs = 1;
 		}
 
-		if (x_ptr == nullptr)
-			return nullptr;
+		if (triag_ptr != nullptr)
+			triag_ptr->copy(A);
+		else triag_ptr = &A;
 
-
+		
 		vector<T, n>& x = *x_ptr;
 
 		x.copy(b);
-		
 
 		for (size_t i = 0; i != n - 1; ++i) {
 			for (size_t j = i + 1; j != n; ++j) {
-				tmp_T c = A[i][i];
-				tmp_T s = A[j][i];
+				tmp_T c = (*triag_ptr)[i][i];
+				tmp_T s = (*triag_ptr)[j][i];
 
-				if (std::fabs(A[i][j]) <= zero) continue;
+				if (std::fabs((*triag_ptr)[i][j]) <= zero) continue;
 
 				tmp_T l = std::sqrt((c * c) + (s * s));
-				c /= l;
-				s /= l;
+				
 
 				for (size_t k = i; k != n; ++k) {
-					tmp_T tmp_1 = A[i][k];
-					tmp_T tmp_2 = A[j][k];
-					A[i][k] = c * tmp_1 + s * tmp_2;
-					A[j][k] = -s * tmp_1 + c * tmp_2;
+					tmp_T tmp_1 = (*triag_ptr)[i][k];
+					tmp_T tmp_2 = (*triag_ptr)[j][k];
+					(*triag_ptr)[i][k] = (c * tmp_1 + s * tmp_2) / l;
+					(*triag_ptr)[j][k] = (- s * tmp_1 + c * tmp_2) / l ;
 				}
 
 				tmp_T tmp_1 = x[i];
 				tmp_T tmp_2 = x[j];
-				x[i] = c * tmp_1 + s * tmp_2;
-				x[j] = -s * tmp_1 + c * tmp_2;
+				x[i] = (c * tmp_1 + s * tmp_2) / l;
+				x[j] = (-s * tmp_1 + c * tmp_2) / l;
 				
-				A[j][i] = 0;
+				(*triag_ptr)[j][i] = 0;
 
 				
 			}
@@ -128,20 +131,20 @@ namespace mymath {
 
 		for (size_t i = 0; i != n - 1; ++i) 
 			for (size_t j = i + 1; j != n; ++j) {
-				if (std::fabs(A[i][j]) <= zero) {
-					if(f) delete x_ptr;
-					return nullptr;
+				if (std::fabs((*triag_ptr)[i][j]) <= zero) {
+					if(ptrs) delete x_ptr;
+					throw(std::invalid_argument("The matrix is singular"));
 				}
 			}
 
 		for (size_t i = 1; i != n; ++i) {
-			x[n - i] /= A[n - i][n - i];
+			x[n - i] /= (*triag_ptr)[n - i][n - i];
 			tmp_T tmp = x[n - i];
 			for (size_t j = i + 1; j != n + 1; ++j)
-				x[n - j] -= A[n - j][n - i] * tmp;
+				x[n - j] -= (*triag_ptr)[n - j][n - i] * tmp;
 		}
 		
-		x[0] /= A[0][0];
+		x[0] /= (*triag_ptr)[0][0];
 
 		return x_ptr;
 	}

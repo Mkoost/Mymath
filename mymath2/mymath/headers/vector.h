@@ -3,7 +3,6 @@
 
 namespace mymath {
 	
-	// TODO
 	template<class T, size_t n>
 	class vector {
 		T values[n];

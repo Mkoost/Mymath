@@ -11,6 +11,7 @@ namespace mymath {
 					std::cout << A[i][j] << " ";
 				std::cout << "\n";
 			}
+			std::cout << "\n";
 		}
 #endif
 
@@ -26,6 +27,7 @@ namespace mymath {
 		void print(const mymath::vector<T, n>& vec) {
 			for (int i = 0; i != n; ++i)
 				std::cout << vec[i] << " ";
+			std::cout << "\n";
 		}
 #endif
 

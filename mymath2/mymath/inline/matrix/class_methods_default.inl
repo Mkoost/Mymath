@@ -31,7 +31,7 @@ namespace mymath {
 	template<class U>
 	matrix<T, n, m>& matrix<T, n, m>::copy(const matrix<U, n, m>& A) {
 		T* ptr1 = (T*)values;
-		U* ptr2 = (U*)A.values[0][0];
+		auto ptr2 = (U const *)A.values;
 		for (size_t i = 0; i != n * m; ++i)
 			ptr1[i] = ptr2[i];
 		return *this;
