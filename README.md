@@ -13,7 +13,7 @@
 
 Файл [otchet1.tex](./otchet1.tex) - исходник отчета
 
-Файл [math_functions.inl](mymath2/mymath/inline/math_functions.inl):
+Файл [math_functions.inl](./mymath2/mymath/inline/math_functions.inl):
 
 * Название функции реализующей алгоритм Гаусса: gauss_solve
 * Название функции реализующей QR разложения: qr_solve
