@@ -6,12 +6,12 @@
 * Программа тестировалась на компиляторах GCC версии 11.4.0 и MSVC версии 143.
 * Поскольку проект не использует дополнительных зависимостей достаточно скомпилировть [main.cpp](mymath2\main.cpp) (точка входа).
 * Код алгоритмов для лабораторных работ: [math_functions.inl](mymath2\mymath\inline\math_functions.inl).
-* [Документация к mymath](.\mymath2\docs\index.md) (в процессе написания).
+* [Документация к mymath](/mymath2/docs/index.md) (в процессе написания).
 
 
 ## Лабораторная работа 1:
 
-Файл [otchet1.tex](.\otchet1.tex) - исходник отчета
+Файл [otchet1.tex](./otchet1.tex) - исходник отчета
 
 Файл [math_functions.inl](mymath2\mymath\inline\math_functions.inl):
 
