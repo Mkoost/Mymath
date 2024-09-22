@@ -76,6 +76,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -90,6 +91,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -104,6 +106,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -118,6 +121,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -132,7 +136,12 @@
     <ClCompile Include="mymath\headers\quaternion.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="mymath\headers\data_structs.h" />
+    <ClInclude Include="mymath\headers\dynamic_matrix.h" />
+    <ClInclude Include="mymath\headers\dynamic_vector.h" />
     <ClInclude Include="mymath\headers\vector.h" />
+    <ClInclude Include="mymath\inline\dynamic_matrix.inl.h" />
+    <ClInclude Include="mymath\inline\dynamic_vector.inl.h" />
     <ClInclude Include="mymath\inline\vector.inl.h" />
     <ClInclude Include="mymath\settings.h" />
     <ClInclude Include="mymath\mymath.h" />
@@ -140,6 +149,14 @@
   <ItemGroup>
     <None Include="mymath\details\__expr.inl" />
     <None Include="mymath\details\__macroses.inl" />
+    <None Include="mymath\inline\dynamic_matrix\class_methods_default.inl" />
+    <None Include="mymath\inline\dynamic_matrix\external_operators_default.inl" />
+    <None Include="mymath\inline\dynamic_matrix\internal_classes_methods_default.inl" />
+    <None Include="mymath\inline\dynamic_matrix\math_functions_default.inl" />
+    <None Include="mymath\inline\dynamic_vector\class_methods_default.inl" />
+    <None Include="mymath\inline\dynamic_vector\external_operators_default.inl" />
+    <None Include="mymath\inline\dynamic_vector\internal_classes_methods_default.inl" />
+    <None Include="mymath\inline\dynamic_vector\math_functions_default.inl" />
     <None Include="mymath\inline\math_functions.inl" />
     <None Include="mymath\inline\matrix\class_methods_default.inl" />
     <None Include="mymath\inline\matrix\external_operators_default.inl" />

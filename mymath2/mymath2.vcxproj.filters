@@ -38,6 +38,21 @@
     <ClInclude Include="mymath\inline\vector.inl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="mymath\headers\data_structs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mymath\headers\dynamic_matrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mymath\headers\dynamic_vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mymath\inline\dynamic_matrix.inl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mymath\inline\dynamic_vector.inl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="mymath\inline\quaternion.inl.h">
@@ -89,6 +104,30 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="mymath\inline\math_functions.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="mymath\inline\dynamic_matrix\class_methods_default.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="mymath\inline\dynamic_matrix\external_operators_default.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="mymath\inline\dynamic_matrix\internal_classes_methods_default.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="mymath\inline\dynamic_matrix\math_functions_default.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="mymath\inline\dynamic_vector\class_methods_default.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="mymath\inline\dynamic_vector\external_operators_default.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="mymath\inline\dynamic_vector\internal_classes_methods_default.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="mymath\inline\dynamic_vector\math_functions_default.inl">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>
