@@ -69,8 +69,8 @@ void test_solve(const std::string& mat_path, const std::string& vec_path, solver
 }
 
 int main() {
-	std::string path1 = "C:\\Users\\Миша\\source\\repos\\mymath2\\mymath2\\Test\\lab1\\sys5\\matrix.dat";
-	std::string path2 = "C:\\Users\\Миша\\source\\repos\\mymath2\\mymath2\\Test\\lab1\\sys5\\vector.dat";
+	std::string path1 = ".\\Test\\lab1\\sys5\\matrix.dat";
+	std::string path2 = ".\\Test\\lab1\\sys5\\vector.dat";
 
 
 	test_solve<test_T, test_T>(path1, path2, s);
