@@ -111,7 +111,6 @@ int main() {
 	std::string path1 = ".\\Test\\lab1\\sys7\\matrix.dat";
 	std::string path2 = ".\\Test\\lab1\\sys7\\vector.dat";
 
-
 	test_solve<test_T, test_T>(path1, path2, qr);
 
 	return 0;
