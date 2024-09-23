@@ -32,6 +32,43 @@ namespace mymath {
 	{
 		return matrix_multiply_standart(a, b);
 	}
+
+	template<class T>
+	double cube_norm(const dynamic_matrix<T>& a) {
+		double mx = 0;
+		for (size_t i = 0; i != a.rows(); ++i) {
+			double tmp = 0;
+			for (size_t j = 0; j != a.columns(); ++j)
+				tmp += std::fabs(a[i][j]);
+			mx = max(mx, tmp);
+		}
+		return mx;
+	}
+
+	template<class T>
+	double oct_norm(const dynamic_matrix<T>& a) {
+		double mx = 0;
+		for (size_t j = 0; j != a.columns(); ++j) {
+			double tmp = 0;
+			for (size_t i = 0; i != a.rows(); ++i)
+				tmp += std::fabs(a[i][j]);
+			mx = max(mx, tmp);
+		}
+		return mx;
+	}
+
+	template<class T>
+	double sphere_norm(const dynamic_matrix<T>& a) {
+		double mx = 0;
+		for (size_t j = 0; j != a.columns(); ++j) {
+			double tmp = 0;
+			for (size_t i = 0; i != a.rows(); ++i)
+				tmp += a[i][j] * a[i][j];
+			mx = max(mx, tmp);
+		}
+		return std::sqrt(mx);
+	}
+
 #if 0
 	template<class T, size_t n>
 	matrix<T, n, n>* inv(const matrix<T, n, n>& a, matrix<T, n, n>* c_ptr = nullptr);

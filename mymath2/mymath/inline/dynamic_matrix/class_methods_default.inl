@@ -68,9 +68,11 @@ namespace mymath {
 	}
 
 	template<class T>
-	dynamic_matrix<T>::dynamic_matrix(T* A, size_t n, size_t m) {
+	dynamic_matrix<T>& dynamic_matrix<T>::move(T* A, size_t n, size_t m) noexcept {
+		if (values) delete[]values;
 		values = A;
 		n_ = n; m_ = m;
+		return *this;
 	}
 
 	template<class T>

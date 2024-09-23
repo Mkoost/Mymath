@@ -34,8 +34,6 @@ namespace mymath {
 		// TODO
 		dynamic_matrix(const T&, size_t n, size_t m);
 
-		dynamic_matrix(T*, size_t n, size_t m);
-
 		dynamic_matrix(const std::initializer_list<std::initializer_list<T>>&);
 
 		// TODO
@@ -53,6 +51,7 @@ namespace mymath {
 		dynamic_matrix<T>& copy(const dynamic_matrix<U>&);
 
 		dynamic_matrix<T>& move(dynamic_matrix<T>&) noexcept;
+		dynamic_matrix<T>& move(T*, size_t n, size_t m) noexcept;
 
 		size_t columns() const;
 		size_t rows() const;

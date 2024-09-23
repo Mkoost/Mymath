@@ -78,8 +78,9 @@ namespace mymath {
 
 			in.close();
 			
-
-			return dynamic_matrix<data_T>(data.ptr, n, n);
+			dynamic_matrix<data_T> lll;
+			lll.move(data.ptr, n, n);
+			return lll;
 		}
 
 #endif
