@@ -7,8 +7,8 @@ namespace mymath {
 	class vector {
 		T values[n];
 	public:
-		using iterator = typename T*;
-		using const_iterator = typename T const*;
+		using iterator = T*;
+		using const_iterator = T const*;
 
 		constexpr iterator begin() noexcept;
 		constexpr iterator end() noexcept;

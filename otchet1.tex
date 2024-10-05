@@ -444,6 +444,45 @@
 		C_1 \norm{v}_a \leq \norm{v}_b \leq C_2 \norm{v}_a.
 	\end{equation*}
 	
+	\item Привести пример системы, решить которую получится только методом Гаусса с выбором главного элемента:
+	\[A  = 
+	\begin{pmatrix}
+		3&6&9\\
+		2&6&7\\
+		1&1&1
+	\end{pmatrix}
+	\]
+	
+	\item 
+	\begin{enumerate}
+		\item Приведите пример матрицы, у которой число обусловленности велико, а определитель мал:
+		\[
+		A = \left(
+		\begin{array}{ccc}
+			853.55 & -500 & -146.45 \\
+			0.14 & 0.5 & -0.85 \\
+			0.0005 & 0.0007 & 0.0005 \\
+		\end{array}
+		\right)\!,
+		\]
+		\[
+		\text{cond} A \sim 1.06 \cdot 10^6, \; \det A \sim 0.99
+		\]
+		\item число обусловленности мало, а определитель велик:
+		
+		\[
+		A = \left(
+		\begin{array}{ccc}
+			0 & 100 & 0 \\
+			34 & 34 & 34 \\
+			99 & 0 & 0 \\
+		\end{array}
+		\right)
+		\]
+		\[
+		\text{cond} A \sim 3.68, \; \det A = 336600
+		\]
+	\end{enumerate}
 	\clearpage
 	\end{enumerate}
 	

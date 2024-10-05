@@ -9,8 +9,8 @@ namespace mymath {
 
 	public:
 		// TODO
-		using iterator = typename T*;
-		using const_iterator = typename T const*;
+		using iterator = T*;
+		using const_iterator = T const*;
 
 		dynamic_vector() = default;
 

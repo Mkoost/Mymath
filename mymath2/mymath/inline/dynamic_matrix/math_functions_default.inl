@@ -11,8 +11,8 @@ namespace mymath {
 		const dynamic_matrix<T>& a,
 		const dynamic_matrix<T>& b)
 	{
-		if (b.rows() != a.columns) return dynamic_matrix<T>();
-		dynamic_matrix<T> c(0, a.rows(), b.columns);
+		if (b.rows() != a.columns()) return dynamic_matrix<T>();
+		dynamic_matrix<T> c(0, a.rows(), b.columns());
 
 		size_t n = a.rows(), m = a.columns(), l = b.columns();
 		for (size_t i = 0; i != n; ++i)

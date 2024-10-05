@@ -437,5 +437,96 @@ namespace mymath {
 		return res;
 	}
 
+
+	template<class T, typename tmp_T = double>
+	dynamic_vector<T>
+	jacobi_iteration(
+		const dynamic_matrix<T>& A,
+		const dynamic_vector<T>& b,
+		tmp_T eps, dynamic_vector<T> start = dynamic_vector<T>()){
+
+		if (A.rows() != A.columns()) throw(std::invalid_argument("Sizes of matrix rows and columns must be equal"));
+		if (A.rows() != b.size()) throw(std::invalid_argument("Matrix and vector have different sizes"));
+
+		if (start.size() == 0) start.copy(b);
+		else if (start.size() != b.size()) throw(std::invalid_argument("Vector and vector have different sizes"));
+
+		size_t n = b.size();
+
+		dynamic_vector<T> x(b);
+		tmp_T nrm = 0;
+		size_t lp = 0;
+		do{
+			++lp;
+			nrm = 0;
+
+			for (size_t j = 0; j != n; ++j)
+				for (size_t i = 0; i != n; ++i) {
+					if (i == j) continue;
+					x[j] -= A[j][i] * start[i];
+				}
+		
+			for (size_t i = 0; i != n; ++i){
+				nrm = std::pow(start[i] - x[i] / A[i][i], 2);
+				start[i] = x[i] / A[i][i];
+				x[i] = b[i];
+			}
+		} while (std::sqrt(nrm) > eps && nrm < 1e10);
+
+		std::cout << lp << "\n";
+		return start;
+	
+	}
+
+	template<class T, typename tmp_T = double>
+	dynamic_vector<T>
+		relax_iteration(
+			const dynamic_matrix<T>& A,
+			const dynamic_vector<T>& b,
+			tmp_T eps, dynamic_vector<T> start = dynamic_vector<T>(), tmp_T omega = 0.5) {
+
+		if (A.rows() != A.columns()) throw(std::invalid_argument("Sizes of matrix rows and columns must be equal"));
+		if (A.rows() != b.size()) throw(std::invalid_argument("Matrix and vector have different sizes"));
+
+		if (start.size() == 0) start.copy(b);
+		else if (start.size() != b.size()) throw(std::invalid_argument("Vector and vector have different sizes"));
+
+		size_t n = b.size();
+
+		dynamic_vector<T> x(b);
+		tmp_T nrm = 0;
+		size_t lp = 0;
+		do {
+			++lp;
+			nrm = 0;
+
+			for (size_t j = 0; j != n; ++j){
+				for (size_t i = j + 1; i < n; ++i) {
+					x[j] -= A[j][i] * start[i];
+				}
+
+				for (size_t i = 0; i < j ; ++i) {
+					x[j] -= A[j][i] * x[i];
+				}
+
+				x[j] *= omega;
+				x[j] /= A[j][j];
+
+				x[j] += (1 - omega) * start[j];
+			}
+
+			for (size_t i = 0; i != n; ++i) {
+				nrm = std::pow(start[i] - x[i], 2);
+				start[i] = x[i];
+				x[i] = b[i];
+			}
+		} while (std::sqrt(nrm) > eps && nrm < 1e10);
+
+		std::cout << lp << "\n";
+		return start;
+
+	}
+
+
 #endif
 }
