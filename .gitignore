@@ -3,18 +3,18 @@ x64
 ./mymath2/x64
 
 commit_message.txt
-./отчеты/otchet1.log
-./отчеты/otchet1.aux
-./отчеты/otchet1.out
-./отчеты/otchet1.toc
-./отчеты/otchet1.synctex.gz
-./отчеты/otchet1.pdf
+./otcheti/otchet1.log
+./otcheti/otchet1.aux
+./otcheti/otchet1.out
+./otcheti/otchet1.toc
+./otcheti/otchet1.synctex.gz
+./otcheti/otchet1.pdf
 
-\320\276\321\202\321\207\320\265\321\202\321\213/otchet2.log
-\320\276\321\202\321\207\320\265\321\202\321\213/otchet2.aux
-\320\276\321\202\321\207\320\265\321\202\321\213/otchet2.out
-\320\276\321\202\321\207\320\265\321\202\321\213/otchet2.toc
-\320\276\321\202\321\207\320\265\321\202\321\213/otchet2.synctex.gz
-\320\276\321\202\321\207\320\265\321\202\321\213/otchet2.pdf
+./otcheti/otchet2.log
+./otcheti/otchet2.aux
+./otcheti/otchet2.out
+./otcheti/otchet2.toc
+./otcheti/otchet2.synctex.gz
+./otcheti/otchet2.pdf
 
 style/
