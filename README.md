@@ -20,7 +20,7 @@
 
 ## Лабораторная работа 2:
 
-Файл [./отчеты/otchet1.tex](./otchet2.tex) - исходник отчета
+Файл [./отчеты/otchet2.tex](./otchet2.tex) - исходник отчета
 
 Файл [math_functions.inl](./mymath2/mymath/inline/math_functions.inl):
 
