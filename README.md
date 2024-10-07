@@ -11,9 +11,19 @@
 
 ## Лабораторная работа 1:
 
-Файл [otchet1.tex](./otchet1.tex) - исходник отчета
+Файл [./отчеты/otchet1.tex](./otchet1.tex) - исходник отчета
 
 Файл [math_functions.inl](./mymath2/mymath/inline/math_functions.inl):
 
 * Название функции реализующей алгоритм Гаусса: gauss_solve
 * Название функции реализующей QR разложения: qr_solve
+
+## Лабораторная работа 2:
+
+Файл [./отчеты/otchet1.tex](./otchet2.tex) - исходник отчета
+
+Файл [math_functions.inl](./mymath2/mymath/inline/math_functions.inl):
+
+* Название функции реализующей метод простой инерации: simple_iter
+* Название функции реализующей метод якоби: jacobi_iteration
+* * Название функции реализующей методы Зейделя и релаксации: relax_iteration
