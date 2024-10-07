@@ -22,12 +22,21 @@ namespace mymath {
 	}
 
 	template<class T>
+	double cube_norm(const dynamic_vector<T>& a) {
+		double mx = 0;
+			double tmp = 0;
+			for (size_t j = 0; j != a.size(); ++j)
+				tmp += std::fabs(a[j]);
+			mx = max(mx, tmp);
+		return mx;
+	}
+
+	template<class T>
 	double oct_norm(const dynamic_vector<T>& a) {
 		double mx = 0;
-		for (size_t j = 0; j != a.columns(); ++j) {
+		for (size_t j = 0; j != a.size(); ++j) {
 			double tmp = 0;
-			for (size_t i = 0; i != a.rows(); ++i)
-				tmp += std::fabs(a[i][j]);
+			tmp += std::fabs(a[j]);
 			mx = max(mx, tmp);
 		}
 		return mx;
@@ -36,10 +45,9 @@ namespace mymath {
 	template<class T>
 	double sphere_norm(const dynamic_vector<T>& a) {
 		double mx = 0;
-		for (size_t j = 0; j != a.columns(); ++j) {
+		for (size_t j = 0; j != a.size(); ++j) {
 			double tmp = 0;
-			for (size_t i = 0; i != a.rows(); ++i)
-				tmp += a[i][j] * a[i][j];
+			tmp += a[j] * a[j];
 			mx = max(mx, tmp);
 		}
 		return std::sqrt(mx);

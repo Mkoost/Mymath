@@ -9,7 +9,7 @@ namespace mymath {
 
 	template<class T>
 	const dynamic_matrix<T>& dynamic_matrix<T>::fill(const dynamic_matrix<T>& mat, const T& some) {
-		T* ptr = reinterpret_cast<T*>(const_cast<dynamic_matrix<T>*>(&mat)->values);
+		T* ptr = const_cast<T*>(mat.values);
 		for (size_t i = 0, k = mat.size(); i != k; ++i)
 			ptr[i] = some;
 		return mat;
@@ -18,7 +18,7 @@ namespace mymath {
 	template<class T>
 	const dynamic_matrix<T>& dynamic_matrix<T>::diag(const dynamic_matrix<T>& mat, const T& some) {
 		fill(mat, 0);
-		T* ptr = reinterpret_cast<T*>(const_cast<dynamic_matrix<T>*>(&mat)->values);
+		T* ptr = const_cast<T*>(mat.values);
 		for (size_t i = 0; i != min(mat.columns(), mat.rows()); ++i) {
 			ptr[i * (mat.columns() + 1)] = some;
 		}

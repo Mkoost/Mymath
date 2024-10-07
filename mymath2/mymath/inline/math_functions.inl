@@ -441,9 +441,10 @@ namespace mymath {
 	template<class T, typename tmp_T = double>
 	dynamic_vector<T>
 	jacobi_iteration(
-		const dynamic_matrix<T>& A,
-		const dynamic_vector<T>& b,
-		tmp_T eps, dynamic_vector<T> start = dynamic_vector<T>()){
+		const dynamic_matrix<T>&       A,
+		const dynamic_vector<T>&       b,
+		tmp_T                          eps, 
+		dynamic_vector<T>              start = dynamic_vector<T>()){
 
 		if (A.rows() != A.columns()) throw(std::invalid_argument("Sizes of matrix rows and columns must be equal"));
 		if (A.rows() != b.size()) throw(std::invalid_argument("Matrix and vector have different sizes"));
@@ -481,9 +482,11 @@ namespace mymath {
 	template<class T, typename tmp_T = double>
 	dynamic_vector<T>
 		relax_iteration(
-			const dynamic_matrix<T>& A,
-			const dynamic_vector<T>& b,
-			tmp_T eps, dynamic_vector<T> start = dynamic_vector<T>(), tmp_T omega = 0.5) {
+			const dynamic_matrix<T>&   A,
+			const dynamic_vector<T>&   b,
+			tmp_T                      eps, 
+			dynamic_vector<T>          start = dynamic_vector<T>(),
+			tmp_T                      omega = 0.5) {
 
 		if (A.rows() != A.columns()) throw(std::invalid_argument("Sizes of matrix rows and columns must be equal"));
 		if (A.rows() != b.size()) throw(std::invalid_argument("Matrix and vector have different sizes"));
@@ -527,6 +530,72 @@ namespace mymath {
 
 	}
 
+	template<class T, typename tmp_T = double>
+	dynamic_matrix<T> minus_E(dynamic_matrix<T>& A) {
+		dynamic_matrix<T> A_new(A);
+		size_t n = A.rows();
+		for (size_t i = 0; i < n; ++i) {
+			A_new[i][i] = A[i][i] - 1;
+		}
+
+		return A_new;
+	}
+
+	template<class T, typename tmp_T = double>
+	dynamic_vector<T> simple_iter(
+		const dynamic_matrix<T>&       A,
+		const dynamic_vector<T>&       b,
+		const tmp_T					   eps,
+		const tmp_T					       tau = 0.05) {
+		std::cout << "Test A: \n";
+		mymath::utilities::print(A);
+		//start here
+		dynamic_matrix<T> E(A);
+		dynamic_matrix<T>::diag(E, 1);
+
+		std::cout << "Test E: \n";
+		mymath::utilities::print(E);
+
+		dynamic_vector<T> x(b);
+		dynamic_vector<T> tmp_x(b);
+		dynamic_vector<T> x_new(0, b.size());
+
+		dynamic_matrix<T> C = E - tau * A;
+		std::cout << "Test C: \n";
+		mymath::utilities::print(C);
+
+		//find tau cycle
+		/*
+		tmp_T tau1 = -1;
+		tmp_T minim = 100;
+		while (cube_norm(C) >= 1) {
+			C = E - tau1 * A;
+			minim = min(cube_norm(C), minim);
+			tau1 += 0.00001;
+			if (tau1 > 1) {std::cout << minim << "\n"; break;}
+		}
+		tau = tau1;
+		*/
+
+		std::cout << "norm C: " << cube_norm(C) << "\n";
+
+		size_t k = 0;
+		if (cube_norm(C) < 1) {
+			while (cube_norm(x_new - x) > ((1 - cube_norm(C)) / cube_norm(C)) * eps) {
+				tmp_x.move(x_new);
+				x = multiply(C, x);
+				x_new = tau * b + x;
+				x.move(tmp_x);
+				k += 1;
+			}
+			//std::cout << "vector x^ \n";
+			//utilities::print(x_new);
+		}
+		else { std::cout << "||C|| >= 1\n\n"; }
+		std::cout << k << "\n";
+		//end here
+		return x;
+	}
 
 #endif
 }

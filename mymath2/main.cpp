@@ -209,18 +209,61 @@ void test_iter_solve(const std::string& mat_path, const std::string& vec_path, s
 
 }
 
+template<class T, class tmp_T>
+void test_solve2(const std::string& mat_path, const std::string& vec_path) {
+
+	mymath::dynamic_matrix<T> A = mymath::utilities::input_matrix_NxN<T>(mat_path);
+
+	mymath::dynamic_vector<T> b = mymath::utilities::input_vector_N<T>(vec_path);
+
+	mymath::dynamic_vector<T> x;
+
+	tmp_T tau = 0.05;
+
+	tmp_T eps = 0.001;
+
+	auto some = mymath::simple_iter(A, b, eps, tau);
+
+	std::cout << "Matrix A: \n";
+	mymath::utilities::print(A);
+	std::cout << "Vector b: \n";
+	mymath::utilities::print(b);
+	std::cout << "\n";
+
+	x.move(some);
+
+	std::cout << "Vector x: \n";
+	mymath::utilities::print(x);
+}
+
+int main() {
+	std::string path;
+	//std::cin >> path;
+	path = "C:\\Users\\Миша\\source\\repos\\mymath2\\mymath2\\Test\\lab2\\sys1\\";
+	std::string path1 = path + "matrix.dat";
+	std::string path2 = path + "vector.dat";
+
+
+	//sys1 tau = 0.05
+	//sys 2 tau = 
+	test_solve2<test_T, test_T>(path1, path2);
+
+	return 0;
+}
+
+/*
 int main() {
 
 	mymath::dynamic_matrix<test_T> A = { 
-		{15, 2, -3, 7},
-		{-5, 11, 2, -3},
-		{0, -1, 7, 4},
-		{12, 0, -6, 20}
+		{86, -8.93, -9.59, -3.91},
+		{4.05, -100, -9.10, -8.14},
+		{0.26, 3.61, -71.8, -4.28},
+		{-4.03, -6.88, 6.57, -198.6}
 	};
 
 	mymath::dynamic_matrix<test_T> A_inv(0, A.rows(), A.columns());
 
-	mymath::dynamic_vector<test_T> b = {53, -90, 107, 68};
+	mymath::dynamic_vector<test_T> b = {818.58, 898.74, -912.22, -687.06};
 
 	mymath::dynamic_matrix<test_T> B;
 
@@ -298,3 +341,4 @@ int main() {
 
 	return 0;
 }
+*/

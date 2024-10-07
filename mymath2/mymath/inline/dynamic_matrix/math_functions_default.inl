@@ -45,6 +45,7 @@ namespace mymath {
 		return mx;
 	}
 
+
 	template<class T>
 	double oct_norm(const dynamic_matrix<T>& a) {
 		double mx = 0;
