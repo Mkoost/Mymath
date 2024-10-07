@@ -1,7 +1,0 @@
-\babel@toc {russian}{}\relax 
-\contentsline {section}{\numberline {\hbox to 0pt{\hss }{{\textbf {1.\ }}}}{{\textbf {\ignorespaces {Исходные данные}}}}}{3}{section*.1}%
-\contentsline {section}{\numberline {\hbox to 0pt{\hss }{{\textbf {2.\ }}}}{{\textbf {\ignorespaces {Краткие сведения}}}}}{3}{section*.2}%
-\contentsline {subsection}{\numberline {\hbox to 0pt{\hss }{{2.1.\ }}}{\ignorespaces {Алгоритм Гаусса}}}{3}{section*.3}%
-\contentsline {subsection}{\numberline {\hbox to 0pt{\hss }{{2.2.\ }}}{\ignorespaces {Метод QR-разложения}}}{3}{section*.4}%
-\contentsline {section}{\textbf {\ignorespaces {Контрольные вопросы}}}{4}{section*.5}%
-\contentsline {section}{\textbf {\ignorespaces {Дополнительные вопросы}}}{10}{section*.7}%
