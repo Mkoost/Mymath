@@ -172,6 +172,7 @@
     <None Include="mymath\inline\vector\external_operators_default.inl" />
     <None Include="mymath\inline\vector\internal_classes_methods_default.inl" />
     <None Include="mymath\inline\vector\math_functions_default.inl" />
+    <None Include="Test\lab 3\matrix.dat" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

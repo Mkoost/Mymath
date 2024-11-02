@@ -457,7 +457,8 @@ namespace mymath {
 		dynamic_vector<T> x(b);
 		tmp_T nrm = 0;
 		size_t lp = 0;
-		do{
+		tmp_T nrm2 = 0;
+		do {
 			++lp;
 			nrm = 0;
 
@@ -466,13 +467,16 @@ namespace mymath {
 					if (i == j) continue;
 					x[j] -= A[j][i] * start[i];
 				}
-		
-			for (size_t i = 0; i != n; ++i){
-				nrm = std::pow(start[i] - x[i] / A[i][i], 2);
+			utilities::print(multiply(A, start) - b);
+			nrm2 = cube_norm(start);
+			std::cout << nrm2 << "\n";
+			for (size_t i = 0; i != n; ++i) {
+				nrm = std::max(std::fabs(start[i] - x[i] / A[i][i]), nrm);
 				start[i] = x[i] / A[i][i];
+
 				x[i] = b[i];
 			}
-		} while (std::sqrt(nrm) > eps && nrm < 1e10);
+		} while(nrm > eps * nrm2 + eps/100 && nrm < 1e10 && lp < 200);
 
 		std::cout << lp << "\n";
 		return start;
@@ -485,8 +489,8 @@ namespace mymath {
 			const dynamic_matrix<T>&   A,
 			const dynamic_vector<T>&   b,
 			tmp_T                      eps, 
-			dynamic_vector<T>          start = dynamic_vector<T>(),
-			tmp_T                      omega = 0.5) {
+			tmp_T                      omega = 1,
+			dynamic_vector<T>          start = dynamic_vector<T>()) {
 
 		if (A.rows() != A.columns()) throw(std::invalid_argument("Sizes of matrix rows and columns must be equal"));
 		if (A.rows() != b.size()) throw(std::invalid_argument("Matrix and vector have different sizes"));
@@ -498,17 +502,20 @@ namespace mymath {
 
 		dynamic_vector<T> x(b);
 		tmp_T nrm = 0;
+		tmp_T nrm2 = 0;
 		size_t lp = 0;
+
 		do {
 			++lp;
 			nrm = 0;
 
-			for (size_t j = 0; j != n; ++j){
+			for (size_t j = 0; j != n; ++j) {
 				for (size_t i = j + 1; i < n; ++i) {
 					x[j] -= A[j][i] * start[i];
+
 				}
 
-				for (size_t i = 0; i < j ; ++i) {
+				for (size_t i = 0; i < j; ++i) {
 					x[j] -= A[j][i] * x[i];
 				}
 
@@ -518,17 +525,70 @@ namespace mymath {
 				x[j] += (1 - omega) * start[j];
 			}
 
+			nrm2 = cube_norm(start);
 			for (size_t i = 0; i != n; ++i) {
-				nrm = std::pow(start[i] - x[i], 2);
+				nrm = std::max(std::fabs(start[i] - x[i]), nrm);
+
 				start[i] = x[i];
 				x[i] = b[i];
 			}
-		} while (std::sqrt(nrm) > eps && nrm < 1e10);
+		} while (nrm > eps * nrm2 + eps / 100 && nrm < 1e10 && lp < 200);
 
 		std::cout << lp << "\n";
 		return start;
 
 	}
+
+
+	template<class T, typename tmp_T = double>
+	dynamic_vector<T>
+		diag3_relax_iteration(
+			const dynamic_matrix<T>&   A,
+			const dynamic_vector<T>&   b,
+			tmp_T                      eps,
+			dynamic_vector<T>          start = dynamic_vector<T>(),
+			tmp_T                      omega = 1) {
+		//w = 1.045 - best 
+
+		if (A.rows() != 3) throw(std::invalid_argument("Sizes of matrix rows and columns must be equal"));
+		if (A.columns() != b.size()) throw(std::invalid_argument("Matrix and vector have different sizes"));
+
+		if (start.size() == 0) start.copy(b);
+		else if (start.size() != b.size()) throw(std::invalid_argument("Vector and vector have different sizes"));
+
+		int n = b.size();
+
+		dynamic_vector<T> x(b);
+		tmp_T nrm = 0;
+		size_t lp = 0;
+
+		do {
+			++lp;
+			nrm = 0;
+
+			for (int j = 0; j != n; ++j) {
+
+
+				
+				x[j] = (1 - omega) * start[j]
+					+ omega * (b[j] - A[2][j] * x[max(j - 1, 0)]
+						- A[0][j] * start[std::min(j + 1, n - 1)]) / A[1][j];
+
+
+			}
+			
+			for (size_t i = 0; i != n; ++i) {
+				nrm = std::max(std::fabs(start[i] - x[i]), nrm);
+				start[i] = x[i];
+			}
+		} while (nrm > eps && nrm < 1e10);
+
+		std::cout << lp << "\n";
+		return start;
+
+	}
+
+
 
 	template<class T, typename tmp_T = double>
 	dynamic_matrix<T> minus_E(dynamic_matrix<T>& A) {
@@ -546,7 +606,7 @@ namespace mymath {
 		const dynamic_matrix<T>&       A,
 		const dynamic_vector<T>&       b,
 		const tmp_T					   eps,
-		const tmp_T					       tau = 0.05) {
+		const tmp_T					   tau = 1) {
 		std::cout << "Test A: \n";
 		mymath::utilities::print(A);
 		//start here
@@ -581,7 +641,7 @@ namespace mymath {
 
 		size_t k = 0;
 		if (cube_norm(C) < 1) {
-			while (cube_norm(x_new - x) > ((1 - cube_norm(C)) / cube_norm(C)) * eps) {
+			while (cube_norm(x_new - x) > eps) {
 				tmp_x.move(x_new);
 				x = multiply(C, x);
 				x_new = tau * b + x;
@@ -597,5 +657,100 @@ namespace mymath {
 		return x;
 	}
 
+
+	template<class T, typename tmp_T = double>
+	void to_lower_Hessenberg(dynamic_matrix<T>& A, tmp_T zero = 1e-15) {
+
+		if (A.rows() != A.columns()) throw(std::invalid_argument("Sizes of matrix rows and columns must be equal"));
+		
+		size_t n = A.rows();
+
+		for (size_t i = 0; i != n - 2; ++i) {
+			for (size_t j = i+2; j != n; ++j) {
+				if (std::fabs(A[i][j]) <= zero) continue;
+
+				tmp_T c = A[i][i];
+				tmp_T s = A[j][i];
+				tmp_T l = std::sqrt((c * c) + (s * s));
+
+
+				for (size_t k = i; k != n; ++k) {
+					tmp_T tmp_1 = A[i][k];
+					tmp_T tmp_2 = A[j][k];
+					A[i][k] = (c * tmp_1 + s * tmp_2) / l;
+					A[j][k] = (-s * tmp_1 + c * tmp_2) / l;
+				}
+
+				A[j][i] = 0;
+
+
+			}
+		}
+	}
+
+	template<class T, typename tmp_T = double>
+	void to_upper_Hessenberg(dynamic_matrix<T>& A, tmp_T zero = 1e-15) {
+
+		if (A.rows() != A.columns()) throw(std::invalid_argument("Sizes of matrix rows and columns must be equal"));
+
+		size_t n = A.rows();
+
+		for (size_t i = 0; i != n - 2; ++i) {
+			for (size_t j = i + 2; j != n; ++j) {
+				if (std::fabs(A[i][j]) <= zero) continue;
+
+				tmp_T c = A[i][i];
+				tmp_T s = A[i][j];
+				tmp_T l = std::sqrt((c * c) + (s * s));
+
+
+				for (size_t k = i; k != n; ++k) {
+					tmp_T tmp_1 = A[k][i];
+					tmp_T tmp_2 = A[k][j];
+					A[k][i] = (c * tmp_1 + s * tmp_2) / l;
+					A[k][j] = (-s * tmp_1 + c * tmp_2) / l;
+				}
+
+				A[i][j] = 0;
+
+
+			}
+		}
+	}
+
+	template<class T, typename tmp_T = double>
+	void francis_eigenvals(dynamic_matrix<T>& A, tmp_T eps=1-10) {
+
+		if (A.rows() != A.columns()) throw(std::invalid_argument("Sizes of matrix rows and columns must be equal"));
+
+		size_t n = A.rows();
+		for(int l = 0; l < 100; ++l)
+		for (size_t i = 0; i != n - 1; ++i) {
+			for (size_t j = i + 1; j != n; ++j) {
+
+				tmp_T c = A[i][i];
+				tmp_T s = A[j][i];
+				tmp_T l = std::sqrt((c * c) + (s * s));
+
+
+				for (size_t k = i; k != n; ++k) {
+					tmp_T tmp_1 = A[i][k];
+					tmp_T tmp_2 = A[j][k];
+					A[i][k] = (c * tmp_1 + s * tmp_2) / l;
+					A[j][k] = (-s * tmp_1 + c * tmp_2) / l;
+				}
+				A[j][i] = 0;
+				for (size_t k = i; k != n; ++k) {
+					tmp_T tmp_1 = A[k][i];
+					tmp_T tmp_2 = A[k][j];
+					A[k][i] = (c * tmp_1 + s * tmp_2) / l;
+					A[k][j] = (-s * tmp_1 + c * tmp_2) / l;
+				}
+
+			}
+		}
+
+		
+	}
 #endif
 }

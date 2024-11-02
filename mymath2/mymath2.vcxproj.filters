@@ -130,5 +130,6 @@
     <None Include="mymath\inline\dynamic_vector\math_functions_default.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="Test\lab 3\matrix.dat" />
   </ItemGroup>
 </Project>
