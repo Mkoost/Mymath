@@ -4,12 +4,12 @@
 
 using test_T = double;
 constexpr const size_t SIZE = 4;
-constexpr const double EPS = 1e-12;
+constexpr const double EPS = 1e-5;
 
 
 int main(){
 	// First exemple {4.01142, 2.98702, 2.00425, 0.997313}
-	// Eigenvalues var 9 {107.973, -38.7335, 32.1177, 14.4424}
+	// Eigenvalues var 9 {107.97337296690272, -38.73345211444923, 32.11767309001762, 14.44240605752893}
 	//mymath::utilities::input_matrix_NxN("Test/lab 3/matrix.dat");
 	/*
 	{ 
@@ -21,13 +21,16 @@ int main(){
 
 	mymath::dynamic_matrix<test_T> A = mymath::utilities::input_matrix_NxN("Test/lab 3/matrix.dat");
 
+	mymath::to_upper_Hessenberg(A);
+
 	mymath::utilities::print(A);
 	std::cout << "\n";
-	mymath::dynamic_vector<test_T> res = mymath::francis_eigenvals(A);
+
+	mymath::dynamic_vector<test_T> res = mymath::francis_eigenvals(A, EPS);
 
 	mymath::utilities::print(res);
 
-	mymath::dynamic_vector<test_T> ans = {107.973, -38.7335, 32.1177, 14.4424};
+	mymath::dynamic_vector<test_T> ans = { 107.97337296690272, -38.73345211444923, 32.11767309001762, 14.44240605752893 };
 
 	
 	std::cout << mymath::cube_norm(ans - res);
