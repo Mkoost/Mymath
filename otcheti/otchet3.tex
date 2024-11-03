@@ -1,0 +1,119 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{geometry}
+\usepackage{mathtools}
+\usepackage{verbatim}
+\usepackage{indentfirst}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{import}
+\usepackage{xifthen}
+\usepackage{pdfpages}
+\usepackage{transparent}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{hyperref}
+\usepackage{float}
+
+\newcommand{\norm}[1]{\lVert #1 \rVert}
+\newcommand{\abs}[1]{\lvert #1 \rvert}
+\usepackage[oglav,spisok,boldsect,eqwhole,figwhole,hyperref,hyperprint,remarks,greekit]{./style/fn2kursstyle}
+
+\graphicspath{{./style/}{./figures/}}
+
+\frenchspacing
+
+\title{Итерационные метды решения систем линейных алгебраических уравнений}
+\lab{2}
+\author{М.\,А.~Каган}
+\creator{И.\,А.~Яковлев}
+\supervisor{}
+\group{ФН2-51Б}
+\date{2024}
+
+\begin{document}
+	\maketitle
+	\tableofcontents
+	
+	\newpage
+	
+
+	
+	\section-{Контрольные вопросы}
+	
+	\begin{enumerate}
+	\item \textbf{-}
+	\vspace*{0.2cm}
+	
+	\textit{\textbf{Ответ:}}
+	
+	\item \textbf{Докажите, что ортогональное преобразование подобия сохраняет симметрию матрицы.}
+	\vspace*{0.2cm}
+	
+	\textit{\textbf{Ответ:}}
+	
+	Пусть $A$ --- симметричная матрица, т.е. $A = A^\text{T}$; $Q$ --- ортогональная матрица. По свойству ортогональных матриц:  $Q^{-1} = Q^\text{T}$. Рассмотрим ортогональное подобное преобразование :
+	\begin{gather}
+		B = Q A Q^{-1} = Q A Q^\text{T} \notag \\
+		B^\text{T} = (Q A Q^\text{T})^\text{T} = (A Q^\text{T})^\text{T} Q^\text{T} = Q A^\text{T} Q^\text{T} = Q A Q^\text{T} = B \notag
+	\end{gather}
+	
+	\item \textbf{-}
+	\vspace*{0.2cm}
+	
+	\textit{\textbf{Ответ:}}
+	
+	\item \textbf{Почему на практике матрицу $A$ подобными преобразованиями вращения приводят только к форме Хессенберга, но не к треугольному виду?}
+	
+	\vspace*{0.2cm}
+	
+	\textit{\textbf{Ответ:}}
+	\begin{enumerate}
+		\item Могут <<потеряться>> комплексные собственные числа, поскольку матрицы поворота состоят из действительных чисел;
+		\item QR-алгоритм сохраняет форму Хессенберга;
+	\end{enumerate}
+
+	
+	\item \textbf{-}
+	\vspace*{0.2cm}
+	
+	\textit{\textbf{Ответ:}}
+	
+	\item \textbf{Сойдется ли алгоритм обратных итераций, если в качестве начального приближения взять собственный вектор, соответствующий другому собственному значению? Что будет в этой ситуации в методе обратной итерации, использующем отношение Рэлея?}
+	
+	\vspace*{0.2cm}
+	
+	\textit{\textbf{Ответ:}}
+	
+	
+	\item \textbf{-}
+	\vspace*{0.2cm}
+	
+	\textit{\textbf{Ответ:}}
+	
+	\item \textbf{ Предложите возможные варианты условий перехода к алгоритму со сдвигами. Предложите алгоритм выбора величины сдвига.}
+	\vspace*{0.2cm}
+	
+	\textit{\textbf{Ответ:}}
+	
+	\item \textbf{-}
+	\vspace*{0.2cm}
+	
+	\textit{\textbf{Ответ:}}
+	
+	\item \textbf{Приведите примеры использования собственных чисел и собственных векторов в численных методах}
+	\vspace*{0.2cm}
+	
+	\textit{\textbf{Ответ:}}
+	\begin{enumerate}
+		\item Критерий сходимости стационарных итерационных методов решения СЛАУ (спектральный радиус меньше единицы); 
+		\item Оптимальные итерационные параметры для методов решения СЛАУ нередко требуют знания собственных значений матрицы (оптимальный параметр для метода простой итерации для симметричной, положительно определенной матрицы, для метода Ричардсона с Чебышевскими параметрами и т.д.);
+		\item Оценка обусловленности матрицы;
+		\item Решение системы линейных ОДУ с постоянными коэффициентами; 
+		\item Привидение к канонической виду квадратичной формы. 
+	\end{enumerate}
+	
+	\end{enumerate}
+\end{document}
