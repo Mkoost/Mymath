@@ -719,38 +719,65 @@ namespace mymath {
 	}
 
 	template<class T, typename tmp_T = double>
-	void francis_eigenvals(dynamic_matrix<T>& A, tmp_T eps=1-10) {
+	mymath::dynamic_vector<T> francis_eigenvals(const dynamic_matrix<T>& B, tmp_T eps = 1e-3) {
+
+		dynamic_matrix<T> A(B);
 
 		if (A.rows() != A.columns()) throw(std::invalid_argument("Sizes of matrix rows and columns must be equal"));
 
 		size_t n = A.rows();
-		for(int l = 0; l < 100; ++l)
-		for (size_t i = 0; i != n - 1; ++i) {
-			for (size_t j = i + 1; j != n; ++j) {
-
-				tmp_T c = A[i][i];
-				tmp_T s = A[j][i];
-				tmp_T l = std::sqrt((c * c) + (s * s));
-
-
-				for (size_t k = i; k != n; ++k) {
-					tmp_T tmp_1 = A[i][k];
-					tmp_T tmp_2 = A[j][k];
-					A[i][k] = (c * tmp_1 + s * tmp_2) / l;
-					A[j][k] = (-s * tmp_1 + c * tmp_2) / l;
-				}
-				A[j][i] = 0;
-				for (size_t k = i; k != n; ++k) {
-					tmp_T tmp_1 = A[k][i];
-					tmp_T tmp_2 = A[k][j];
-					A[k][i] = (c * tmp_1 + s * tmp_2) / l;
-					A[k][j] = (-s * tmp_1 + c * tmp_2) / l;
-				}
-
-			}
-		}
 
 		
+		mymath::dynamic_vector<T> res;
+		res.move(new T[n], n);
+		
+		for (int i = 0; i < n; ++i)
+			res[i] = A[i][i];
+
+		size_t iter = 0;
+		
+		tmp_T nrm = 0;
+		do {
+			nrm = 0;
+			tmp_T mx = 0;
+			size_t mi, mj;
+			for (size_t i = 0; i != n - 1; ++i)
+				for (size_t j = i + 1; j != n; ++j)
+					if (mx < std::fabs(A[j][i])) {
+						mx = std::fabs(A[j][i]);
+						mi = i;
+						mj = j;
+					}
+
+			size_t i = mi, j = mj;
+			tmp_T c = A[i][i];
+			tmp_T s = A[j][i];
+			tmp_T l = std::sqrt((c * c) + (s * s));
+
+			for (size_t k = 0; k != n; ++k) {
+				tmp_T tmp_1 = A[i][k];
+				tmp_T tmp_2 = A[j][k];
+				A[i][k] = (c * tmp_1 + s * tmp_2) / l;
+				A[j][k] = (-s * tmp_1 + c * tmp_2) / l;
+			}
+			A[j][i] = 0;
+
+			for (size_t k = 0; k != n; ++k) {
+				tmp_T tmp_1 = A[k][i];
+				tmp_T tmp_2 = A[k][j];
+				A[k][i] = (c * tmp_1 + s * tmp_2) / l;
+				A[k][j] = (-s * tmp_1 + c * tmp_2) / l;
+			}
+
+
+			for (int m = 0; m < n; ++m){
+				nrm += std::fabs(res[m] - A[m][m]);
+				res[m] = A[m][m];
+			}
+			++iter;
+		} while (nrm > eps);
+	std::cout << "iters: " << iter << "\n";
+	return res;
 	}
 #endif
 }
