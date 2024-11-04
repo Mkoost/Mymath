@@ -525,16 +525,15 @@ namespace mymath {
 				x[j] += (1 - omega) * start[j];
 			}
 
-			nrm2 = cube_norm(start);
 			for (size_t i = 0; i != n; ++i) {
 				nrm = std::max(std::fabs(start[i] - x[i]), nrm);
 
 				start[i] = x[i];
 				x[i] = b[i];
 			}
-		} while (nrm > eps * nrm2 + eps / 100 && nrm < 1e10 && lp < 200);
+		} while (nrm > eps && nrm < 1e10 && lp < 200);
 
-		std::cout << lp << "\n";
+		//std::cout << lp << "\n";
 		return start;
 
 	}
@@ -789,6 +788,36 @@ namespace mymath {
 	return res;
 	}
 
+	template<class T, typename tmp_T = double>
+	mymath::dynamic_vector<T> inverse_iteration(
+		const dynamic_matrix<T>& mat,
+		const dynamic_vector<T>& b,
+		tmp_T eps, tmp_T working_eps = 1e-10) {
+
+		if (mat.rows() != mat.columns()) throw(std::invalid_argument("Sizes of matrix rows and columns must be equal"));
+		if (eps < working_eps) working_eps = eps / 10;
+		dynamic_vector<T> x = b;
+		dynamic_matrix<T> A = mat;
+		size_t n = A.rows();
+		dynamic_vector<T> y;
+		tmp_T nrm;
+		size_t iter = 0;
+		x /= norm(x);
+		do{
+			tmp_T lambda = multiply(A, x) * x;
+			for (size_t i = 0; i != n; ++i) A[i][i] -= lambda;
+			
+			y = relax_iteration(A, x, working_eps);
+			
+			y /= norm(y);
+			//utilities::print(y);
+			nrm = cube_norm(x - y);
+			x.move(y);
+			for (size_t i = 0; i != n; ++i) A[i][i] += lambda;
+		} while (++iter != 200);
+	
+		return x;
+	}
 
 #endif
 }
