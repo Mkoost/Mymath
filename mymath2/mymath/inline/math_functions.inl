@@ -256,7 +256,7 @@ namespace mymath {
 	}
 
 	template<class T>
-	dynamic_vector<T> matrix_and_vector_multiply_standart(
+	dynamic_vector<T> vector_and_matrix_multiply_standart(
 		const dynamic_vector<T>& a,
 		const dynamic_matrix<T>& b) {
 
@@ -792,10 +792,9 @@ namespace mymath {
 	mymath::dynamic_vector<T> inverse_iteration(
 		const dynamic_matrix<T>& mat,
 		const dynamic_vector<T>& b,
-		tmp_T eps, tmp_T working_eps = 1e-10) {
+		tmp_T eps) {
 
 		if (mat.rows() != mat.columns()) throw(std::invalid_argument("Sizes of matrix rows and columns must be equal"));
-		if (eps < working_eps) working_eps = eps / 10;
 		dynamic_vector<T> x = b;
 		dynamic_matrix<T> A = mat;
 		size_t n = A.rows();
@@ -804,20 +803,45 @@ namespace mymath {
 		size_t iter = 0;
 		x /= norm(x);
 		do{
-			tmp_T lambda = multiply(A, x) * x;
+			tmp_T lambda = multiply(x, A) * x;
 			for (size_t i = 0; i != n; ++i) A[i][i] -= lambda;
 			
-			y = relax_iteration(A, x, working_eps);
+			y.move(qr_solve(A, x).vec[0]);
 			
 			y /= norm(y);
 			//utilities::print(y);
 			nrm = cube_norm(x - y);
 			x.move(y);
 			for (size_t i = 0; i != n; ++i) A[i][i] += lambda;
-		} while (++iter != 200);
+		} while (++iter != 100);
 	
 		return x;
 	}
 
+	template<class T, typename tmp_T = double>
+	mymath::dynamic_vector<T> inverse_iteration_fixed_lambda(
+		const dynamic_matrix<T>& mat,
+		const dynamic_vector<T>& b,
+		tmp_T eps, tmp_T lambda) {
+
+		if (mat.rows() != mat.columns()) throw(std::invalid_argument("Sizes of matrix rows and columns must be equal"));
+		dynamic_vector<T> x = b;
+		dynamic_matrix<T> A = mat;
+		size_t n = A.rows();
+		dynamic_vector<T> y;
+		tmp_T nrm;
+		size_t iter = 0;
+		x /= norm(x);
+		for (size_t i = 0; i != n; ++i) A[i][i] -= lambda;
+		do {
+			y.move(qr_solve(A, x).vec[0]);
+			y /= norm(y);
+			//utilities::print(y);
+			nrm = cube_norm(x - y);
+			x.move(y);
+		} while (++iter != 100);
+
+		return x;
+	}
 #endif
 }

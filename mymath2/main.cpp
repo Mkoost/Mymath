@@ -33,18 +33,20 @@ int main(){
 
 	mymath::utilities::print(res);
 
-	mymath::dynamic_vector<test_T> ans = { 107.97337296690272, -38.73345211444923, 32.11767309001762, 14.44240605752893 };
+	mymath::dynamic_vector<test_T> ans = { 4.01142, 2.98702, 2.00425, 0.997313 };
 
 	
 	std::cout << mymath::cube_norm(ans - res) << "\n\n\n";
 	
 	mymath::utilities::print(A);
 
-	mymath::dynamic_vector<test_T> x0 = { -0.87, 0.00, -0.25, -0.43 };
+	mymath::dynamic_vector<test_T> x0 = { 99, 0, 0.25, 9 };
 
-	x0 = mymath::inverse_iteration(A, x0, 1e-3);
+	x0 = mymath::inverse_iteration_fixed_lambda(A, x0, 1e-3, 1.0);
 	
 	mymath::utilities::print(x0);
+
+	std::cout << mymath::multiply(A, x0) * x0 << "\n\n";
 
 
 	
