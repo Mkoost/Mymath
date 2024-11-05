@@ -42,7 +42,7 @@ int main(){
 
 	mymath::dynamic_vector<test_T> x0 = { 99, 0, 0.25, 9 };
 
-	x0 = mymath::inverse_iteration_fixed_lambda(A, x0, 1e-3, 1.0);
+	x0 = mymath::inverse_iteration_fixed_lambda(A, x0, 1e-3, 1.9);
 	
 	mymath::utilities::print(x0);
 

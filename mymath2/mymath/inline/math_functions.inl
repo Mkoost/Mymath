@@ -802,18 +802,24 @@ namespace mymath {
 		tmp_T nrm;
 		size_t iter = 0;
 		x /= norm(x);
+		tmp_T lambda = multiply(x, A) * x;
 		do{
-			tmp_T lambda = multiply(x, A) * x;
+			
 			for (size_t i = 0; i != n; ++i) A[i][i] -= lambda;
 			
 			y.move(qr_solve(A, x).vec[0]);
-			
 			y /= norm(y);
-			//utilities::print(y);
-			nrm = cube_norm(x - y);
-			x.move(y);
+
 			for (size_t i = 0; i != n; ++i) A[i][i] += lambda;
-		} while (++iter != 100);
+			
+			tmp_T lam = multiply(y, A) * y;
+
+			nrm = fabs(lambda - lam);
+			++iter;
+			x.move(y);
+			lambda = lam;
+		} while (std::fabs(nrm) > eps);
+		std::cout << iter << "\n";
 	
 		return x;
 	}
@@ -825,22 +831,29 @@ namespace mymath {
 		tmp_T eps, tmp_T lambda) {
 
 		if (mat.rows() != mat.columns()) throw(std::invalid_argument("Sizes of matrix rows and columns must be equal"));
+
 		dynamic_vector<T> x = b;
 		dynamic_matrix<T> A = mat;
 		size_t n = A.rows();
 		dynamic_vector<T> y;
-		tmp_T nrm;
+		tmp_T lst_nrm = 0;
+		tmp_T nrm = 0;
 		size_t iter = 0;
 		x /= norm(x);
 		for (size_t i = 0; i != n; ++i) A[i][i] -= lambda;
 		do {
+			lst_nrm = nrm;
 			y.move(qr_solve(A, x).vec[0]);
 			y /= norm(y);
 			//utilities::print(y);
-			nrm = cube_norm(x - y);
+			nrm = x*y;
+			nrm *= nrm;
+			nrm = std::fabs(1 - nrm);
+			
+			++iter;
 			x.move(y);
-		} while (++iter != 100);
-
+		} while (nrm > eps && fabs(nrm - lst_nrm) > 1e-20);
+		std::cout << iter << "\n";
 		return x;
 	}
 #endif
