@@ -1,56 +1,115 @@
 #include "mymath/mymath.h"
+#include <list>
 #include <iostream>
-
 
 using test_T = double;
 constexpr const size_t SIZE = 4;
 constexpr const double EPS = 1e-5;
+using point = mymath::dvec2;
+using pvec = mymath::dynamic_vector<point>;
+constexpr const double PI = 3.1415926535;
+
+struct kaganvec {
+	std::list<test_T> fs;
+	std::list<point> ps;
+};
+
+void add_point(kaganvec& vec, point p) {
+	if (vec.ps.size()) {
+		vec.ps.push_back(p);
+		test_T f = 0;
+		auto psb = vec.ps.begin();
+		auto psi = vec.ps.begin();
+		++psi;
+		auto scnd = psi;
+		auto pse = vec.ps.end();
+		for (size_t i = 0; i != vec.ps.size()-1; ++i) {
+			test_T tmp = 1;
+			++psb;
+			while (psi != pse) {
+				if (psi != psb)
+					tmp *= (*psb)[0] - (*psi)[0];
+				++psi;
+			}
+			f += (*psb)[1] / tmp;
+			psi = scnd;
+		}
+		f -= (*vec.fs.rbegin());
+		f /= p[0] - (*vec.ps.begin())[0];
+		vec.fs.push_back(f);
+	}
+	else {
+		vec.fs.push_back(p[1]);
+		vec.ps.push_back(p);
+	}
+};
+
+test_T evaluate(kaganvec& vec, test_T x) {
+	auto ps = vec.ps.begin();
+	
+	test_T res = (*ps)[1];
+	test_T tmp = 1;
+	auto f = vec.fs.begin();
+	++f;
+	for (auto endf = vec.fs.end(); f != endf; ++f) {
+		tmp *= (x - (*ps)[0]);
+		res += tmp * (*f);
+		++ps;
+	}
+	return res;
+
+}
+
+
+test_T ex_f1(test_T x) {
+	return  x * x;
+}
+
+test_T ex_f2(test_T x) {
+	return 1 / (1 + x * x);
+}
+
+test_T ex_f3(test_T x) {
+	return 1 / std::atan(1 + 10 * x * x);
+}
+
+test_T ex_f4(test_T x) {
+	return std::pow((4 * x * x * x + 2 * x * x - 4 * x + 2), std::sqrt(2))
+		+ std::sin(1/(5 + x - x * x)) - 5;
+}
+
+
+void poly_fit_uniform(kaganvec& vec, size_t n, double l, double r) {
+	auto labs = r - l;
+	for (size_t i = 0; i != n - 1; ++i){
+		
+		add_point(vec, {l + i * labs / n, ex_f4(l + i * labs / n)});
+	}
+	add_point(vec, { r, ex_f4(r)});
+}
+
+void poly_fit_chebi(kaganvec& vec, size_t n, double l, double r) {
+	auto labs = r - l;
+	for (size_t i = 0; i != n + 1; ++i) {
+		test_T x = (l + r) / 2 + ((r - l) / 2 ) * std::cos((2 * i + 1) * PI / (2*(n + 1)));
+		add_point(vec, { x, ex_f4(x) });
+	}
+
+}
+
 
 
 int main(){
-	// First exemple {4.01142, 2.98702, 2.00425, 0.997313}
-	// Eigenvalues var 9 {107.97337296690272, -38.73345211444923, 32.11767309001762, 14.44240605752893}
-	//mymath::utilities::input_matrix_NxN("Test/lab 3/matrix.dat");
-	/*
-	{ 
-		{1.5, 0, -0.43, -0.75},
-		{0, 3, 0.87, -0.5}, 
-		{-0.43, 0.87, 2.9, -0.22}, 
-		{-0.75, -0.5, -0.22, 2.6}};
-	*/
+	kaganvec j;
 
-	mymath::dynamic_matrix<test_T> A = {
-		{1.5, 0, -0.43, -0.75},
-		{0, 3, 0.87, -0.5},
-		{-0.43, 0.87, 2.9, -0.22},
-		{-0.75, -0.5, -0.22, 2.6} };
-
-
-	mymath::utilities::print(A);
-	std::cout << "\n";
-
-	mymath::dynamic_vector<test_T> res = mymath::francis_eigenvals(A, EPS);
-
-	mymath::utilities::print(res);
-
-	mymath::dynamic_vector<test_T> ans = { 4.01142, 2.98702, 2.00425, 0.997313 };
-
+	size_t n = 100;
+	double l = -1, r = 1;
+	double labs = r - l;
+	poly_fit_chebi(j, 10, -1, 1);
 	
-	std::cout << mymath::cube_norm(ans - res) << "\n\n\n";
-	
-	mymath::utilities::print(A);
-
-	mymath::dynamic_vector<test_T> x0 = { 99, 0, 0.25, 9 };
-
-	x0 = mymath::inverse_iteration_fixed_lambda(A, x0, 1e-3, 1.9);
-	
-	mymath::utilities::print(x0);
-
-	std::cout << mymath::multiply(A, x0) * x0 << "\n\n";
-
-
-	
-	
+	for (size_t i = 0; i != n + 1; ++i) {
+		std::cout << '{' << l + i * labs / n << ", " << evaluate(j, l + i * labs / n) << "}, ";
+	}
 
 	return 0;
 }
