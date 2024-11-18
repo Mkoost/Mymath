@@ -78,14 +78,19 @@ test_T ex_f4(test_T x) {
 		+ std::sin(1/(5 + x - x * x)) - 5;
 }
 
+test_T ex_f5(test_T x) {
+	return std::pow(2.71828182846, x);
+}
+
+
 
 void poly_fit_uniform(kaganvec& vec, size_t n, double l, double r) {
 	auto labs = r - l;
 	for (size_t i = 0; i != n - 1; ++i){
 		
-		add_point(vec, {l + i * labs / n, ex_f4(l + i * labs / n)});
+		add_point(vec, {l + i * labs / n, ex_f5(l + i * labs / n)});
 	}
-	add_point(vec, { r, ex_f4(r)});
+	add_point(vec, { r, ex_f5(r)});
 }
 
 void poly_fit_chebi(kaganvec& vec, size_t n, double l, double r) {
@@ -105,11 +110,9 @@ int main(){
 	size_t n = 100;
 	double l = -1, r = 1;
 	double labs = r - l;
-	poly_fit_chebi(j, 10, -1, 1);
+	poly_fit_uniform(j, 11, 0, 2);
+	std::cout << 9.0250134994341209264717 - evaluate(j, 2.2);
 	
-	for (size_t i = 0; i != n + 1; ++i) {
-		std::cout << '{' << l + i * labs / n << ", " << evaluate(j, l + i * labs / n) << "}, ";
-	}
 
 	return 0;
 }
