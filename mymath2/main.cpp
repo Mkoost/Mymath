@@ -5,11 +5,12 @@
 
 using test_T = double;
 constexpr const size_t SIZE = 4;
-constexpr const double EPS = 1e-5;
+constexpr const double EPS = 1e-6;
+constexpr const double D_EPS = 1e-8;
 using point = mymath::dvec2;
 using pvec = mymath::dynamic_vector<point>;
 using dvec = std::vector<double>;
-constexpr const double PI = 3.1415926535;
+constexpr const double PI = 3.1415926535897932;
 
 struct kaganvec {
 	std::list<test_T> fs;	// functions?
@@ -64,15 +65,15 @@ test_T evaluate(kaganvec& vec, test_T x) {
 
 
 test_T ex_f1(test_T x) {
-	return  x * x;
+	return (x - 0.1) * (x - 0.22) * (x - 0.55) * (x - 0.7) * (x - 0.75);
 }
 
 test_T ex_f2(test_T x) {
-	return 1 / (1 + x * x);
+	return std::sqrt(x + 1) - 1;
 }
 
 test_T ex_f3(test_T x) {
-	return 1 / std::atan(1 + 10 * x * x);
+	return  35 * x * x * x - 67 * x * x - 3 * x + 3;
 }
 
 test_T ex_f4(test_T x) {
@@ -80,21 +81,29 @@ test_T ex_f4(test_T x) {
 		+ std::sin(1 / (5 + x - x * x)) - 5;
 }
 
+test_T func(test_T x) {
+	return  ex_f3(x);
+}
+
+test_T func1(test_T x, test_T y) {
+	return  x * x + y * y;
+}
+test_T func2(test_T x, test_T y) {
+	return  x * y + 4;
+}
 
 void poly_fit_uniform(kaganvec& vec, size_t n, double l, double r) {
 	auto labs = r - l;
 	for (size_t i = 0; i != n - 1; ++i) {
-
-		add_point(vec, { l + i * labs / n, ex_f4(l + i * labs / n) });
+		add_point(vec, { l + i * labs / n, func(l + i * labs / n) });
 	}
-	add_point(vec, { r, ex_f4(r) });
+	add_point(vec, { r, func(r) });
 }
 
 void poly_fit_chebi(kaganvec& vec, size_t n, double l, double r) {
-	auto labs = r - l;
-	for (size_t i = 0; i != n + 1; ++i) {
-		test_T x = (l + r) / 2 + ((r - l) / 2) * std::cos((2 * i + 1) * PI / (2 * (n + 1)));
-		add_point(vec, { x, ex_f4(x) });
+	for (size_t i = 1; i != n + 1; ++i) {
+		test_T x = (l + r) / 2 + ((r - l) / 2) * std::cos((2 * i - 1) * PI / (2 * (n)));
+		add_point(vec, { x, func(x) });
 	}
 
 }
@@ -270,30 +279,247 @@ dvec spline(const dvec& mesh, const dvec& F, const dvec& x) {
 	return spline_eval(x, n, mesh, a, b, c, d);
 }
 
+test_T err_norm(kaganvec& j, size_t n, double l, double r) {
+	test_T mx = 0;
+	test_T labs = r - l;
+	for (size_t i = 0; i < n + 1; ++i) {
+		mx = std::max(mx, std::fabs(func(l + i * labs / n) - evaluate(j, l + i * labs / n)));
+	}
+	return mx;
+}
+
+
+
+std::list<mymath::dvec2> roots_location(double a, double b, size_t n, double (*f)(double), double eps = EPS) {
+	double step = (b - a) / n;
+	std::list<mymath::dvec2> res;
+
+	mymath::dvec2 v{0, 0};
+	double f1 = f(a);
+	
+	if (f1 < 0)
+		v = { a, 0 };
+	else
+		v = { 0, a };
+
+	double x1 = a;
+
+	for (size_t i = 1; i != n + 1; ++i) {
+		
+		double x2 = a + step * i;
+		double f2 = f(x2);
+
+		if (f1 == 0){
+			if (f2 < 0){
+				v[0] = x2;
+				v[1] = x1;
+				res.push_back(v);
+			}
+			else{
+				v[1] = x2;
+				v[0] = x1;
+				res.push_back(v);
+			}
+		}
+		else if (f1 * f2 > 0) {
+			if (f1 < 0)
+				v[0] = x2;
+			else
+				v[1] = x2;
+			
+		}
+		else {
+			if (f1 < 0){
+				v[1] = x2;
+				res.push_back(v);
+			}
+			else{
+				v[0] = x2;
+				res.push_back(v);
+			}
+		}
+
+		f1 = f2;
+		x1 = x2;
+
+	}
+
+	return res;
+
+};
+
+
+
+double bisection_method_mp(double l, double r, double (*f)(double), double eps = EPS) {
+	double x = (r + l) / 2;
+	size_t iter = 0;
+	while (r - l > eps) {
+		++iter;
+		if (f(x) < 0) l = x;
+		else r = x;
+		x = (r + l) / 2;
+	}
+	std::cout << "iter: " << iter << ", ";
+	return x;
+}
+
+double bisection_method_pm(double l, double r, double (*f)(double), double eps = EPS) {
+	size_t iter = 0;
+	double x = (r + l) / 2;
+	while (r - l > eps) {
+		++iter;
+		if (f(x) < 0) r = x;
+		else l = x;
+
+		x = (r + l) / 2;
+	}
+	std::cout << "iter: " << iter << ", ";
+	return x;
+}
+
+double fderivative(double x, double (*f)(double), double eps = D_EPS) {
+	return (f(x + eps) - f(x)) / D_EPS;
+
+}
+
+mymath::dvec2 fderivative(double x, double y, double (*f)(double, double), double eps = D_EPS) {
+	return { (f(x + eps, y) - f(x, y)) / D_EPS,  (f(x, y + eps) - f(x, y)) / D_EPS };
+
+}
+
+
+double newton_method_mp(double l, double r, double (*f)(double), double eps = EPS) {
+	size_t iter = 0;
+	double lf = f(l), rf = f(r);
+	double x = (lf * r - rf * l) / (lf - rf);
+	double nrm = 0;
+	if (f(x) < 0)
+		l = x;
+	else
+		r = x;
+
+	do{
+		++iter;
+		double tmp = x - f(x) / fderivative(x, f);
+		if (tmp > r || tmp < l){
+			lf = f(l), rf = f(r);
+			tmp = (lf * r - rf * l) / (lf - rf);
+		}
+		nrm = std::fabs(x - tmp);
+		x = tmp;
+		if (f(x) < 0) l = x;
+		else r = x;
+
+	} while (nrm > eps);
+	std::cout << "iter: " << iter << ", ";
+	return x;
+}
+
+double newton_method_pm(double l, double r, double (*f)(double), double eps = EPS) {
+	size_t iter = 0;
+	double lf = f(l), rf = f(r);
+	double x = (lf * r - rf * l) / (lf - rf);
+	double nrm = 0;
+	if (f(x) < 0)
+		r = x;
+	else
+		l = x;
+	do {
+		++iter;
+		double tmp = x - f(x) / fderivative(x, f);
+		if (tmp > r || tmp < l) {
+			lf = f(l), rf = f(r);
+			tmp = (lf * r - rf * l) / (lf - rf);
+		}
+
+		nrm = std::fabs(x - tmp);
+		x = tmp;
+		if (f(x) < 0) r = x;
+		else l = x;
+
+	} while (nrm > eps);
+	std::cout << "iter: " << iter << ", ";
+	return x;
+}
+
+mymath::dynamic_vector<double> newton_method(mymath::dvec2 l, mymath::dvec2 r, double (*f1)(double, double), double (*f2)(double, double), double eps = EPS) {
+	mymath::dynamic_vector<double> x{(l[0] + r[0])/2, (l[1] + r[1]) / 2 };
+	mymath::dynamic_matrix<double> F(0, 2, 2);
+	double nrm = 0;
+	size_t iter = 0;
+	do {
+		auto f = fderivative(x[0], x[1], f1);
+		F[0][0] = f[0];
+		F[0][1] = f[1];
+		f = fderivative(x[0], x[1], f2);
+		F[1][0] = f[0];
+		F[1][1] = f[1];
+
+		mymath::utilities::print(F);
+		auto b = x;
+		b[0] = -f1(x[0], x[1]);
+		b[1] = -f2(x[0], x[1]);
+
+		b += mymath::multiply(F, x);
+
+		auto tmp = mymath::relax_iteration(F, b, eps);
+		nrm = mymath::cube_norm(x - tmp);
+		x.move(tmp);
+		++iter;
+	} while (nrm > eps && iter <= 30);
+
+	mymath::dynamic_vector<double> res{0, 0, 0};
+	res[0] = x[0];
+	res[1] = x[1];
+	
+	if (iter <= 30)
+		res[2] = nrm;
+	else
+		res[2] = -1;
+	return res;
+}
+
 
 int main() {
-	/*
-	kaganvec j;
 
-	size_t n = 100;
-	double l = -1, r = 1;
-	double labs = r - l;
-	poly_fit_chebi(j, 10, -1, 1);
+	auto roots = roots_location(0, 1, 2, func);
+	
+	std::cout << "BISECTION METHOD: \n";
+	for (auto i : roots) {
+		double x;
+		std::cout << i[0] << ", " << i[1] << ": ";
+		if (i[0] < i[1])
+			x = bisection_method_mp(i[0], i[1], func);
+		else
+			x = bisection_method_pm(i[1], i[0], func);
+		std::cout << "x = " << x << ", " << "|f(x)| = " << std::fabs(func(x)) << "\n";
 
-	for (size_t i = 0; i != n + 1; ++i) {
-		std::cout << '{' << l + i * labs / n << ", " << evaluate(j, l + i * labs / n) << "}, \n";
 	}
-	*/
-	std::cout << "добрый день.\n";
-	//dvec mesh = {-1, -0.5, 0, 0.5, 1};
-	dvec mesh = { -1, -0.5, 0, 0.5, 1 };
-	dvec x = { -1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1 };
-	dvec F = { 1, 2, 3, 4, 5 };
 
-	dvec sol = spline(mesh, F, x);
-	size_t n = sol.size();
-	for (size_t i = 0; i < n; i++) {
-		std::cout << "{ " << sol[i] << ", " << x[i] << " }\n";
+	std::cout << "\n\n";
+
+	std::cout << "NEWTON METHOD: \n";
+	for (auto i : roots){
+		double x;
+		std::cout << i[0] << ", " << i[1] << ": ";
+		if (i[0] < i[1])
+			x = newton_method_mp(i[0], i[1], func);
+		else
+			x = newton_method_pm(i[1], i[0], func);
+		std::cout << "x = " << x << ", " << "|f(x)| = " << std::fabs(func(x)) << "\n";
+
 	}
-	return 0;
+	std::cout << "\n\n";
+
+	std::cout << "NEWTON METHOD 2D: \n";
+	for(size_t i = 0; i != 4; ++i)
+		for (size_t j = 0; j != 4; ++j) {
+			auto res = newton_method({10.0/4 * j, 10.0 / 4 * (i+1)}, { 10.0 / 4 * (j+1), 10.0 / 4 * i }, func1, func2);
+			std::cout << "\n\n";
+			std::cout << i << " " << j << ": ";
+			mymath::utilities::print(res);
+		}
+	
+
+	return 0; 
 }
