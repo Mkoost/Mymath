@@ -81,12 +81,19 @@ test_T ex_f4(test_T x) {
 		+ std::sin(1 / (5 + x - x * x)) - 5;
 }
 
+test_T ex_f5(test_T x) {
+	return (x + 1) * (x + 1);
+}
+test_T ex_f6(test_T x) {
+	return x * x - 1;
+}
+
 test_T func(test_T x) {
 	return  ex_f3(x);
 }
 
 test_T func1(test_T x, test_T y) {
-	return  x * x + y * y;
+	return  x * x - y * y - 15;
 }
 test_T func2(test_T x, test_T y) {
 	return  x * y + 4;
@@ -442,8 +449,8 @@ double newton_method_pm(double l, double r, double (*f)(double), double eps = EP
 	return x;
 }
 
-mymath::dynamic_vector<double> newton_method(mymath::dvec2 l, mymath::dvec2 r, double (*f1)(double, double), double (*f2)(double, double), double eps = EPS) {
-	mymath::dynamic_vector<double> x{(l[0] + r[0])/2, (l[1] + r[1]) / 2 };
+mymath::dynamic_vector<double> newton_method(mymath::dvec2 st, double (*f1)(double, double), double (*f2)(double, double), double eps = EPS) {
+	mymath::dynamic_vector<double> x{st[0], st[1]};
 	mymath::dynamic_matrix<double> F(0, 2, 2);
 	double nrm = 0;
 	size_t iter = 0;
@@ -455,15 +462,27 @@ mymath::dynamic_vector<double> newton_method(mymath::dvec2 l, mymath::dvec2 r, d
 		F[1][0] = f[0];
 		F[1][1] = f[1];
 
-		mymath::utilities::print(F);
-		auto b = x;
+		double opred = F[0][0] * F[1][1] - F[0][1] * F[1][0];
+		
+		if (std::fabs(opred) <= 1e-15) {
+			iter = 30;
+			break;
+		}
+		std::swap(F[0][0], F[1][1]);
+		F[0][1] *= -1;
+		F[1][0] *= -1;
+		
+		F /= opred;
+
+		mymath::dynamic_vector<double> b = {0, 0};
 		b[0] = -f1(x[0], x[1]);
 		b[1] = -f2(x[0], x[1]);
 
-		b += mymath::multiply(F, x);
+		mymath::dynamic_vector<double> tmp = mymath::multiply(F, b);
+		
+		tmp += x;
 
-		auto tmp = mymath::relax_iteration(F, b, eps);
-		nrm = mymath::cube_norm(x - tmp);
+		nrm = std::min(std::fabs(func1(tmp[0], tmp[1])), std::fabs(func2(tmp[0], tmp[1])));
 		x.move(tmp);
 		++iter;
 	} while (nrm > eps && iter <= 30);
@@ -473,12 +492,21 @@ mymath::dynamic_vector<double> newton_method(mymath::dvec2 l, mymath::dvec2 r, d
 	res[1] = x[1];
 	
 	if (iter <= 30)
-		res[2] = nrm;
+		res[2] = iter;
 	else
-		res[2] = -1;
+		res[2] = 30;
 	return res;
 }
 
+test_T newton_method(test_T x, double (*f)(double), double eps = EPS) {
+	int iter = 0;
+	do {
+		iter++;
+		x = x - f(x) / fderivative(x, f);
+	} while (std::abs(f(x)) > eps);
+	std::cout << "iter: " << iter << ", ";
+	return x;
+}
 
 int main() {
 
@@ -512,14 +540,23 @@ int main() {
 	std::cout << "\n\n";
 
 	std::cout << "NEWTON METHOD 2D: \n";
-	for(size_t i = 0; i != 4; ++i)
-		for (size_t j = 0; j != 4; ++j) {
-			auto res = newton_method({10.0/4 * j, 10.0 / 4 * (i+1)}, { 10.0 / 4 * (j+1), 10.0 / 4 * i }, func1, func2);
+	size_t kkk = 8;
+	for (size_t i = 0; i != kkk; ++i)
+		for (size_t j = 0; j != kkk; ++j) {
+			auto res = newton_method({ 10.0 / kkk * j, 10.0 / kkk * i }, func1, func2);
 			std::cout << "\n\n";
 			std::cout << i << " " << j << ": ";
 			mymath::utilities::print(res);
+			std::cout << "f_i(x, y): " << func1(res[0], res[1]) << " " << func2(res[0], res[1]) << "\n\n";
 		}
+	std::cout << "\n\n\n\n";
+	//(x - 1) ^ 2
+	auto tmp = std::fabs(ex_f5(newton_method(-10.0, ex_f5)));
+	std::cout << "err: " << tmp << "\n";
 	
+	// x^2 - 1
+	tmp = std::fabs(ex_f6(newton_method(-10.0, ex_f6)));
+	std::cout << "err: " << tmp;
 
 	return 0; 
 }

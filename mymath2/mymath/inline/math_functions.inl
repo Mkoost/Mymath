@@ -285,7 +285,7 @@ namespace mymath {
 	data_structs::base_data_dynamic_vector_matrix<T, 1, 1> qr_solve(
 		const dynamic_matrix<T>&    A,
 		const dynamic_vector<T>&    b,
-		tmp_T                       zero = 0e-15) {
+		tmp_T                       zero = 0) {
 
 
 		if (A.rows() != A.columns()) throw(std::invalid_argument("Sizes of matrix rows and columns must be equal"));
