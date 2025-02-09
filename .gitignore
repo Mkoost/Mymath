@@ -34,4 +34,11 @@ otcheti/otchet5.pdf
 otcheti/otchet5.synctex.gz
 otcheti/otchet5.toc
 
+
+./otcheti 2/otchet1.log
+./otcheti 2/otchet1.aux
+./otcheti 2/otchet1.out
+./otcheti 2/otchet1.toc
+./otcheti 2/otchet1.synctex.gz
+./otcheti 2/otchet1.pdf
 style/

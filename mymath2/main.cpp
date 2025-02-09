@@ -82,7 +82,7 @@ test_T ex_f4(test_T x) {
 }
 
 test_T ex_f5(test_T x) {
-	return (x + 1) * (x + 1);
+	return (x - 1) * (x - 1) * (x - 1);
 }
 test_T ex_f6(test_T x) {
 	return x * x - 1;
@@ -494,7 +494,7 @@ mymath::dynamic_vector<double> newton_method(mymath::dvec2 st, double (*f1)(doub
 	if (iter <= 30)
 		res[2] = iter;
 	else
-		res[2] = 30;
+		res[2] = 31;
 	return res;
 }
 
@@ -551,7 +551,7 @@ int main() {
 		}
 	std::cout << "\n\n\n\n";
 	//(x - 1) ^ 2
-	auto tmp = std::fabs(ex_f5(newton_method(-10.0, ex_f5)));
+	auto tmp = std::fabs(ex_f5(newton_method(4.0, ex_f5)));
 	std::cout << "err: " << tmp << "\n";
 	
 	// x^2 - 1

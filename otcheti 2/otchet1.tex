@@ -1,0 +1,122 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{geometry}
+\usepackage{mathtools}
+\usepackage{verbatim}
+\usepackage{indentfirst}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{import}
+\usepackage{xifthen}
+\usepackage{pdfpages}
+\usepackage{transparent}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{hyperref}
+\usepackage{float}
+
+\newcommand{\norm}[1]{\lVert #1 \rVert}
+\newcommand{\abs}[1]{\lvert #1 \rvert}
+\usepackage[oglav,spisok,boldsect,eqwhole,figwhole,hyperref,hyperprint,remarks,greekit]{./style/fn2kursstyle}
+
+\graphicspath{{./style/}{./figures/}}
+
+\frenchspacing
+
+\title{ Методы численного решения обыкновенных дифференциальных уравнений}
+\lab{1}
+\author{М.\,А.~Каган}
+\creator{И.\,А.~Яковлев}
+\supervisor{}
+\group{ФН2-51Б}
+\date{2024}
+
+\begin{document}
+	\maketitle
+	\tableofcontents
+	
+	\newpage
+	
+	
+	
+	\section-{Контрольные вопросы}
+	
+	\begin{enumerate}
+		\item \textbf{Сформулируйте условия существования и единственности решения задачи Коши для обыкновенных дифференциальных уравнений. Выполнены ли они для вашего варианта задания?}
+		\vspace*{0.2cm}
+		
+		\textit{\textbf{Ответ:}}
+		
+		Рассмотрим векторную функцию $u: I \subseteq \mathbb{R} \rightarrow \mathbb{R}^n$, где $t \in \mathbb{R}$. Рассмотрим задачу Коши:
+
+		\[
+		\begin{cases}
+			u' = f(t, u) \\
+			u(t_0) = u_0 \\
+		\end{cases}
+		\]
+		\begin{enumerate}
+			\item Пусть функция  $f(t, u)$ определена и непрерывна в прямоугольнике:
+			\[
+			D = \Bigl\{ (t, u): |t - t_0| \le a; |u_i - u_{0, i}| \le b \Bigr\}.
+			\]
+			Выберем $M > 0$, такую что $|f_i| < M$.
+			\item Пусть функция $f(t, u)$ липшиц-непрерывна с постоянной $L$ по переменным $u_1, u_2, \ldots, u_n$:
+			\[
+			|f(t, u^{(1)}) - f(t, u^{(2)})| \le L\sum\limits^{n}_{i=1}|u^{(1)} - u^{(2)}|
+			\]
+		\end{enumerate}
+		
+		Тогда решение задачи Коши существует и единственно на участке
+		\[
+		|t - t_0| \le \min{a, b/M, 1/L}
+		\]
+		
+		\item \textbf{Что такое фазовое пространство? Что называют фазовой траекторией? Что называют интегральной кривой?}
+		\vspace*{0.2cm}
+		
+		\textit{\textbf{Ответ:}}
+		
+		\item \textbf{Каким порядком аппроксимации и точности обладают методы, рассмотренные в лабораторной работе?}
+		\vspace*{0.2cm}
+		
+		\textit{\textbf{Ответ:}}
+		
+		\begin{enumerate}
+			\item Метод Эйлера:
+			\item Метод Рунге -- Кутты:
+			\item Метод Адамса -- Башфорта:
+			\item Метод <<предикор -- корректор>>:
+		\end{enumerate}
+		
+		\item \textbf{Какие задачи называются жесткими? Какие методы предпочтительны для их решения? Какие из рассмотренных методов можно использовать для решения жестких задач?}
+		\vspace*{0.2cm}
+		
+		\textit{\textbf{Ответ:}}
+		
+		\item \textbf{Как найти $\vec{y}_1$, $\vec{y}_2$, $\vec{y}_3$, чтобы реализовать алгоритм прогноза и коррекции (1.18)?}
+		\vspace*{0.2cm}
+		
+		\textit{\textbf{Ответ:}}
+		
+		
+		
+		\item \textbf{ Какой из рассмотренных алгоритмов является менее трудоемким? Какой из рассмотренных алгоритмов позволяет достигнуть заданную точность, используя наибольший шаг интегрирования? Какие достоинства и недостатки рассмотренных алгоритмов вы можете указать?}
+		\vspace*{0.2cm}
+		
+		\textit{\textbf{Ответ:}}
+		
+		\item \textbf{Какие алгоритмы, помимо правила Рунге, можно использовать для автоматического выбора шага?}
+		\vspace*{0.2cm}
+		
+		\textit{\textbf{Ответ:}}
+	
+	\end{enumerate}
+
+	
+	
+	
+	
+\end{document}
