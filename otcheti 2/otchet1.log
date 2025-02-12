@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2024.2.17)  9 FEB 2025 22:31
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2024.2.17)  12 FEB 2025 17:16
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -941,7 +941,15 @@ LaTeX Font Warning: Font shape `T2A/cmr/bx/it' in size <18> not available
 \tf@toc=\write3
 \openout3 = `otchet1.toc'.
 
- [2] [3] [4] (otchet1.aux)
+ [2] [3] [4]
+<./figures/butcher_table_sp.png, id=65, 360.34625pt x 318.18875pt>
+File: ./figures/butcher_table_sp.png Graphic file (type png)
+<use ./figures/butcher_table_sp.png>
+Package pdftex.def Info: ./figures/butcher_table_sp.png  used on input line 154
+.
+(pdftex.def)             Requested size: 273.14922pt x 241.18993pt.
+ [5 <./figures/butcher_table_sp.png>]
+(otchet1.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
@@ -953,13 +961,13 @@ LaTeX Font Warning: Size substitutions with differences
 
  ) 
 Here is how much of TeX's memory you used:
- 16676 strings out of 474542
- 266973 string characters out of 5743030
- 1932978 words of memory out of 5000000
- 38572 multiletter control sequences out of 15000+600000
- 576600 words of font info for 77 fonts, out of 8000000 for 9000
+ 16711 strings out of 474542
+ 267726 string characters out of 5743030
+ 1933978 words of memory out of 5000000
+ 38597 multiletter control sequences out of 15000+600000
+ 578206 words of font info for 79 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 78i,8n,81p,543b,572s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 78i,10n,81p,543b,662s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\Миша\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\lab
 i1200.pk> <C:\Users\Миша\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi
 600\labx1200.pk> <C:\Users\Миша\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-
@@ -981,9 +989,9 @@ a/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/Ми
 ша/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msam10.p
 fb><C:/Users/Миша/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts
 /symbols/msbm10.pfb>
-Output written on otchet1.pdf (4 pages, 347780 bytes).
+Output written on otchet1.pdf (5 pages, 378952 bytes).
 PDF statistics:
- 391 PDF objects out of 1000 (max. 8388607)
- 20 named destinations out of 1000 (max. 500000)
- 34 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 411 PDF objects out of 1000 (max. 8388607)
+ 26 named destinations out of 1000 (max. 500000)
+ 39 words of extra memory for PDF output out of 10000 (max. 10000000)
 
