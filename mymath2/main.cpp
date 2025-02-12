@@ -524,60 +524,8 @@ test_T newton_method(test_T x, double (*f)(double), double eps = EPS) {
 }
 
 int main() {
-/*
-	auto roots = roots_location(0, 1, 2, func);
-	
-	std::cout << "BISECTION METHOD: \n";
-	for (auto i : roots) {
-		double x;
-		std::cout << i[0] << ", " << i[1] << ": ";
-		if (i[0] < i[1])
-			x = bisection_method_mp(i[0], i[1], func);
-		else
-			x = bisection_method_pm(i[1], i[0], func);
-		std::cout << "x = " << x << ", " << "|f(x)| = " << std::fabs(func(x)) << "\n";
 
-	}
 
-	std::cout << "\n\n";
 
-	std::cout << "NEWTON METHOD: \n";
-	for (auto i : roots){
-		double x;
-		std::cout << i[0] << ", " << i[1] << ": ";
-		if (i[0] < i[1])
-			x = newton_method_mp(i[0], i[1], func);
-		else
-			x = newton_method_pm(i[1], i[0], func);
-		std::cout << "x = " << x << ", " << "|f(x)| = " << std::fabs(func(x)) << "\n";
-
-	}
-	std::cout << "\n\n";
-*/
-	std::ofstream outfile("output.txt", std::ios::app);
-
-	std::cout << "NEWTON METHOD 2D: \n";
-	size_t kkk = 200;
-	for (size_t i = 0; i != kkk; ++i)
-		for (size_t j = 0; j != kkk; ++j) {
-			auto res = newton_method({ -10.0 + 20 / double(kkk-1) * j, -10.0 + 20 / double(kkk-1) * i }, func1, func2);
-			std::cout << "\n\n";
-			std::cout << i << " " << j << ": ";
-			mymath::utilities::print(res);
-			std::cout << "f_i(x, y): " << func1(res[0], res[1]) << " " << func2(res[0], res[1]) << "\n\n";
-			if (res[2] > 30 || res[2] == 1) res[2] = -1;
-			outfile << -10.0 + 20 / double(kkk-1) * j << " " << -10.0 + 20 / double(kkk-1) * i << " " << res[2] << "\n";
-		}
-	/*
-	std::cout << "\n\n\n\n";
-	//(x - 1) ^ 2
-	auto tmp = std::fabs(ex_f5(newton_method(4.0, ex_f5)));
-	std::cout << "err: " << tmp << "\n";
-	
-	// x^2 - 1
-	tmp = std::fabs(ex_f6(newton_method(-10.0, ex_f6)));
-	std::cout << "err: " << tmp;
-*/
-	outfile.close();
 	return 0; 
 }

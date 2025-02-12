@@ -131,5 +131,8 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="Test\lab 3\matrix.dat" />
+    <None Include="mymath\inline\math\algebra_dynamic.inl">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

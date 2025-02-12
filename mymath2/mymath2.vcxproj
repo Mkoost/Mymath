@@ -157,6 +157,7 @@
     <None Include="mymath\inline\dynamic_vector\external_operators_default.inl" />
     <None Include="mymath\inline\dynamic_vector\internal_classes_methods_default.inl" />
     <None Include="mymath\inline\dynamic_vector\math_functions_default.inl" />
+    <None Include="mymath\inline\math\algebra_dynamic.inl" />
     <None Include="mymath\inline\math_functions.inl" />
     <None Include="mymath\inline\matrix\class_methods_default.inl" />
     <None Include="mymath\inline\matrix\external_operators_default.inl" />
