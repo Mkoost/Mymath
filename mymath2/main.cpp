@@ -12,7 +12,7 @@ using point = mymath::dvec2;
 using pvec = mymath::dynamic_vector<point>;
 using dvec = std::vector<double>;
 constexpr const double PI = 3.1415926535897932;
-
+using eqSys = mymath::dynamic_vector<double(*)(double, mymath::dynamic_vector<double>)>;
 struct kaganvec {
 	std::list<test_T> fs;	// functions?
 	std::list<point> ps;	// points?
@@ -372,160 +372,13 @@ std::list<mymath::dvec2> roots_location(double a, double b, size_t n, double (*f
 
 
 
-double bisection_method_mp(double l, double r, double (*f)(double), double eps = EPS) {
-	double x = (r + l) / 2;
-	size_t iter = 0;
-	while (r - l > eps) {
-		++iter;
-		if (f(x) < 0) l = x;
-		else r = x;
-		x = (r + l) / 2;
-	}
-	std::cout << "iter: " << iter << ", ";
-	return x;
-}
-
-double bisection_method_pm(double l, double r, double (*f)(double), double eps = EPS) {
-	size_t iter = 0;
-	double x = (r + l) / 2;
-	while (r - l > eps) {
-		++iter;
-		if (f(x) < 0) r = x;
-		else l = x;
-
-		x = (r + l) / 2;
-	}
-	std::cout << "iter: " << iter << ", ";
-	return x;
-}
-
-double fderivative(double x, double (*f)(double), double eps = D_EPS) {
-	return (f(x + eps) - f(x)) / D_EPS;
-
-}
-
-mymath::dvec2 fderivative(double x, double y, double (*f)(double, double), double eps = D_EPS) {
-	return { (f(x + eps, y) - f(x, y)) / D_EPS,  (f(x, y + eps) - f(x, y)) / D_EPS };
-
-}
-
-
-double newton_method_mp(double l, double r, double (*f)(double), double eps = EPS) {
-	size_t iter = 0;
-	double lf = f(l), rf = f(r);
-	double x = (lf * r - rf * l) / (lf - rf);
-	double nrm = 0;
-	if (f(x) < 0)
-		l = x;
-	else
-		r = x;
-
-	do{
-		++iter;
-		double tmp = x - f(x) / fderivative(x, f);
-		if (tmp > r || tmp < l){
-			lf = f(l), rf = f(r);
-			tmp = (lf * r - rf * l) / (lf - rf);
-		}
-		nrm = std::fabs(x - tmp);
-		x = tmp;
-		if (f(x) < 0) l = x;
-		else r = x;
-
-	} while (nrm > eps);
-	std::cout << "iter: " << iter << ", ";
-	return x;
-}
-
-double newton_method_pm(double l, double r, double (*f)(double), double eps = EPS) {
-	size_t iter = 0;
-	double lf = f(l), rf = f(r);
-	double x = (lf * r - rf * l) / (lf - rf);
-	double nrm = 0;
-	if (f(x) < 0)
-		r = x;
-	else
-		l = x;
-	do {
-		++iter;
-		double tmp = x - f(x) / fderivative(x, f);
-		if (tmp > r || tmp < l) {
-			lf = f(l), rf = f(r);
-			tmp = (lf * r - rf * l) / (lf - rf);
-		}
-
-		nrm = std::fabs(x - tmp);
-		x = tmp;
-		if (f(x) < 0) r = x;
-		else l = x;
-
-	} while (nrm > eps);
-	std::cout << "iter: " << iter << ", ";
-	return x;
-}
-
-mymath::dynamic_vector<double> newton_method(mymath::dvec2 st, double (*f1)(double, double), double (*f2)(double, double), double eps = EPS) {
-	mymath::dynamic_vector<double> x{st[0], st[1]};
-	mymath::dynamic_matrix<double> F(0, 2, 2);
-	double nrm = 0;
-	size_t iter = 0;
-	do {
-		auto f = fderivative(x[0], x[1], f1);
-		F[0][0] = f[0];
-		F[0][1] = f[1];
-		f = fderivative(x[0], x[1], f2);
-		F[1][0] = f[0];
-		F[1][1] = f[1];
-
-		double opred = F[0][0] * F[1][1] - F[0][1] * F[1][0];
-		
-		if (std::fabs(opred) <= 1e-15) {
-			iter = 30;
-			break;
-		}
-		std::swap(F[0][0], F[1][1]);
-		F[0][1] *= -1;
-		F[1][0] *= -1;
-		
-		F /= opred;
-
-		mymath::dynamic_vector<double> b = {0, 0};
-		b[0] = -f1(x[0], x[1]);
-		b[1] = -f2(x[0], x[1]);
-
-		mymath::dynamic_vector<double> tmp = mymath::multiply(F, b);
-		
-		tmp += x;
-
-		nrm = std::min(std::fabs(func1(tmp[0], tmp[1])), std::fabs(func2(tmp[0], tmp[1])));
-		x.move(tmp);
-		++iter;
-	} while (nrm > eps && iter <= 30);
-
-	mymath::dynamic_vector<double> res{0, 0, 0};
-	res[0] = x[0];
-	res[1] = x[1];
-	
-	if (iter <= 30)
-		res[2] = iter;
-	else
-		res[2] = 31;
-	return res;
-}
-
-test_T newton_method(test_T x, double (*f)(double), double eps = EPS) {
-	int iter = 0;
-	do {
-		iter++;
-		x = x - f(x) / fderivative(x, f);
-	} while (std::abs(f(x)) > eps);
-	std::cout << "iter: " << iter << ", ";
-	return x;
-}
 
 int main() {
-
-
-
+	eqSys a(nullptr, 2);
+	a[0] = [](double t, mymath::dynamic_vector<double> x) -> double {return 2 * x[0] + x[1] * x[1] - 1; };
+	a[1] = [](double t, mymath::dynamic_vector<double> x) -> double {return 6 * x[0] - x[1] * x[1] + 1; };
+	mymath::dynamic_vector<double> init = { 0.0, 0.0 };
+	auto res = mymath::runge_kutta_4(0.0, 1.0, init, a, 1e-3);
+	std::cout << res.size();
 	return 0; 
 }

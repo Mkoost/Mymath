@@ -131,7 +131,13 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="Test\lab 3\matrix.dat" />
-    <None Include="mymath\inline\math\algebra_dynamic.inl">
+    <None Include="mymath\inline\math\dynamic_algebra.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="mymath\inline\math\dynamic_eq_sys.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="mymath\inline\math\dynamic_de_solvers.inl">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>
