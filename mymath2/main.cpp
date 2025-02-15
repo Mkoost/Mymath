@@ -372,7 +372,7 @@ std::list<mymath::dvec2> roots_location(double a, double b, size_t n, double (*f
 
 
 
-
+/*
 int main() {
 	eqSys a(nullptr, 2);
 	a[0] = [](double t, mymath::dynamic_vector<double> x) -> double {return 2 * x[0] + x[1] * x[1] - 1; };
@@ -381,4 +381,21 @@ int main() {
 	auto res = mymath::runge_kutta_4(0.0, 1.0, init, a, 1e-3);
 	std::cout << res.size();
 	return 0; 
+}
+*/
+
+int main() {
+	eqSys fl(nullptr, 2);
+	fl[0] = [](double t, mymath::dynamic_vector<double> x) -> double {return x[0] * x[0] - x[1] * x[1] - 15; };
+	fl[1] = [](double t, mymath::dynamic_vector<double> x) -> double {return x[0] * x[1] + 4; };
+	eqSys fr(nullptr, 2);
+	fr[0] = [](double t, mymath::dynamic_vector<double> x) -> double {return 0; };
+	fr[1] = fr[0];
+
+	mymath::dynamic_vector<double> st_p = { -3, 1.5 };
+
+
+	auto x =  mymath::eq_system_solve(0.0, st_p, fl, fr);
+
+	std::cout << x[0] << " " << x[1] << '\n';
 }
