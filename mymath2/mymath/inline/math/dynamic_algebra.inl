@@ -5,6 +5,7 @@
 #include "../dynamic_matrix.inl.h"
 #include "../dynamic_vector.inl.h"
 #include "../../details/__expr.inl"
+#include "../../headers/data_structs.h"
 #include "../../settings.h"
 #include <cmath>
 
@@ -129,7 +130,7 @@ namespace mymath{
 	}
 
 
-	// НИКОМУ НЕ ПОКАЗЫВАТЬ !!!!!!!!!!!!!!!!! ИНСУЛЬТ ГАРАНТИРОВАН !!!!!!!!!!!!!
+	// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ !!!!!!!!!!!!!!!!! пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ !!!!!!!!!!!!!
 	template<class T, typename tmp_T = double>
 	data_structs::base_data_dynamic_vector_matrix<T, 1, 1> gauss_solve(
 		dynamic_matrix<T>& A,
@@ -145,7 +146,7 @@ namespace mymath{
 		dynamic_matrix<T> triag(A);
 		dynamic_matrix<T>* A_ptr = &triag;
 
-		// вектор перестановок
+		// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		dynamic_vector<size_t> rows;
 
 		rows.move(new size_t[n], n);
@@ -163,7 +164,7 @@ namespace mymath{
 		for (size_t i = 0; i < n - 1; ++i) {
 
 			main_elem_ind = i;
-			// выбор главного элемента
+			// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 			for (size_t ii = i; ii < n; ++ii) {
 				if ((*A_ptr)[rows[ii]][i] > (*A_ptr)[rows[i]][i]) {
 					main_elem_ind = ii;
@@ -171,26 +172,26 @@ namespace mymath{
 			}
 			std::swap(rows[i], rows[main_elem_ind]);
 
-			// правую часть поделить
+			// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 			(*b_ptr)[rows[i]] /= (*A_ptr)[rows[i]][i];
 
-			// делим всю строку на главный элемент строки
+			// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 			for (size_t j = i + 1; j < n; ++j) {
 				(*A_ptr)[rows[i]][j] /= (*A_ptr)[rows[i]][i];
 			}
 
-			//вычитание по столбцу из вектора b
+			//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ b
 			for (size_t ii = i + 1; ii < n; ++ii) {
 				(*b_ptr)[rows[ii]] -= (*A_ptr)[rows[ii]][i] * (*b_ptr)[rows[i]];
 
-				// вычет из строки от элемента aii 
+				// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ aii 
 				for (size_t jj = i + 1; jj < n; ++jj) {
 					(*A_ptr)[rows[ii]][jj] -= (*A_ptr)[rows[ii]][i] * ((*A_ptr)[rows[i]][jj]);
 				}
 			}
 		}
 
-		// последний элемент b поделить
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ b пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		(*b_ptr)[rows[n - 1]] /= (*A_ptr)[rows[n - 1]][n - 1];
 
 		for (size_t i = 0; i != n; ++i)
@@ -198,7 +199,7 @@ namespace mymath{
 				throw(std::invalid_argument("The matrix is singular"));
 			}
 
-		// обратный ход
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
 		x[rows[n - 1]] = (*b_ptr)[rows[n - 1]];
 		for (size_t i = n - 1; i > 0; --i) {
 			x[rows[i - 1]] = (*b_ptr)[rows[i - 1]];
