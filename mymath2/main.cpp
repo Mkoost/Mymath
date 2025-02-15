@@ -13,7 +13,7 @@ using pvec = mymath::dynamic_vector<point>;
 using dvec = std::vector<double>;
 using pddvec = mymath::dynamic_vector<double>;
 constexpr const double PI = 3.1415926535897932;
-using eqSys = mymath::dynamic_vector<double(*)(double, mymath::dynamic_vector<double>)>;
+using eqSys = mymath::dynamic_vector<double(*)(const double, const mymath::dynamic_vector<double>)>;
 struct kaganvec {
 	std::list<test_T> fs;	// functions?
 	std::list<point> ps;	// points?
@@ -399,33 +399,28 @@ std::list<pddvec> explicit_Euler(pddvec grid, pddvec y0, pddvec (*func)(double t
 	return res;
 }
 
-/*
+
 int main() {
 	eqSys a(nullptr, 2); // equation system, functions from right parts
 	a[0] = [](double t, mymath::dynamic_vector<double> x) -> double {return 2 * x[0] + x[1] * x[1] - 1; }; // lambda function, in round paranthesis args
 	a[1] = [](double t, mymath::dynamic_vector<double> x) -> double {return 6 * x[0] - x[1] * x[1] + 1; };
 	mymath::dynamic_vector<double> init = { 0.0, 0.0 };
-	auto res = mymath::runge_kutta_4(0.0, 1.0, init, a, 1e-3);
-	std::cout << res.size();
+	auto res = mymath::symmetrical_scheme(0.0, 1.0, init, a, 1e-3);
+	std::cout << res.size() << '\n';
 
-
-	// variant 22, explicit Euler method
-	size_t n = 10000;
-	double t0 = 0;
-	double T = 25;
-	pddvec grid(0, n);
-	for (size_t i = 0; i < n; ++i) {
-		grid[i] = t0 + (T - t0) / n * i;
+	for (auto i : res) {
+		std::cout << "{";
+		for (size_t j = 0; j < i.size() - 1; ++j) {
+			std::cout << i[j] << ", ";
+		}
+		std::cout << i[i.size() - 1] << "}, " << " ";
 	}
-	mymath::dynamic_vector<double> y0 = { 0.1, 0.1 };
-	explicit_Euler(grid, y0, f22);
-	std::cout << "\n\nExplicit Euler\nf0: " << explicit_Euler(grid, y0, f22).back()[1] << std::endl;
 
 	return 0; 
 }
-*/
 
-int main() {
+
+/*int main() {
 	eqSys fl(nullptr, 2);
 	fl[0] = [](double t, mymath::dynamic_vector<double> x) -> double {return x[0] * x[0] - x[1] * x[1] - 15; };
 	fl[1] = [](double t, mymath::dynamic_vector<double> x) -> double {return x[0] * x[1] + 4; };
@@ -436,7 +431,7 @@ int main() {
 	mymath::dynamic_vector<double> st_p = { -3, 1.5 };
 
 
-	auto x =  mymath::eq_system_solve(0.0, st_p, fl, fr);
+	auto x =  mymath::eq_system_solve(0.0, st_p, fl);
 
 	std::cout << x[0] << " " << x[1] << '\n';
-}
+}*/

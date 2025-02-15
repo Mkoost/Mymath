@@ -11,76 +11,15 @@
 
 namespace mymath {
 
-	//                ^ v_3
-	//                |
-	//                |
-	//                |
-	//                |
-	//                |
-	//             P  0----------------> v_2
-	//               /
-	//              /
-	//             /
-	//            v
-	//            v_1
-	//                                                       
-	// localization matrix: (v_1, v_2, v_3), where is v = (x1, x2, x3)^T
-	// localization point: is P 
-	//
-	// D1 Example:
-	// 
-	//          y
-	//			^
-	//          |                              /
-	//          |                             |          
-	//          |                            /
-	//          |                          /
-	//          |                        --
-	//          |				        /
-	//          |                     --
-	//          |                    /
-	//          |                 ---
-	//          |             ----
-	//          |   P        /           v_1
-	//          0---0-------0------------>----------> x
-	//          |  x_1     /            x_2
-	//          |      ----
-	//          |   ---   
-	//          |  /
-	//          |--
-	//        / |
-	//      --   |
-	//     /     |
-	//
-	//	P = x_1
-	//	v1 = x_2 - x_1
-	//
-	// D2 Example:
-	//
-	//          y
-	//			^
-	//          |                    v_2        /
-	//          |                     ^        |          
-	//          |                    /        /
-	//          |                   /       /
-	//          |         ---------/-----0---------
-	//          |				  /     /
-	//     y_1  0             p  0    --
-	//          |                 \  /
-	//          |                 -\-
-	//          |             ----  \
-	//          |                    > v_1  
-	//          0---------------0------------------> x
-	//                         x_1
-	// P = (x_1, y_1)
-	// Loc = (v_1, v_2)       
 
 
+	namespace{
 		template<class T, class U>
-		void make_jacobi(dynamic_matrix<T>& mat, dynamic_vector<T>& p, T t, const dynamic_vector<T>& x, const dynamic_vector<U>& fl, const dynamic_vector<U>& fr, double eps) {
-			size_t n = fl.size();
+		void __make_jacobi(dynamic_matrix<T>& mat, dynamic_vector<T>& p, T t, const dynamic_vector<T>& x, U f, double eps) {
+			size_t n = f.size();
+			f[0];
 			for (size_t i = 0; i < n; ++i){
-				p[i] = fl[i](t, x) - fr[i](t, x);
+				p[i] = f[i](t, x);
 			}
 
 			dynamic_vector<T> tmp = x;
@@ -88,36 +27,35 @@ namespace mymath {
 			for(size_t i = 0; i < n; ++i)
 				for (size_t j = 0; j < n; ++j) {
 					tmp[j] = x[j] + eps;
-					mat[i][j] = (fl[i](t, tmp) - fr[i](t, tmp) - p[i]) / eps;
+					mat[i][j] = (f[i](t, tmp) - p[i]) / eps;
 					tmp[j] = x[j];
 				}
 
 		}
-
+	}
 
 	template<class T, class U>
-	dynamic_vector<T> eq_system_solve(T t, const dynamic_vector<T>& loc_p, const dynamic_vector<U>& fl, const dynamic_vector<U>& fr, double eps = 1e-8, size_t max_iter = 2) {
-		
-		if ((fl.size() != fr.size()))
-			throw(std::invalid_argument("Number of left and right equations are not equal"));
+	dynamic_vector<T> eq_system_solve(T t, const dynamic_vector<T>& loc_p, U& f, double eps = 1e-8, size_t max_iter = 2) {
 
 		dynamic_vector<T> x = loc_p;
-		dynamic_matrix<T> jacobi(0, fl.size(), fl.size());
-		dynamic_vector<T> v(0, fl.size());
+		dynamic_vector<T> tmpp = loc_p;
+		dynamic_matrix<T> jacobi(0, f.size(), f.size());
+		dynamic_vector<T> v(0, f.size());
 		double nrm = 1000;
+
 		size_t iter = 0;
 
 		do {
 			++iter;
-			make_jacobi(jacobi, v, t, x, fl, fr, eps / 10);
+			__make_jacobi(jacobi, v, t, x, f, eps / 10);
 			
-			
+			tmpp = x;
 			v *= -1;
 			v += multiply(jacobi, x);
 
 			x = relax_iteration(jacobi, v, std::max( 1e-11, eps / 10), 1.0, x);
-			
-
+			tmpp -= x;
+			nrm = mymath::cube_norm(tmpp);
 		}while(eps < nrm && iter <= max_iter);
 		return x;
 	}

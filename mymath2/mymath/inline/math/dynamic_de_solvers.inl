@@ -11,8 +11,51 @@
 
 namespace mymath {
 	
+
+	namespace{
+		template<class T, class U>
+		struct __special_de_func_for_explict_euler {
+			size_t state = 0;
+			T tau = 0;
+			U* f = nullptr;
+			dynamic_vector<T>* yi = nullptr;
+
+			__special_de_func_for_explict_euler<T, U>& operator[](size_t st) {
+				state = st;
+				return *this;
+			}
+	
+
+			T operator() (const T& t, const mymath::dynamic_vector<T>& y) {
+				return y[state] - (*yi)[state] - tau * (*f)[state](t, y);
+			}
+
+			size_t size() const { return yi->size(); };
+		};
+
+		template<class T, class U>
+		struct __special_de_func_for_symmetrical_scheme {
+			size_t state = 0;
+			T tau = 0;
+			U* f = nullptr;
+			dynamic_vector<T>* yi = nullptr;
+			dynamic_vector<T>* fi = nullptr;
+			__special_de_func_for_symmetrical_scheme<T, U>& operator[](size_t st) {
+				state = st;
+				return *this;
+			}
+
+
+			T operator() (const T& t, const mymath::dynamic_vector<T>& y) {
+				return 2*(y[state] - (*yi)[state]) - tau * ((*f)[state](t, y) + (*fi)[state]);
+			}
+
+			size_t size() const { return yi->size(); };
+		};
+	}
+
 	template<class T, class U>
-	std::list<mymath::dynamic_vector<T>> runge_kutta_4(T bt, T et, const dynamic_vector<T>& init, const dynamic_vector<U>& f, T step, T stepmin = 1e-13, double eps=1e-8, size_t iter=4294967296) {
+	std::list<mymath::dynamic_vector<T>> runge_kutta_4(T bt, T et, const dynamic_vector<T>& init, const U& f, T step, T stepmin = 1e-13, double eps=1e-8, size_t iter=4294967296) {
 		if (init.size() != f.size())
 			throw(std::invalid_argument("Init vector size and f size are different"));
 		if (bt > et)
@@ -66,6 +109,145 @@ namespace mymath {
 
 	}
 
+	template<class T, class U>
+	std::list<mymath::dynamic_vector<T>> explicit_euler(T bt, T et, const dynamic_vector<T>& init, const U& f, T step, T stepmin = 1e-13, double eps = 1e-8, size_t iter = 4294967296) {
+		if (init.size() != f.size())
+			throw(std::invalid_argument("Init vector size and f size are different"));
+		if (bt > et)
+			throw(std::invalid_argument("Begin time is greater then end time"));
 
+		const size_t n = init.size();
 
+		std::list<dynamic_vector<T>> res;
+		dynamic_vector<T> yn(init);
+		res.push_back(yn);
+
+		dynamic_vector<T> k(0, n);
+		dynamic_vector<T> tmp(0, n);
+		do {
+			for (size_t i = 0; i < n; ++i)
+				k[i] = f[i](bt, yn);
+
+			bt += step;
+			yn += step * k;
+
+			res.push_back(yn);
+			if (et - bt < step) step = et - bt;
+		} while (bt <= et && step > stepmin);
+		std::cout << bt << '\n';
+		return res;
+
+	}
+
+	template<class T, class U>
+	std::list<mymath::dynamic_vector<T>> implict_euler(T bt, T et, const dynamic_vector<T>& init, U& f, T step, T stepmin = 1e-13, double eps = 1e-8, size_t iter = 4294967296) {
+		if (init.size() != f.size())
+			throw(std::invalid_argument("Init vector size and f size are different"));
+		if (bt > et)
+			throw(std::invalid_argument("Begin time is greater then end time"));
+
+		const size_t n = init.size();
+
+		std::list<dynamic_vector<T>> res;
+		dynamic_vector<T> yn(init);
+		res.push_back(yn);
+
+		__special_de_func_for_explict_euler<T, U> method;
+		method.tau = step;
+		method.f = &f;
+		method.yi = &yn;
+		do {
+			yn = eq_system_solve(bt, yn, method, eps);
+			bt += step;
+
+			res.push_back(yn);
+			if (et - bt < step) step = et - bt;
+		} while (bt <= et && step > stepmin);
+		return res;
+
+	}
+
+	template<class T, class U>
+	std::list<mymath::dynamic_vector<T>> symmetrical_scheme(T bt, T et, const dynamic_vector<T>& init, U& f, T ststep, T stepmin = 1e-13, double eps = 1e-8, size_t iter = 4294967296) {
+		if (init.size() != f.size())
+			throw(std::invalid_argument("Init vector size and f size are different"));
+		if (bt > et)
+			throw(std::invalid_argument("Begin time is greater then end time"));
+
+		T step = ststep;
+		const size_t n = init.size();
+
+		std::list<dynamic_vector<T>> res;
+		dynamic_vector<T> yn(init);
+		dynamic_vector<T> fn(0, yn.size());
+
+		res.push_back(yn);
+
+		__special_de_func_for_symmetrical_scheme<T, U> method;
+		method.tau = step;
+		method.f = &f;
+		method.yi = &yn;
+		method.fi = &fn;
+
+		do {
+			for (size_t i = 0; i < yn.size(); ++i)
+				fn[i] = f[i](bt, yn);
+			yn = eq_system_solve(bt, yn, method, eps);
+			bt += step;
+
+			res.push_back(yn);
+			if (et - bt < step) step = et - bt;
+		} while (bt <= et && step > stepmin);
+		return res;
+
+	}
+
+	/*template<class T, class U>
+	std::list<mymath::dynamic_vector<T>> predictor_corrector(T bt, T et, const dynamic_vector<T>& init, U& f, T ststep, T stepmin = 1e-13, double eps = 1e-8, size_t iter = 4294967296) {
+		if (init.size() != f.size())
+			throw(std::invalid_argument("Init vector size and f size are different"));
+		if (bt > et)
+			throw(std::invalid_argument("Begin time is greater then end time"));
+
+		T step = ststep;
+		dynamic_vector<T> yn_corr(init);
+		dynamic_vector<T> yn_pred(init);
+		dynamic_vector<T> fn_pred(init);
+		std::list<dynamic_vector<T>> res = runge_kutta_4(bt, bt + ststep / 10, init, f, ststep / 40);
+		
+
+		auto bg = res.begin();
+		auto fi = bg;
+		end += 3;
+
+		T pred_step = ststep / 10;
+		do {
+			dynamic_vector<T>::fill(yn_pred, 0);
+			fi = bg;
+
+			yn_pred += 55 * (*fi);
+			++fi;
+			yn_pred -= 59 * (*fi);
+			++fi;
+			yn_pred += 37 * (*fi);
+			++fi;
+			yn_pred -= 9 * (*fi);
+			
+			yn_pred /= 24;
+			yn_pred *= pred_step;
+			yn_pred += yn_corr;
+			++bg;
+			
+			fn_pred()
+
+			fi = bg;
+
+			bt += step;
+			pred_step = step;
+			res.push_back(yn);
+			if (et - bt < step) step = et - bt;
+		} while (bt <= et && step > stepmin);
+		return res;
+
+	}*/
 }
