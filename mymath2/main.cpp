@@ -11,6 +11,7 @@ constexpr const double D_EPS = 1e-8;
 using point = mymath::dvec2;
 using pvec = mymath::dynamic_vector<point>;
 using dvec = std::vector<double>;
+using pddvec = mymath::dynamic_vector<double>;
 constexpr const double PI = 3.1415926535897932;
 using eqSys = mymath::dynamic_vector<double(*)(double, mymath::dynamic_vector<double>)>;
 struct kaganvec {
@@ -370,16 +371,56 @@ std::list<mymath::dvec2> roots_location(double a, double b, size_t n, double (*f
 
 };
 
+pddvec f22(double tn, pddvec yn) {
+	double b = -1;
+	double delta = 0.02;
+	double a = 2.5;
+	double F = 0.5;
+	double nu = std::sqrt(a) + 0.15; 
+	double dy1 = yn[1];
+	double dy2 = -2 * delta * yn[1] - a * yn[0] - b * std::pow(yn[0], 3) + F * std::cos(nu * tn);
 
+	mymath::dynamic_vector<double> res = {0, 0};
+	res[0] = dy1;
+	res[1] = dy2;
+	return res;
+}
+
+// tau -- шаг разностной сетки, с начального приближения в левом конце считаем все точки на области
+std::list<pddvec> explicit_Euler(pddvec grid, pddvec y0, pddvec (*func)(double tn, pddvec yn)) {
+	std::list<pddvec> res;
+	res.push_back(y0);
+
+	size_t n = grid.size();
+	for (int i = 1; i < n; ++i) {
+		res.push_back(res.back() + (grid[i] - grid[i-1]) * func(grid[i], res.back()));
+	}
+
+	return res;
+}
 
 /*
 int main() {
-	eqSys a(nullptr, 2);
-	a[0] = [](double t, mymath::dynamic_vector<double> x) -> double {return 2 * x[0] + x[1] * x[1] - 1; };
+	eqSys a(nullptr, 2); // equation system, functions from right parts
+	a[0] = [](double t, mymath::dynamic_vector<double> x) -> double {return 2 * x[0] + x[1] * x[1] - 1; }; // lambda function, in round paranthesis args
 	a[1] = [](double t, mymath::dynamic_vector<double> x) -> double {return 6 * x[0] - x[1] * x[1] + 1; };
 	mymath::dynamic_vector<double> init = { 0.0, 0.0 };
 	auto res = mymath::runge_kutta_4(0.0, 1.0, init, a, 1e-3);
 	std::cout << res.size();
+
+
+	// variant 22, explicit Euler method
+	size_t n = 10000;
+	double t0 = 0;
+	double T = 25;
+	pddvec grid(0, n);
+	for (size_t i = 0; i < n; ++i) {
+		grid[i] = t0 + (T - t0) / n * i;
+	}
+	mymath::dynamic_vector<double> y0 = { 0.1, 0.1 };
+	explicit_Euler(grid, y0, f22);
+	std::cout << "\n\nExplicit Euler\nf0: " << explicit_Euler(grid, y0, f22).back()[1] << std::endl;
+
 	return 0; 
 }
 */
