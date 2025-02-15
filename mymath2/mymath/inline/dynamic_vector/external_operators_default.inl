@@ -81,7 +81,7 @@ namespace mymath {
 	}
 
 	template<class T>
-	constexpr dynamic_vector<T> operator*(const T& B, const dynamic_vector<T>&& A) {
+	dynamic_vector<T> operator*(const T& B, dynamic_vector<T>&& A) {
 		A *= B;
 
 		return A;
