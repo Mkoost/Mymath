@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2024.2.17)  16 FEB 2025 16:04
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2024.2.17)  16 FEB 2025 16:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -954,7 +954,13 @@ File: ./figures/butcher_table_sp.png Graphic file (type png)
 Package pdftex.def Info: ./figures/butcher_table_sp.png  used on input line 180
 .
 (pdftex.def)             Requested size: 273.14922pt x 241.18993pt.
- [6 <./figures/butcher_table_sp.png>] [7] [8] (otchet1.aux)
+ [6 <./figures/butcher_table_sp.png>] [7] [8]
+Overfull \hbox (2.91289pt too wide) in paragraph at lines 274--276
+\T2A/cmr/m/n/12 Чтобы раз-ност-ный ме-тод был устой-чи-вый, кор-ни его ха-рак-т
+е-ри-сти-че-ско-го урав-
+ []
+
+[9] (otchet1.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
@@ -966,11 +972,11 @@ LaTeX Font Warning: Size substitutions with differences
 
  ) 
 Here is how much of TeX's memory you used:
- 16776 strings out of 474542
- 268499 string characters out of 5743030
+ 16785 strings out of 474542
+ 268595 string characters out of 5743030
  1938978 words of memory out of 5000000
- 38617 multiletter control sequences out of 15000+600000
- 582662 words of font info for 96 fonts, out of 8000000 for 9000
+ 38619 multiletter control sequences out of 15000+600000
+ 584306 words of font info for 98 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  78i,10n,81p,664b,698s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\РњРёС€Р°\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\lar
@@ -1001,9 +1007,9 @@ MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/РњРёС€Р°/AppData/Loca
 l/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msam10.pfb><C:/Users/РњРё
 С€Р°/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.p
 fb>
-Output written on otchet1.pdf (8 pages, 444502 bytes).
+Output written on otchet1.pdf (9 pages, 449161 bytes).
 PDF statistics:
- 490 PDF objects out of 1000 (max. 8388607)
- 42 named destinations out of 1000 (max. 500000)
+ 503 PDF objects out of 1000 (max. 8388607)
+ 45 named destinations out of 1000 (max. 500000)
  47 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -240,18 +240,45 @@
 				f(t_n, y(t_n)) \approx y'(t_{n+1/2}) - \dfrac{\tau}{2} y''(t_{n+1/2}) + \dfrac{\tau^2}{12} y'''(t_{n+1/2}) + O(\tau^3) \\
 				f(t_{n+1}, y(t_{n+1})) \approx y'(t_{n+1/2}) + \dfrac{\tau}{2} y''(t_{n+1/2}) + \dfrac{\tau^2}{12} y'''(t_{n+1/2}) + O(\tau^3) \\
 				\dfrac{f(t_n, y(t_n)) + f(t_{n+1}, y(t_{n+1}))}{2} \approx y'(t_{n+1/2}) + O(\tau^2) \approx f(t_{n+1/2}, y(t_{n+1/2})) \\
-				\int\limits_{t_n}^{t_{n+1}} f(\xi, y(\xi)) d\xi \approx \tau  y'(t_{n+1/2}) + O(\tau^3)\\
-				y(t_n) \approx y(t_{n+1/2}) - \dfrac{\tau}{2} y'(t_{n+1/2}) + \dfrac{\tau^2}{12} y''(t_{n+1/2}) + O(\tau^3) \\
-				y(t_{n+1}) \approx y(t_{n+1/2}) + \dfrac{\tau}{2} y'(t_{n+1/2}) + \dfrac{\tau^2}{12} y''(t_{n+1/2}) + O(\tau^3) \\
-				y(t_{n+1}) - y(t_n) - \int\limits_{t_n}^{t_{n+1}} f(\xi, y(\xi)) d\xi \approx O(\tau^3) 
+				\int\limits_{t_n}^{t_{n+1}} f(\xi, y(\xi)) d\xi \approx \tau  y'(t_{n+1/2}) + O(\tau^3) = I^*\\
+				y(t_n) \approx y(t_{n+1/2}) - \dfrac{\tau}{2} y'(t_{n+1/2}) + \dfrac{\tau^2}{12} y''(t_{n+1/2}) + O(\tau^3) = y^*(t_{n}) \\
+				y(t_{n+1}) \approx y(t_{n+1/2}) + \dfrac{\tau}{2} y'(t_{n+1/2}) + \dfrac{\tau^2}{12} y''(t_{n+1/2}) + O(\tau^3) = y^*(t_{n+1})  \\
+				y^*(t_{n+1}) - y^*(t_n) - I^* \approx O(\tau^3) 
 			\end{gather*}
 			Т.е. симметричная схема --- метод второго порядка.
 		\end{enumerate}
 		
-		\item \textbf{Выполняются ли условия существования и единственности решения задачи Коши для своих вариантов}
+		\item \textbf{Выполняются ли условия существования и единственности решения задачи Коши в заданных вариантах.}
 		\vspace*{0.2cm} 
 		
 		\textit{\textbf{Ответ:}} 
+		(Устно)
+		
+		\item \textbf{Исследование системы на устойчивость.}
+		\vspace*{0.2cm} 
+		
+		\textit{\textbf{Ответ:}} 
+		(Устно)
+	
+		
+		\item \textbf{Является ли неявный метод Эйлера $A\text{-устойчивым}$?}
+		\vspace*{0.2cm} 
+		
+		\textit{\textbf{Ответ:}} 
+		Рассмотрим тестовое дифференциальное уравнение: $u'(t) = \lambda u(t)$.
+		
+		Воспользуемся неявным методом Эйлера:
+		\begin{gather*}
+		y_{n+1} - y_{n} - \tau \lambda y{n+1} = 0 \\
+		(1-\mu) y_{n+1}  = y_{n}
+		\end{gather*}
+		Чтобы разностный метод был устойчивый, корни его характеристического уравнения должны меньше единицы по модулю:
+		\begin{gather*}
+			(1-\mu) q  = 1 \\
+			\dfrac{1}{|1-\mu|} \le 1 \\
+			|\mu - 1| \ge 1
+		\end{gather*}
+		Т.е. метод устойчив при $\text{Re} \, \mu < 0$
 	\end{enumerate}
 	
 	
