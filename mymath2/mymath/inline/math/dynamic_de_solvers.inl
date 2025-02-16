@@ -54,6 +54,7 @@ namespace mymath {
 
 			size_t size() const { return yi->size(); };
 		};
+
 	}
 
 	template<class T, class U>
@@ -104,11 +105,11 @@ namespace mymath {
 			k /= 6;
 
 			yn += step * k;
-			if (iter % save_iter == 0)
+			if (iter % save_iter == 0) {
 				res.push_back(yn);
+			}
 			if (et - bt < step) step = et - bt;
-		} while (bt <= et && step > stepmin);
-		std::cout << bt << '\n';
+		} while ((bt <= et) && (step > stepmin) && (iter != max_iter));
 		return res;
 
 	}
@@ -157,7 +158,7 @@ namespace mymath {
 	}
 
 	template<class T, class U>
-	std::list<mymath::dynamic_vector<T>> runge_kutta_4_autostep(T bt, T et, const dynamic_vector<T>& init, const U& f, T step, T stepmin = 1e-13, double eps = 1e-8, size_t save_iter = 1, size_t max_iter = 4294967296) {
+	std::list<std::pair<T, dynamic_vector<T>>> runge_kutta_4_autostep(T bt, T et, const dynamic_vector<T>& init, const U& f, T step, T stepmin = 1e-13, double eps = 1e-8, size_t save_iter = 1, size_t max_iter = 4294967296) {
 		if (init.size() != f.size())
 			throw(std::invalid_argument("Init vector size and f size are different"));
 		if (bt > et)
@@ -178,47 +179,47 @@ namespace mymath {
 		dynamic_vector<T> ki(0, n);
 		dynamic_vector<T> tmp(0, n);
 		
+
+
 		do {
 			++iter;
-			for (size_t i = 0; i < n; ++i)
-				ki[i] = f[i](bt, yn);
+			double eps_actual;
+			tmp = yn;
+			auto bigstep = runge_kutta_4(bt, et, tmp, f, step, stepmin, eps, 1, 1);
+			auto smallstep = runge_kutta_4(bt, et, tmp, f, step / 2, stepmin, eps, 2, 2);
+			auto bg_b = bigstep.begin();
+			auto bg_s = smallstep.begin();
+			if (bigstep.size() < 2 || bigstep.size() < 2) break;
+			++bg_b;
+			++bg_s;
+			do {
+				eps_actual = cube_norm((*bg_b) - (*bg_s)) / 15;
 
-			k += ki;
-			tmp = yn + (step / 2) * ki;
-			bt += step / 2;
+				if (std::abs(eps_actual / eps) < 10 && std::abs(eps_actual / eps) > 0.1) { yn = (*bg_b);  break; }
+				else if (std::abs(eps_actual / eps) >= 10) { step /= 2; }
+				else { step *= 2;  }
 
-			for (size_t i = 0; i < n; ++i)
-				ki[i] = f[i](bt, tmp);
-
-			tmp = yn + (step / 2) * ki;
-			ki *= 2;
-			k += ki;
-
-			for (size_t i = 0; i < n; ++i)
-				ki[i] = f[i](bt, tmp);
-
-			tmp = yn + step * ki;
-
-			ki *= 2;
-			k += ki;
-			bt += step / 2;
-
-			for (size_t i = 0; i < n; ++i)
-				ki[i] = f[i](bt, tmp);
-
-			k += ki;
-			k /= 6;
-
-			yn += step * k;
+				*bg_b = (*bg_s);
+				
+				smallstep = runge_kutta_4(bt, et, tmp, f, step / 2, stepmin, eps, 2, 2);
+				bg_s = smallstep.begin();
+				++bg_s;
+				if (smallstep.size() < 2) { yn = (*bg_b); break; }
+			} while (true);
 			
+			if (smallstep.size() == 0) break;
+
+			bt += step;
+
 			if (iter % save_iter == 0) {
 				elem.first = bt;
 				elem.second = yn;
 				res.push_back(elem);
+				std::cout << bt << '\n';
 			}
+			
 			if (et - bt < step) step = et - bt;
 		} while (bt <= et && step > stepmin);
-		std::cout << bt << '\n';
 		return res;
 
 	}

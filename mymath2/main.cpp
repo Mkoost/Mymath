@@ -405,16 +405,18 @@ int main() {
 	a[0] = [](double t, mymath::dynamic_vector<double> x) -> double {return 2 * x[0] + x[1] * x[1] - 1; }; // lambda function, in round paranthesis args
 	a[1] = [](double t, mymath::dynamic_vector<double> x) -> double {return 6 * x[0] - x[1] * x[1] + 1; };
 	mymath::dynamic_vector<double> init = { 0.0, 0.0 };
-	auto res = mymath::symmetrical_scheme(0.0, 1.0, init, a, 1e-3, 1e-13, 1e-8, 10);
+	auto res = mymath::runge_kutta_4_autostep(0.0, 1.0, init, a, 1e-3, 1e-13, 1e-8, 10000);
 	std::cout << res.size() << '\n';
-
+	
 	for (auto i : res) {
 		std::cout << "{";
-		for (size_t j = 0; j < i.size() - 1; ++j) {
-			std::cout << i[j] << ", ";
+		for (size_t j = 0; j < i.second.size() - 1; ++j) {
+			std::cout << i.second[j] << ", ";
 		}
-		std::cout << i[i.size() - 1] << "}, " << " ";
+		std::cout << i.second[i.second.size() - 1] << "}, ";
 	}
+	
+	
 
 	return 0; 
 }
