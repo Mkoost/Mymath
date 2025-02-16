@@ -8,6 +8,8 @@
 #include "../../settings.h"
 #include <cmath>
 #include <list>
+#include <utility>
+
 
 namespace mymath {
 	
@@ -55,7 +57,7 @@ namespace mymath {
 	}
 
 	template<class T, class U>
-	std::list<mymath::dynamic_vector<T>> runge_kutta_4(T bt, T et, const dynamic_vector<T>& init, const U& f, T step, T stepmin = 1e-13, double eps=1e-8, size_t iter=4294967296) {
+	std::list<mymath::dynamic_vector<T>> runge_kutta_4(T bt, T et, const dynamic_vector<T>& init, const U& f, T step, T stepmin = 1e-13, double eps=1e-8, size_t save_iter = 1, size_t max_iter = 4294967296) {
 		if (init.size() != f.size())
 			throw(std::invalid_argument("Init vector size and f size are different"));
 		if (bt > et)
@@ -66,11 +68,12 @@ namespace mymath {
 		std::list<dynamic_vector<T>> res;
 		dynamic_vector<T> yn(init);
 		res.push_back(yn);
-		
+		size_t iter = 0;
 		dynamic_vector<T> k(0, n);
 		dynamic_vector<T> ki(0, n);
 		dynamic_vector<T> tmp(0, n);
 		do {
+			++iter;
 			for (size_t i = 0; i < n; ++i)
 				ki[i] = f[i](bt, yn);
 			
@@ -101,7 +104,8 @@ namespace mymath {
 			k /= 6;
 
 			yn += step * k;
-			res.push_back(yn);
+			if (iter % save_iter == 0)
+				res.push_back(yn);
 			if (et - bt < step) step = et - bt;
 		} while (bt <= et && step > stepmin);
 		std::cout << bt << '\n';
@@ -109,8 +113,77 @@ namespace mymath {
 
 	}
 
+
 	template<class T, class U>
-	std::list<mymath::dynamic_vector<T>> explicit_euler(T bt, T et, const dynamic_vector<T>& init, const U& f, T step, T stepmin = 1e-13, double eps = 1e-8, size_t iter = 4294967296) {
+	std::list<mymath::dynamic_vector<T>> runge_kutta_4_autostep(T bt, T et, const dynamic_vector<T>& init, const U& f, T step, T stepmin = 1e-13, double eps = 1e-8, size_t save_iter = 1, size_t max_iter = 4294967296) {
+		if (init.size() != f.size())
+			throw(std::invalid_argument("Init vector size and f size are different"));
+		if (bt > et)
+			throw(std::invalid_argument("Begin time is greater then end time"));
+
+		const size_t n = init.size();
+
+		std::list<std::pair<T, dynamic_vector<T>>> res;
+		dynamic_vector<T> yn(init);
+
+		std::pair<T, dynamic_vector<T>> elem;
+		elem.first = bt;
+		elem.second = yn;
+		res.push_back(elem);
+
+		size_t iter = 0;
+		dynamic_vector<T> k(0, n);
+		dynamic_vector<T> ki(0, n);
+		dynamic_vector<T> tmp(0, n);
+		
+		do {
+			++iter;
+			for (size_t i = 0; i < n; ++i)
+				ki[i] = f[i](bt, yn);
+
+			k += ki;
+			tmp = yn + (step / 2) * ki;
+			bt += step / 2;
+
+			for (size_t i = 0; i < n; ++i)
+				ki[i] = f[i](bt, tmp);
+
+			tmp = yn + (step / 2) * ki;
+			ki *= 2;
+			k += ki;
+
+			for (size_t i = 0; i < n; ++i)
+				ki[i] = f[i](bt, tmp);
+
+			tmp = yn + step * ki;
+
+			ki *= 2;
+			k += ki;
+			bt += step / 2;
+
+			for (size_t i = 0; i < n; ++i)
+				ki[i] = f[i](bt, tmp);
+
+			k += ki;
+			k /= 6;
+
+			yn += step * k;
+			
+			if (iter % save_iter == 0) {
+				elem.first = bt;
+				elem.second = yn;
+				res.push_back(elem);
+			}
+			if (et - bt < step) step = et - bt;
+		} while (bt <= et && step > stepmin);
+		std::cout << bt << '\n';
+		return res;
+
+	}
+
+
+	template<class T, class U>
+	std::list<mymath::dynamic_vector<T>> explicit_euler(T bt, T et, const dynamic_vector<T>& init, const U& f, T step, T stepmin = 1e-13, double eps = 1e-8, size_t save_iter = 1, size_t max_iter = 4294967296) {
 		if (init.size() != f.size())
 			throw(std::invalid_argument("Init vector size and f size are different"));
 		if (bt > et)
@@ -121,17 +194,19 @@ namespace mymath {
 		std::list<dynamic_vector<T>> res;
 		dynamic_vector<T> yn(init);
 		res.push_back(yn);
-
+		size_t iter = 0;
 		dynamic_vector<T> k(0, n);
 		dynamic_vector<T> tmp(0, n);
 		do {
+			++iter;
 			for (size_t i = 0; i < n; ++i)
 				k[i] = f[i](bt, yn);
 
 			bt += step;
 			yn += step * k;
 
-			res.push_back(yn);
+			if (iter % save_iter == 0)
+				res.push_back(yn);
 			if (et - bt < step) step = et - bt;
 		} while (bt <= et && step > stepmin);
 		std::cout << bt << '\n';
@@ -140,7 +215,7 @@ namespace mymath {
 	}
 
 	template<class T, class U>
-	std::list<mymath::dynamic_vector<T>> implict_euler(T bt, T et, const dynamic_vector<T>& init, U& f, T step, T stepmin = 1e-13, double eps = 1e-8, size_t iter = 4294967296) {
+	std::list<mymath::dynamic_vector<T>> implict_euler(T bt, T et, const dynamic_vector<T>& init, U& f, T step, T stepmin = 1e-13, double eps = 1e-8, size_t save_iter = 1, size_t max_iter = 4294967296) {
 		if (init.size() != f.size())
 			throw(std::invalid_argument("Init vector size and f size are different"));
 		if (bt > et)
@@ -151,16 +226,18 @@ namespace mymath {
 		std::list<dynamic_vector<T>> res;
 		dynamic_vector<T> yn(init);
 		res.push_back(yn);
-
+		size_t iter = 0;
 		__special_de_func_for_explict_euler<T, U> method;
 		method.tau = step;
 		method.f = &f;
 		method.yi = &yn;
 		do {
+			++iter;
 			yn = eq_system_solve(bt, yn, method, eps);
 			bt += step;
 
-			res.push_back(yn);
+			if (iter % save_iter == 0)
+				res.push_back(yn);
 			if (et - bt < step) step = et - bt;
 		} while (bt <= et && step > stepmin);
 		return res;
@@ -168,7 +245,7 @@ namespace mymath {
 	}
 
 	template<class T, class U>
-	std::list<mymath::dynamic_vector<T>> symmetrical_scheme(T bt, T et, const dynamic_vector<T>& init, U& f, T ststep, T stepmin = 1e-13, double eps = 1e-8, size_t iter = 4294967296) {
+	std::list<mymath::dynamic_vector<T>> symmetrical_scheme(T bt, T et, const dynamic_vector<T>& init, U& f, T ststep, T stepmin = 1e-13, double eps = 1e-8, size_t save_iter = 1, size_t max_iter = 4294967296) {
 		if (init.size() != f.size())
 			throw(std::invalid_argument("Init vector size and f size are different"));
 		if (bt > et)
@@ -177,10 +254,10 @@ namespace mymath {
 		T step = ststep;
 		const size_t n = init.size();
 
+		size_t iter = 0;
 		std::list<dynamic_vector<T>> res;
 		dynamic_vector<T> yn(init);
 		dynamic_vector<T> fn(0, yn.size());
-
 		res.push_back(yn);
 
 		__special_de_func_for_symmetrical_scheme<T, U> method;
@@ -190,12 +267,15 @@ namespace mymath {
 		method.fi = &fn;
 
 		do {
+			++iter;
 			for (size_t i = 0; i < yn.size(); ++i)
 				fn[i] = f[i](bt, yn);
 			yn = eq_system_solve(bt, yn, method, eps);
 			bt += step;
 
-			res.push_back(yn);
+			if (iter % save_iter == 0)
+				res.push_back(yn); 
+
 			if (et - bt < step) step = et - bt;
 		} while (bt <= et && step > stepmin);
 		return res;

@@ -13,18 +13,18 @@ namespace mymath {
 
 
 
-	namespace{
+	namespace {
 		template<class T, class U>
 		void __make_jacobi(dynamic_matrix<T>& mat, dynamic_vector<T>& p, T t, const dynamic_vector<T>& x, U f, double eps) {
 			size_t n = f.size();
 			f[0];
-			for (size_t i = 0; i < n; ++i){
+			for (size_t i = 0; i < n; ++i) {
 				p[i] = f[i](t, x);
 			}
 
 			dynamic_vector<T> tmp = x;
 
-			for(size_t i = 0; i < n; ++i)
+			for (size_t i = 0; i < n; ++i)
 				for (size_t j = 0; j < n; ++j) {
 					tmp[j] = x[j] + eps;
 					mat[i][j] = (f[i](t, tmp) - p[i]) / eps;
@@ -48,15 +48,15 @@ namespace mymath {
 		do {
 			++iter;
 			__make_jacobi(jacobi, v, t, x, f, eps / 10);
-			
+
 			tmpp = x;
 			v *= -1;
 			v += multiply(jacobi, x);
 
-			x = relax_iteration(jacobi, v, std::max( 1e-11, eps / 10), 1.0, x);
+			x = relax_iteration(jacobi, v, std::max(1e-11, eps / 10), 1.0, x);
 			tmpp -= x;
 			nrm = mymath::cube_norm(tmpp);
-		}while(eps < nrm && iter <= max_iter);
+		} while (eps < nrm && iter <= max_iter);
 		return x;
 	}
 

@@ -405,7 +405,7 @@ int main() {
 	a[0] = [](double t, mymath::dynamic_vector<double> x) -> double {return 2 * x[0] + x[1] * x[1] - 1; }; // lambda function, in round paranthesis args
 	a[1] = [](double t, mymath::dynamic_vector<double> x) -> double {return 6 * x[0] - x[1] * x[1] + 1; };
 	mymath::dynamic_vector<double> init = { 0.0, 0.0 };
-	auto res = mymath::symmetrical_scheme(0.0, 1.0, init, a, 1e-3);
+	auto res = mymath::symmetrical_scheme(0.0, 1.0, init, a, 1e-3, 1e-13, 1e-8, 10);
 	std::cout << res.size() << '\n';
 
 	for (auto i : res) {

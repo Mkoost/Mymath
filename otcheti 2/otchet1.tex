@@ -208,6 +208,50 @@
 			\item Функция $f(x)$ называют непрерывно дифференцируемой в области $U \subset D$, если существуют непрерывные частные производные в области $U \subset D$ $\sfrac{\partial f(x)}{\partial x_i}$, где $i = 1,\ldots,n$. 
 		\end{enumerate}
 		
+		\item \textbf{Вывод порядка сходимости методов Эйлера (явного и неявного) и симметричной схемы}
+		\vspace*{0.2cm} 
+		
+		\textit{\textbf{Ответ:}} 
+		
+		Будем рассматривать схемы с постоянным шагом $\tau$, длина отрезка интегрирования $C = n\tau$, где $n \in \mathbb{N}$. Тогда $n \approx \sfrac{C}{\tau}=O(\tau^{-1})$. Пусть некоторый метод допускает на каждом шагу ошибку порядка $O(\tau^{k+1})$, тогда порядок метода будет равен $O(\tau^k)$.
+		В общем виде задачу на n-ом шаге можно записать в следующем виде:
+		\[
+		y(t_{n+1}) = y(t_n) + \int\limits_{t_n}^{t_{n+1}}f(\xi, y(\xi)) d\xi \\
+		\] 
+		\begin{enumerate}
+			\item Метод Эйлера (явный):
+			\begin{gather*}
+				f(t_n, y(t_n)) \approx y'(t_n) - O(\tau) \\
+				\int\limits_{t_n}^{t_{n+1}} f(\xi, y(\xi)) d\xi \approx \tau y'(t_n) - O(\tau^2) \\
+				y(t_{n+1}) \approx y(t_{n}) + \tau y'(t_{n}) + O(\tau^2) \\
+				y(t_{n}) + \tau y(t_{n}) + O(\tau^2) - y(t_{n}) - \tau y'(t_{n}) + O(\tau^2) = O(\tau^2)
+			\end{gather*}
+			Т.е. явный метод Эйлера --- метод первого порядка.
+			\item Метод Эйлера (неявный):
+			\begin{gather*}
+					f(t_n, y(t_n)) \approx y'(t_{n+1}) - O(\tau) \\
+				\int\limits_{t_n}^{t_{n+1}} f(\xi, y(\xi)) d\xi \approx \tau y'(t_{n+1}) - O(\tau^2) \\
+				y(t_{n}) \approx y(t_{n+1}) - \tau y'(t_{n+1}) - O(\tau^2) \\
+				y(t_{n+1})  - y(t_{n+1}) + \tau y(t_{n+1}) + O(\tau^2) - \tau y(t_{n_1}) + O(\tau^2) = O(\tau^2)
+			\end{gather*}
+			Т.е. неявный метод Эйлера --- метод первого порядка.
+			\item Симметричная схема:
+			\begin{gather*}
+				f(t_n, y(t_n)) \approx y'(t_{n+1/2}) - \dfrac{\tau}{2} y''(t_{n+1/2}) + \dfrac{\tau^2}{12} y'''(t_{n+1/2}) + O(\tau^3) \\
+				f(t_{n+1}, y(t_{n+1})) \approx y'(t_{n+1/2}) + \dfrac{\tau}{2} y''(t_{n+1/2}) + \dfrac{\tau^2}{12} y'''(t_{n+1/2}) + O(\tau^3) \\
+				\dfrac{f(t_n, y(t_n)) + f(t_{n+1}, y(t_{n+1}))}{2} \approx y'(t_{n+1/2}) + O(\tau^2) \approx f(t_{n+1/2}, y(t_{n+1/2})) \\
+				\int\limits_{t_n}^{t_{n+1}} f(\xi, y(\xi)) d\xi \approx \tau  y'(t_{n+1/2}) + O(\tau^3)\\
+				y(t_n) \approx y(t_{n+1/2}) - \dfrac{\tau}{2} y'(t_{n+1/2}) + \dfrac{\tau^2}{12} y''(t_{n+1/2}) + O(\tau^3) \\
+				y(t_{n+1}) \approx y(t_{n+1/2}) + \dfrac{\tau}{2} y'(t_{n+1/2}) + \dfrac{\tau^2}{12} y''(t_{n+1/2}) + O(\tau^3) \\
+				y(t_{n+1}) - y(t_n) - \int\limits_{t_n}^{t_{n+1}} f(\xi, y(\xi)) d\xi \approx O(\tau^3) 
+			\end{gather*}
+			Т.е. симметричная схема --- метод второго порядка.
+		\end{enumerate}
+		
+		\item \textbf{Выполняются ли условия существования и единственности решения задачи Коши для своих вариантов}
+		\vspace*{0.2cm} 
+		
+		\textit{\textbf{Ответ:}} 
 	\end{enumerate}
 	
 	
