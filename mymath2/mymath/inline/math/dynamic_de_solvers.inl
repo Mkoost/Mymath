@@ -156,9 +156,9 @@ namespace mymath {
 		return res;
 
 	}
-
+	
 	template<class T, class U>
-	std::list<std::pair<T, dynamic_vector<T>>> runge_kutta_4_autostep(T bt, T et, const dynamic_vector<T>& init, const U& f, T step, T stepmin = 1e-13, double eps = 1e-8, size_t save_iter = 1, size_t max_iter = 4294967296) {
+	std::list<std::pair<T, dynamic_vector<T>>> runge_kutta_4_autostep_fast(T bt, T et, const dynamic_vector<T>& init, const U& f, T step, T stepmin = 1e-13, double eps = 1e-8, size_t save_iter = 1, size_t max_iter = 4294967296) {
 		if (init.size() != f.size())
 			throw(std::invalid_argument("Init vector size and f size are different"));
 		if (bt > et)
@@ -178,7 +178,7 @@ namespace mymath {
 		dynamic_vector<T> k(0, n);
 		dynamic_vector<T> ki(0, n);
 		dynamic_vector<T> tmp(0, n);
-		
+
 
 
 		do {
@@ -187,27 +187,84 @@ namespace mymath {
 			tmp = yn;
 			auto bigstep = runge_kutta_4(bt, et, tmp, f, step, stepmin, eps, 1, 1);
 			auto smallstep = runge_kutta_4(bt, et, tmp, f, step / 2, stepmin, eps, 2, 2);
-			auto bg_b = bigstep.begin();
-			auto bg_s = smallstep.begin();
+			auto bg_b = bigstep.end();
+			auto bg_s = smallstep.end();
 			if (bigstep.size() < 2 || bigstep.size() < 2) break;
-			++bg_b;
+			--bg_b;
+			--bg_s;
+			eps_actual = cube_norm((*bg_b) - (*bg_s)) / 15;
+			step = std::pow(eps / eps_actual, 0.2) * step;
+
+			smallstep = runge_kutta_4(bt, et, tmp, f, step / 2, stepmin, eps, 2, 2);
+			bg_s = smallstep.begin();
 			++bg_s;
+			yn = (*bg_s);
+
+			bt += step;
+
+			if (iter % save_iter == 0) {
+				elem.first = bt;
+				elem.second = yn;
+				res.push_back(elem);
+				std::cout << bt << '\n';
+			}
+
+			if (et - bt < step) step = et - bt;
+		} while (bt <= et && step > stepmin);
+		return res;
+
+	}
+
+	template<class T, class U>
+	std::list<std::pair<T, dynamic_vector<T>>> runge_kutta_4_autostep_slow(T bt, T et, const dynamic_vector<T>& init, const U& f, T step, T stepmin = 1e-13, double eps = 1e-8, size_t save_iter = 1, size_t max_iter = 4294967296) {
+		if (init.size() != f.size())
+			throw(std::invalid_argument("Init vector size and f size are different"));
+		if (bt > et)
+			throw(std::invalid_argument("Begin time is greater then end time"));
+		
+		const size_t n = init.size();
+
+		std::list<std::pair<T, dynamic_vector<T>>> res;
+		dynamic_vector<T> yn(init);
+
+		std::pair<T, dynamic_vector<T>> elem;
+		elem.first = bt;
+		elem.second = yn;
+		res.push_back(elem);
+
+		size_t iter = 0;
+		dynamic_vector<T> k(0, n);
+		dynamic_vector<T> ki(0, n);
+		dynamic_vector<T> tmp(0, n);
+
+		do {
+			++iter;
+			double eps_actual;
+			tmp = yn;
+			auto bigstep = runge_kutta_4(bt, et, tmp, f, step, stepmin, eps, 1, 1);
+			auto smallstep = runge_kutta_4(bt, et, tmp, f, step / 2, stepmin, eps, 2, 2);
+			auto bg_b = bigstep.end();
+			auto bg_s = smallstep.end();
+			if (bigstep.size() < 2 || bigstep.size() < 2) break;
+			--bg_b;
+			--bg_s;
+			size_t iner_iter = 0;
 			do {
+				++iner_iter;
 				eps_actual = cube_norm((*bg_b) - (*bg_s)) / 15;
 
 				if (std::abs(eps_actual / eps) < 10 && std::abs(eps_actual / eps) > 0.1) { yn = (*bg_b);  break; }
-				else if (std::abs(eps_actual / eps) >= 10) { step /= 2; }
-				else { step *= 2;  }
+				step *= std::pow(eps / eps_actual, 0.2);
 
 				*bg_b = (*bg_s);
 				
 				smallstep = runge_kutta_4(bt, et, tmp, f, step / 2, stepmin, eps, 2, 2);
-				bg_s = smallstep.begin();
-				++bg_s;
+				bg_s = smallstep.end();
+				--bg_s;
 				if (smallstep.size() < 2) { yn = (*bg_b); break; }
 			} while (true);
 			
-			if (smallstep.size() == 0) break;
+			if (smallstep.size() == 0 && iner_iter < 5) break;
 
 			bt += step;
 
