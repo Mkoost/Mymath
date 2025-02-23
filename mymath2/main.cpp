@@ -402,19 +402,20 @@ std::list<pddvec> explicit_Euler(pddvec grid, pddvec y0, pddvec (*func)(double t
 
 int main() {
 	eqSys a(nullptr, 2); // equation system, functions from right parts
-	a[0] = [](double t, mymath::dynamic_vector<double> x) -> double {return 2 * x[0] + x[1] * x[1] - 1; }; // lambda function, in round paranthesis args
-	a[1] = [](double t, mymath::dynamic_vector<double> x) -> double {return 6 * x[0] - x[1] * x[1] + 1; };
-	mymath::dynamic_vector<double> init = { 0.0, 0.0 };
-	auto res = mymath::runge_kutta_4_autostep_slow(0.0, 1.0, init, a, 1e-3, 1e-13, 1e-6, 10);
-	std::cout << res.size() << '\n';
+	a[0] = [](double t, mymath::dynamic_vector<double> x) -> double {return x[1]; }; // lambda function, in round paranthesis args
+	a[1] = [](double t, mymath::dynamic_vector<double> x) -> double {return -20./0.3 * x[0]; };
+	mymath::dynamic_vector<double> init = { 1.0, 0.0 };
+	auto res1 = mymath::implict_addams(0.0, 10.0, init, a, 1e-6, 1e-13, 1e-8, 10000);
+	std::cout << res1.size() << '\n';
 	
-	for (auto i : res) {
-		std::cout << "{";
-		for (size_t j = 0; j < i.second.size() - 1; ++j) {
-			std::cout << i.second[j] << ", ";
-		}
-		std::cout << i.second[i.second.size() - 1] << "}, ";
+	size_t k = 0;
+	std::ofstream file1("shod1.txt", std::ios::trunc);
+	for (const auto& yn : res1) {
+		file1 << (yn)[0] << " " << (yn)[1] << " " << 1e-6 * 10000  * (k++) << "\n";
 	}
+
+	file1.close();
+
 	
 	
 
