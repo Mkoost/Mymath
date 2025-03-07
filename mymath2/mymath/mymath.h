@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 #include <cmath>
-#include <memory>
+//#include <memory>
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -20,6 +20,7 @@
 #include "inline/math_functions.inl"
 #include "inline/dynamic_matrix.inl.h"
 #include "inline/dynamic_vector.inl.h"
+#include "inline/difference_scheme.inl.h"
 
 #undef __MYMATH_TEMPLATE_GEN_TYPE_PSEUDONYMS_17845
 #undef __GEN_MYMATH_MAT_PSEUDONYMS_10931

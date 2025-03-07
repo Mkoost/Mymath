@@ -24,6 +24,9 @@
     <ClCompile Include="mymath\headers\matrix.h">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="mymath\headers\difference_scheme.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mymath\mymath.h">
@@ -51,6 +54,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="mymath\inline\dynamic_vector.inl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mymath\inline\difference_scheme.inl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
