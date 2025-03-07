@@ -11,7 +11,9 @@ namespace mymath {
 		using __difference_scheme_bc_approx = T(*)(
 			T tau,
 			dynamic_vector<T> elems,
-			__difference_scheme_bc_func bc
+			dynamic_vector<T> h_elems,
+			__difference_scheme_bc_func bc, 
+			__difference_scheme_K_coef_func K
 			);
 
 		using __difference_scheme_algo = T(*)(
