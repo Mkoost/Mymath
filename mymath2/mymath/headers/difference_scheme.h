@@ -19,16 +19,14 @@ namespace mymath {
 		using __difference_scheme_algo = T(*)(
 			T _tau,
 			T bt,
-			T et,
-			T _end_time,
-			size_t _h,
+			size_t _h, // kolichestvo uzlov internal
 			__difference_scheme_bc_func bbc, // begin boundary condition
-			__difference_scheme_bc_func ebc,
+			__difference_scheme_bc_func ebc, // end boundary condition
 			__difference_scheme_bc_approx bbc_approx,
 			__difference_scheme_bc_approx ebc_approx,
-			dynamic_vector<T>* nl,
-			dynamic_vector<T>* prev_layer
-			); // end boundary condition
+			dynamic_vector<T>* pl; // prev_layer
+			dynamic_vector<T>* nl, // new_layer
+			); 
 
 		__difference_scheme_bc_func begin_bc = nullptr;
 		__difference_scheme_bc_func end_bc = nullptr;
@@ -48,7 +46,10 @@ namespace mymath {
 		void gen_grid(T h_, T tau_) {
 			
 		};
+<<<<<<< HEAD
 		void set_begin_time(T begin_time);*/
+=======
+>>>>>>> 7d5dff1ea53a6a8e55eb0afb3cd2c7b73bd5ebc7
 	};
 
 }
