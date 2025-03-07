@@ -405,13 +405,12 @@ int main() {
 	a[0] = [](double t, mymath::dynamic_vector<double> x) -> double {return x[1]; }; // lambda function, in round paranthesis args
 	a[1] = [](double t, mymath::dynamic_vector<double> x) -> double {return -20./0.3 * x[0]; };
 	mymath::dynamic_vector<double> init = { 1.0, 0.0 };
-	auto res1 = mymath::implict_addams(0.0, 10.0, init, a, 1e-6, 1e-13, 1e-8, 10000);
+	auto res1 = mymath::runge_kutta_4_autostep_fast(0.0, 10.0, init, a, 1e-6, 1e-13, 1e-6, 5000);
 	std::cout << res1.size() << '\n';
 	
-	size_t k = 0;
 	std::ofstream file1("shod1.txt", std::ios::trunc);
 	for (const auto& yn : res1) {
-		file1 << (yn)[0] << " " << (yn)[1] << " " << 1e-6 * 10000  * (k++) << "\n";
+		file1 << (yn.second)[0] << " " << (yn.second)[1] << " " << yn.first << "\n";
 	}
 
 	file1.close();

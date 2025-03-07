@@ -204,7 +204,7 @@ namespace mymath {
 		dynamic_vector<T> k(0, n);
 		dynamic_vector<T> ki(0, n);
 		dynamic_vector<T> tmp(0, n);
-
+		T bt_st = bt;
 
 
 		do {
@@ -218,7 +218,8 @@ namespace mymath {
 			--bg_b;
 			--bg_s;
 			eps_actual = cube_norm((*bg_b) - (*bg_s)) / 15;
-			step *= std::pow(eps / eps_actual, 0.2);
+			step *= std::pow(eps / (eps_actual), 0.2);
+		
 
 			smallstep = runge_kutta_4(bt, et, tmp, f, step, stepmin, eps, 1, 1);
 			bg_s = smallstep.end();
@@ -365,6 +366,7 @@ namespace mymath {
 			k /= 6;
 
 			yn += step * k;
+
 			if (inner_iter == 2) {
 				inner_iter = 0;
 				

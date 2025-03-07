@@ -11,6 +11,7 @@
 \usepackage{import}
 \usepackage{xifthen}
 \usepackage{pdfpages}
+\usepackage{array}
 \usepackage{transparent}
 \usepackage{graphicx}
 \usepackage{caption}
@@ -24,6 +25,8 @@
 \graphicspath{{./style/}{./figures/}}
 
 \frenchspacing
+
+\captionsetup[table]{justification=raggedleft, singlelinecheck=false}
 
 \title{Методы численного решения обыкновенных дифференциальных уравнений}
 \lab{1}
@@ -177,8 +180,8 @@
 			\item Для методов Рунге -- Кутты можно построить такие таблицы коэффициентов как на рис. \ref{fig:Special-Butcher}, 
 			\begin{figure}[h]
 				\centering
-				\includegraphics[width=0.6\textwidth]{butcher_table_sp}
 				\caption{Таблица }
+				\includegraphics[width=0.6\textwidth]{butcher_table_sp}
 				\label{fig:Special-Butcher}
 			\end{figure}
 			 чтобы один из двух методов обладал порядком точности на 1 больше. Таким образом, из полученных значений $y_n$ и $\tilde{y_n}$ можно получить оценку погрешности аппроксимации, основываясь на которой необходимо увеличить или уменьшить шаг.
@@ -280,7 +283,18 @@
 		\end{gather*}
 		Т.е. метод устойчив при $\text{Re} \, \mu < 0$
 	\end{enumerate}
-	
+	\begin{table}[ht]
+		\centering
+		\begin{tabular}{|c|c|}
+			\hline
+			Колонка 1 & Колонка 2 \\
+			\hline
+			Данные 1 & Данные 2 \\
+			\hline
+		\end{tabular}
+		\caption{ таблицы с подписью, выровненной по правому краю.}
+		\label{tab:example}
+	\end{table}
 	
 	
 \end{document}

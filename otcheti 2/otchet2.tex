@@ -1,0 +1,122 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{geometry}
+\usepackage{mathtools}
+\usepackage{verbatim}
+\usepackage{indentfirst}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{import}
+\usepackage{xifthen}
+\usepackage{pdfpages}
+\usepackage{array}
+\usepackage{transparent}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{hyperref}
+\usepackage{float}
+
+\newcommand{\norm}[1]{\lVert #1 \rVert}
+\newcommand{\abs}[1]{\lvert #1 \rvert}
+\usepackage[oglav,spisok,boldsect,eqwhole,figwhole,hyperref,hyperprint,remarks,greekit]{./style/fn2kursstyle}
+
+\graphicspath{{./style/}{./figures/}}
+
+\frenchspacing
+
+\captionsetup[table]{justification=raggedleft, singlelinecheck=false}
+
+\title{Численное решение краевых задач для одномерного уравнения
+	теплопроводности}
+\lab{2}
+\author{М.\,А.~Каган}
+\creator{И.\,А.~Яковлев}
+\supervisor{}
+\group{ФН2-62Б}
+\date{2025}
+
+\begin{document}
+	\maketitle
+	\tableofcontents
+	
+	\newpage
+	
+	
+	
+	\section-{Контрольные вопросы}
+	
+	\begin{enumerate}
+		\item \textbf{Вопрос}
+		\vspace*{0.2cm}
+		
+		\textit{\textbf{Ответ:}}
+		
+		\item \textbf{Какие из рассмотренных схем являются абсолютно устойчивыми? Какая из рассмотренных схем позволяет вести расчеты с более крупным шагом по времени?}
+		\vspace*{0.2cm}
+		
+		\textit{\textbf{Ответ:}}
+		
+		\begin{enumerate}
+			\item Пусть $y^I$, $y^{II}$ решение разностных задача с одинаковым оператором, соответствующим правым частям $\varphi^I$, $\varphi^{II}$ и граничным условиям $\nu^{I}$ и $\nu^{II}$.  Разностную схему называют абсолютно устойчивой, если существуют $M_1$ и $M_2$ большие нуля, не зависящие от шага сетки, что справедливо неравенство
+			\[
+			\norm{y^I - y^{II}} \le M_1 \norm{\varphi^I - \varphi^{II}}  + M_2\norm{\nu^{I} - \nu^{II}}
+			\]
+			вне зависимости от выбора соотношения шагов. Если при $M_1 = 0$ выполняется неравенство, то говорят об устойчивости по начальным условиям, а если $M_2$, то об устойчивости по правой части.
+			
+			Из рассмотренных схем, только смешанная разностная схема удовлетворяет данному условию.
+			
+			\item Для схем с безусловной аппроксимацией порядка $O(\tau^2 + h)$ можно вести расчет с б\'oльшим шагом по времени в сравнении с шагом $h$.   
+		\end{enumerate}
+		
+		\item \textbf{Вопрос}
+		\vspace*{0.2cm}
+		
+		\textit{\textbf{Ответ:}}
+		
+		\item \textbf{ Какие методы (способы) построения разностной аппроксимации граничных условий (2.5), (2.6) с порядком точности  $O(\tau^2 + h)$, $O(\tau^2 + h^2)$ и $O(\tau + h^2)$ вы знаете?}
+		\vspace*{0.2cm}
+		
+		\textit{\textbf{Ответ:}}
+		
+		Схема вида: 
+		$O(\tau^2 + h)$ и $O(\tau + h^2)$ при $\sigma = 1$ и $\sigma = 1/2$ соответственно
+		
+		
+		\item \textbf{Вопрос}
+		\vspace*{0.2cm}
+		
+		\textit{\textbf{Ответ:}}
+		
+		\item \textbf{Какие ограничения на $h$, $\tau$ и $\sigma$ накладывают условия устойчивости прогонки?}
+		\vspace*{0.2cm}
+		
+		\textit{\textbf{Ответ:}}
+		
+		\begin{enumerate}
+			Смешанная разностная сетка определяемая параметром $\sigma$ устойчива, если
+			\[
+			\sigma \ge \dfrac{1}{2} - \dfrac{c p h^2}{4 \tau \tilde{K}}, \;\;\;\; \tilde{K}=\max\limits_{0 \, \le x \, \le L}{K(x)}
+			\]
+			Для абсолютно устойчивых схем, в частности неявная, явная и симметричная, устойчивы при любых соотношениях шагов $\tau$ и $h$/
+			
+			Для $\sigma < 1/2$ устойчива при достаточно малом соотношении $\tau/h^2$, то такие схемы условно устойчивы.
+		\end{enumerate}
+		
+		\item \textbf{Вопрос}
+		\vspace*{0.2cm}
+		
+		\textit{\textbf{Ответ:}}
+		
+		\item \textbf{Для случая $K = K(u)$ предложите способы организации внутреннего итерационного процесса или алгоритмы, заменяющие его.}
+		\vspace*{0.2cm}
+		
+		\textit{\textbf{Ответ:}}
+		
+	\end{enumerate}
+
+	
+	
+	
+\end{document}

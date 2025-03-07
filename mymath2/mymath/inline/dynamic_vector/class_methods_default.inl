@@ -1,6 +1,8 @@
 #pragma once
 #include "./../../headers/dynamic_vector.h"
 #include "./../../details/__expr.inl"
+#include <stdexcept>
+
 
 namespace mymath {
 	// ------------------------------------------------------------------>	 CLASS METHODS 
