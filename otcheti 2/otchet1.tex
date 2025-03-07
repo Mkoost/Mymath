@@ -29,7 +29,7 @@
 \lab{1}
 \author{М.\,А.~Каган}
 \creator{И.\,А.~Яковлев}
-\supervisor{}
+\supervisor{А. О. Колганова}
 \group{ФН2-61Б}
 \date{2025}
 
@@ -155,7 +155,7 @@
 		\textit{\textbf{Ответ:}}
 
 		\textbf{явный метод Эйлера} является наименее трудоемким: на одной итерации требуется вызывать всего лишь один раз функцию правой части. Также обладает несложной реализацией. Однако имеет лишь первый порядок точности и не подходит для решения жестких задач.
-
+                             
 		\textbf{Неявный метод Эйлера} также имеет первый порядок точности, но подходит для решения жестких задач. Однако в общем случае на каждом шаге необходимо решать систему нелинейных уравнений, что повышает трудоемкость.
 
 		\textbf{Симметричная схема} является модификацией неявного метода Эйлера, повышающей порядок с первого до второго.
@@ -254,12 +254,25 @@
 		\textit{\textbf{Ответ:}} 
 		(Устно)
 		
-		\item \textbf{Исследование системы на устойчивость.}
+		\item \textbf{Исследование фазовых траекторий системы.}
 		\vspace*{0.2cm} 
 		
 		\textit{\textbf{Ответ:}} 
-		(Устно)
-	
+		
+		Часть исследования на бумаге. Система:
+		\[
+		\begin{dcases}
+			x' = -2x -2y,\\
+			y' = -x + 2y.
+		\end{dcases}
+		\]
+		Проведя исследование и выяснив, что имеется особая точка типа <<седло>>, сможем найти собственные векторы и построить фазовые траектории (рис. \ref{hitler.}).
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.45\linewidth]{lab1vopr4.pdf}
+			\caption{Фазовый портрет заданной системы}
+			\label{hitler.}
+		\end{figure}
 		
 		\item \textbf{Является ли неявный метод Эйлера $A\text{-устойчивым}$?}
 		\vspace*{0.2cm} 
@@ -279,8 +292,186 @@
 			|\mu - 1| \ge 1
 		\end{gather*}
 		Т.е. метод устойчив при $\text{Re} \, \mu < 0$
-	\end{enumerate}
+
+	\item \textbf{Построить область устойчивости неявного метода Эйлера и Рунге---Кутты второго порядка.}
 	
-	
-	
+	\textit{\textbf{Ответ:}}
+
+	Неявный метод Эйлера описывается следующим образом:
+	\[
+	y_{n+1} = y_n + h f(t_{n+1}, y_{n+1}).
+	\]
+	Рассматривая линейное уравнение вида \( y' = \lambda y \):
+	\[
+	y_{n+1} = y_n + h \lambda y_{n+1},
+	\]
+	его можно записать как
+	\[
+	y_{n+1} (1 - h \lambda) = y_n.
+	\]
+	Таким образом, получаем:
+	\[
+	\frac{y_{n+1}}{y_n} = \frac{1}{1 - h \lambda}
+	\]
+	Для устойчивости необходимо, чтобы модуль отношения был меньше или равен единицы:
+	\[
+	\left| \frac{1}{1 - z} \right| \leq 1
+	\]
+	где \( z = h \lambda \). Это условие можно преобразовать в область в комплексной плоскости (рис. \ref{noshitmrkagan}).
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.45\linewidth]{lab1ust1.pdf}
+		\caption{Область устойчивости неявного метода Эйлера}
+		\label{noshitmrkagan}
+	\end{figure}
+
+	Двустадийный метод Рунге---Кутты второго порядка:
+	\[
+	k_1 = f(t_n, \, y_n), \quad k_2 = f(t_n + \tau, \, y_n + \tau k_1), \quad y_{n+1} = y_n + \frac \tau 2 k_1 + \frac \tau 2 k_2.
+	\]
+	Рассматривая уравнение \( y' = \lambda y \):
+	\[
+	k_1 = \lambda y_n, \quad k_2 = \lambda \left(y_n + \tau \lambda y_n \right), \quad y_{n+1} = y_n \left(1 + \frac \tau 2 \lambda + \frac \tau 2 \left(\lambda + \tau \lambda^2 \right) \right).
+	\]
+	Положив $\mu = \tau \lambda$, получим условие устойчивости и его репрезентацию в комплексной плоскости (рис. \ref{yeahfuckyeah}).
+	\[
+	\left|1 + \mu + \frac {\mu^2} {2} \right| \leq 1, \quad \mu \in \mathbb{C}
+	\]
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.45\linewidth]{lab1ust2.pdf}
+		\caption{Область устойчивости метода Рунге---Кутты второго порядка}
+		\label{yeahfuckyeah}
+	\end{figure}
+
+\end{enumerate}
+
+	\clearpage
+	\section-{Приложение}
+	\subsection*{Маятник}
+	\begin{figure}[H]
+		\begin{minipage}[b]{0.45\linewidth}
+		  \centering
+		  \includegraphics[width=0.9\linewidth]{mayat1.pdf}
+		  \caption{Явный метод Эйлера}
+		  \label{rrr}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[b]{0.45\linewidth}
+		  \centering
+		  \includegraphics[width=0.9\linewidth]{mayat2.pdf}
+		  \caption{Неявный метод Эйлера}
+		  \label{ttt}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[b]{0.45\linewidth}
+		  \centering
+		  \includegraphics[width=0.9\linewidth]{mayat3.pdf}
+		  \caption{Симметричная схема}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[b]{0.45\linewidth}
+		  \centering
+		  \includegraphics[width=0.9\linewidth]{mayat4.pdf}
+		  \caption{Рунге---Кутты 2 пор.}
+		\end{minipage}
+		\end{figure}
+
+	\subsection*{Графики функций для вариантов 10 и 22}
+	Уравнение Статса-де-Марса генерации лазерного излучения:
+	\[
+	\begin{dcases}
+		\frac{dm}{dt} = Amn - \frac{f(t) m}{T},\\
+		\frac{dn}{dt} = -Bmn,\\ 
+		A = 2e-9, \, T = 1e-9, \, B = 2e-9,\\
+		f(t) = 
+		\begin{dcases}
+			10 - 4.85e-10t, \, 0 \leq t < 2e-8,\\
+			0.3, \, t \geq 2e-8,
+		\end{dcases}\\
+		t = 0\dots4e-8,\\
+		m(0) = 100, \, n(0)=1e19
+	\end{dcases}
+	\]
+
+	Уравнение Дуффинга с правой частью:
+	\[
+	\begin{dcases}
+		y'' + 2 \delta y' + 0.5 \left( \mu + \nu \sin (t)\right) \sin y = M,\\
+		\delta = 0.5, \, \mu = 0.001, \, \nu = 0.5, \, M=0.05,\\
+		t = 0\dots100,\\
+		y(0)=0.1, \, y'(0) = -0.5
+	\end{dcases}
+	\]
+	\begin{figure}[H]
+		\begin{minipage}[b]{0.45\linewidth}
+			\centering
+			\includegraphics[width=\linewidth]{lab1var22.pdf}
+			\caption{Уравнение Дуффинга с правой частью}
+			\label{rrr}
+		  \end{minipage}
+		  \hfill
+		  \begin{minipage}[b]{0.45\linewidth}
+			\centering
+			\includegraphics[width=1.1\linewidth]{lab1var10.pdf}
+			\caption{Уравнение Статса-де-Марса генерации лазерного излучения}
+			\label{ttt}
+		  \end{minipage}
+	\end{figure}
+
+	\subsection*{Графики Рунге-Кутты 4 пор. с выбором шага}
+	Рассмотрим систему следующего вида:
+	\[
+		\begin{dcases}
+			x' = -2x -2y,\\
+			y' = -x + 2y.
+		\end{dcases}
+	\]
+	Построим ее численное решение c помощью метода Рунге---Кутты четвертого порядка с модификацией выбора шага на отрезке $t \in \left[0; 1 \right]$, дополнив условиями 
+	$$x(0) = 1, \, y(0) = 1$$
+	и отметив узлы, в которых были посчитаны значения функций (рис. \ref{picx1}, \ref{picx2}).
+	\begin{figure}[H]
+		\begin{minipage}[b]{0.45\linewidth}
+			\centering
+			\includegraphics[width=\linewidth]{picx1.png}
+			\caption{Решение $x(t)$ с отмеченными красными точками узлами}
+			\label{picx1}
+		  \end{minipage}
+		  \hfill
+		  \begin{minipage}[b]{0.45\linewidth}
+			\centering
+			\includegraphics[width=\linewidth]{picx2.png}
+			\caption{Решение $y(t)$ с отмеченными красными точками узлами}
+			\label{picx2}
+		  \end{minipage}
+		  \vfill
+		  \vspace{1em}
+		  \begin{minipage}[b]{0.45\linewidth}
+			\centering
+			\includegraphics[width=\linewidth]{picerr1.png}
+			\caption{График точности решения $x(t)$}
+			\label{picerr1}
+		  \end{minipage}
+		  \hfill
+		  \begin{minipage}[b]{0.45\linewidth}
+			\centering
+			\includegraphics[width=\linewidth]{picerr2.png}
+			\caption{График точности решения $y (t)$}
+			\label{picerr2}
+		  \end{minipage}
+		  \vfill
+		  \vspace{1em}
+		  \begin{minipage}[b]{0.45\linewidth}
+			\centering
+			\includegraphics[width=\linewidth]{pictau.png}
+			\caption{График изменения шага $\tau$}
+			\label{pictau}
+		  \end{minipage}
+		  \hfill
+		  \begin{minipage}[b]{0.45\linewidth}
+			\centering
+			\includegraphics[width=\linewidth]{pictau.png}
+			\caption{График изменения шага $\tau$}
+		  \end{minipage}
+	\end{figure}
 \end{document}

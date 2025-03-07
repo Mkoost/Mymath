@@ -1,0 +1,184 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{geometry}
+\usepackage{mathtools}
+\usepackage{verbatim}
+\usepackage{indentfirst}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{import}
+\usepackage{xifthen}
+\usepackage{pdfpages}
+\usepackage{transparent}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{hyperref}
+\usepackage{float}
+
+\newcommand{\norm}[1]{\lVert #1 \rVert}
+\newcommand{\abs}[1]{\lvert #1 \rvert}
+\usepackage[oglav,spisok,boldsect,eqwhole,figwhole,hyperref,hyperprint,remarks,greekit]{./style/fn2kursstyle}
+
+\graphicspath{{./style/}{./figures/}}
+
+\frenchspacing
+
+\title{Методы численного решения обыкновенных дифференциальных уравнений}
+\lab{1}
+\author{М.\,А.~Каган}
+\creator{И.\,А.~Яковлев}
+\supervisor{А. О. Колганова}
+\group{ФН2-61Б}
+\date{2025}
+
+\begin{document}
+	\maketitle
+	\tableofcontents
+	
+	\newpage
+	
+	
+	
+	\section-{Контрольные вопросы}
+	
+	\begin{enumerate}
+		\item \textbf{Дайте определения терминам: корректно поставленная задача, понятие аппроксимации дифференциальной задачи разностной схемой, порядок аппроксимации, однородная схема, консервативная схема, монотонная схема, устойчивая разностная схема (условно/абсолютно), сходимость}
+		\vspace*{0.2cm}
+		
+		\textit{\textbf{Ответ:}}
+		
+		Задача называется \textbf{корректно поставленной}, если ее решение существует, единственно, и непрерывно зависит от входных данных.
+		
+		Пусть дана задача
+		\[
+		Au = f \, \, \text{в} \,\, G, \, Ru = \mu \,\, \text{на} \,\, \partial G,
+		\]
+		разностная схема
+		\[
+		A_h y = \varphi \, \, \text{в} \,\, G_h, \, R_h y = \nu \,\, \text{на} \,\, \partial G_h,
+		\]
+		тогда разностная схема аппроксимирует исходную задачу, если для
+		% f_h --- значение исходной функции в узлах сетки
+		% вторая штука -- для определения погрешности оператора R-R_h
+		\begin{gather*}
+			\psi_h = \varphi - f_h + \left( \left( Au \right)_h - A_h u_h \right),\\
+			\chi_h = \nu - \mu_h + \left( \left( Ru \right)_h - R_h u_h \right)
+		\end{gather*}
+		выполняется
+		\begin{gather*}
+		\norm{\psi_h}_\psi \to 0, \,\, \text{при} \,\, h \to 0, \quad
+		\norm{\chi_h}_\chi \to 0, \,\, \text{при} \,\, h \to 0.
+		\end{gather*}
+		$p$-й порядок аппроксимации:
+		\[
+		\norm{\psi_h}_\psi = O \left( h^p \right), \quad \norm{\chi_h}_\chi = O \left( h^p \right).
+		\]
+		Разностная схема называется \textbf{однородной}, если её уравнение записано одинаковым образом и на одном шаблоне во всех узлах сетки без явного выделения особенностей.
+
+		Разностная схема называется \textbf{консервативной}, если для её решения выполняются законы сохранения, присущие
+		исходной задаче.
+
+		Разностная схема называется \textbf{монотонной}, если в одномерном случае её решение сохраняет монотонность по
+		пространственной переменной, при условии, что соответствующее свойство справедливо для исходной задачи, а в
+		многомерном — удовлетворяет принципу максимума исходной задачи.
+
+		Разностная схема называется \textbf{устойчивой}, если её решение непрерывно зависит от входных данных и эта зависимость равномерна по h. Пусть $y^I, \, y^{II}$ --- решения для $A_h$ и $R_h$, тогда разностная схема устойчива, если
+		\[
+		\forall \varepsilon > 0 \,\, \exists \,\, \delta (\varepsilon): \, \norm{\varphi^I - \varphi^{II}}_\varphi \leq f, \,\, \norm{\nu^I - \nu^{II}}_\nu \leq f \implies \norm{y^I - y^{II}}_Y < \varepsilon.
+		\]
+		
+		Если разностная схема не зависит от соотношения между шагами по различным независимым переменным, то такую устойчивость называют \textbf{безусловной}. В противном случае — \textbf{условной}.
+
+		Разностное решение сходится к точному, если $\norm{y - A_h u}_Y$ стремится к нулю при шаге $h$ стремящимся к нулю. С $p$-м порядком, если $\norm{y - A_h u}_Y = O(h^p)$ при $h \to 0$.
+
+		\item \textbf{Какие из рассмотренных схем являются абсолютно устойчивыми? Какая из рассмотренных схем позволяет вести расчеты с более крупным шагом по времени?}
+		\vspace*{0.2cm}
+		
+		\textit{\textbf{Ответ:}}
+		
+		\begin{enumerate}
+			\item Пусть $y^I$, $y^{II}$ решение разностных задача с одинаковым оператором, соответствующим правым частям $\varphi^I$, $\varphi^{II}$ и граничным условиям $\nu^{I}$ и $\nu^{II}$.  Разностную схему называют абсолютно устойчивой, если существуют $M_1$ и $M_2$ большие нуля, не зависящие от шага сетки, что справедливо неравенство
+			\[
+			\norm{y^I - y^{II}} \le M_1 \norm{\varphi^I - \varphi^{II}}  + M_2\norm{\nu^{I} - \nu^{II}}
+			\]
+			вне зависимости от выбора соотношения шагов. Если при $M_1 = 0$ выполняется неравенство, то говорят об устойчивости по начальным условиям, а если $M_2$, то об устойчивости по правой части.
+			
+			Из рассмотренных схем, только смешанная разностная схема удовлетворяет данному условию.
+			
+			\item Для схем с безусловной аппроксимацией порядка $O(\tau^2 + h)$ можно вести расчет с б\'oльшим шагом по времени в сравнении с шагом $h$.   
+		\end{enumerate}
+				
+		\item \textbf{Будет ли смешанная схема (2.15) иметь второй поярдок аппроксимации при $\alpha_i = \dfrac{2K(x_i)K(x_{i-1})}{K(x_i) + K(x_{i-1})}$?}
+		\vspace*{0.2cm}
+		
+		\textit{\textbf{Ответ:}}
+		
+		Из выбора обозначений:
+		\[
+		\alpha_i = \left( \frac 1 h \int_{x_{i-1}}^{x_i} \frac{dx}{K(x)} \right)^{-1}.
+		\]
+		Введем $I = \int_{x_{i-1}}^{x_i} \frac{dx}{K(x)}$. Тогда
+		\[
+		I = h \dfrac{K(x_i) + K(x_{i-1})}{2K(x_i)K(x_{i-1})} = h \frac 1 2 \left( \frac{1}{K(x_i)} + \frac{1}{K(x_{i-1})} \right),
+		\]
+		или
+		\[
+		\int_{x_{i-1}}^{x_i} \frac{dx}{K(x)} = h \frac 1 2 \left( \frac{1}{K(x_i)} + \frac{1}{K(x_{i-1})} \right),
+		\]
+		что является формулой трапеций
+		\[
+		\int_{x_{i-1}}^{x_i} f(x) \approx \frac{f(x_i) + f(x_{i-1})}{2} \left( x_i - x_{i-1} \right).
+		\]
+		Метод трапеций имеет второй порядок, следовательно исследуемая схема также имеет второй порядок аппроксимации.
+		\item \textbf{Вопрос 4}
+		\vspace*{0.2cm}
+		
+		\textit{\textbf{Ответ:}}
+				
+		\item \textbf{При каких $h$, $\tau$ и $\sigma$ смешанная схема монотонна? Проиллюстрируйте результатами расчетов свойства монотонных и немонотонных разностных схем.}
+		\vspace*{0.2cm}
+		
+		\textit{\textbf{Ответ:}}
+		
+		Явная двухслойная линейная однородная схема 
+		\[
+		\hat{y}_n =\sum_{i} d_i y_{n + i}
+		\]
+		монотонна, если все $d_i \geq 0$.
+
+		Приведем уравнение теплопроводности к такому виду:
+		\begin{multline*}
+			c \rho \frac{y_i^{j+1}-y_i^j}\tau = \frac1{h^2}\Big[\sigma \left(\alpha_{i+1}(y_{i+1}^{j+1}-y_i^{j+1}) - \alpha_i(y_i^{j+1}-y_{i-1}^{j+1})\right) + \\
+			%
+			+ (1-\sigma)\left(\alpha_{i+1}(y_{i+1}^j - y_i^j) - \alpha_i (y_i^j - y_{i-1}^j)\right)\Big],
+		\end{multline*}
+		сгруппировав и перенеся необходимые слагаемые, получим
+		\begin{multline*}
+			\left(\frac{\sigma (\alpha_{i+1}+\alpha_i)}{h^2} + \frac{c\rho}\tau\right)y_i^{j+1} = \left(\frac{\sigma \alpha_{i+1}}{h^2}\right)y_{i+1}^{j+1} + \left(\frac{\sigma \alpha_i}{h^2}\right)y_{i-1}^{j+1} + \\
+			%
+			+ \left(\frac{(1-\sigma)\alpha_{i+1}}{h^2}\right) y_{i+1}^j + \left(\frac{(1-\sigma)\alpha_i}{h^2}\right) y_{i-1}^j + \left(\frac{c\rho}{\tau} - \frac{(1-\sigma)(\alpha_{i+1} + \alpha_i)}{h^2}\right) y_i^j.
+		\end{multline*}
+		Так как $0 \leq \sigma \leq 1$ и $\alpha_i > 0$ множитель в левой части, и все множители в правой части кроме одного положительны. Из-за него получаем условие:
+		\[
+		\frac{c\rho}{\tau} > \frac{\left( 1 - \sigma \right) \left( \alpha_{i+1} + \alpha_i \right)}{h^2}.
+		\]
+		
+		\item \textbf{Вопрос 6}
+		\vspace*{0.2cm}
+		
+		\textit{\textbf{Ответ:}}
+		
+		\begin{enumerate}
+			\item Смешанная разностная сетка определяемая параметром $\sigma$ устойчива, если
+			\[
+			\sigma \ge \dfrac{1}{2} - \dfrac{c p h^2}{4 \tau \tilde{K}}, \;\;\;\; \tilde{K}=\max\limits_{0 \, \le x \, \le L}{K(x)}
+			\]
+			Для абсолютно устойчивых схем, в частности неявная, явная и симметричная, устойчивы при любых соотношениях шагов $\tau$ и $h$/
+			
+			\item Для $\sigma < 1/2$ устойчива при достаточно малом соотношении $\tau/h^2$, то такие схемы условно устойчивы.
+		\end{enumerate}
+		
+	\end{enumerate}
+\end{document}
