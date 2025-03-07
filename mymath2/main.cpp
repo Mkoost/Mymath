@@ -401,39 +401,21 @@ std::list<pddvec> explicit_Euler(pddvec grid, pddvec y0, pddvec (*func)(double t
 
 
 int main() {
-	eqSys a(nullptr, 2); // equation system, functions from right parts
-	a[0] = [](double t, mymath::dynamic_vector<double> x) -> double {return x[1]; }; // lambda function, in round paranthesis args
-	a[1] = [](double t, mymath::dynamic_vector<double> x) -> double {return -20./0.3 * x[0]; };
-	mymath::dynamic_vector<double> init = { 1.0, 0.0 };
-	auto res1 = mymath::runge_kutta_4_autostep_fast(0.0, 10.0, init, a, 1e-6, 1e-13, 1e-6, 5000);
-	std::cout << res1.size() << '\n';
-	
-	std::ofstream file1("shod1.txt", std::ios::trunc);
-	for (const auto& yn : res1) {
-		file1 << (yn.second)[0] << " " << (yn.second)[1] << " " << yn.first << "\n";
-	}
+	//eqSys a(nullptr, 2); // equation system, functions from right parts
+	//a[0] = [](double t, mymath::dynamic_vector<double> x) -> double {return x[1]; }; // lambda function, in round paranthesis args
+	//a[1] = [](double t, mymath::dynamic_vector<double> x) -> double {return -20./0.3 * x[0]; };
+	//mymath::dynamic_vector<double> init = { 1.0, 0.0 };
+	//auto res1 = mymath::runge_kutta_4_autostep_fast(0.0, 10.0, init, a, 1e-6, 1e-13, 1e-6, 5000);
+	//std::cout << res1.size() << '\n';
+	//
+	//std::ofstream file1("shod1.txt", std::ios::trunc);
+	//for (const auto& yn : res1) {
+	//	file1 << (yn.second)[0] << " " << (yn.second)[1] << " " << yn.first << "\n";
+	//}
 
-	file1.close();
+	//file1.close();
 
-	
-	
+	mymath::difference_scheme<double> ds;
 
 	return 0; 
 }
-
-
-/*int main() {
-	eqSys fl(nullptr, 2);
-	fl[0] = [](double t, mymath::dynamic_vector<double> x) -> double {return x[0] * x[0] - x[1] * x[1] - 15; };
-	fl[1] = [](double t, mymath::dynamic_vector<double> x) -> double {return x[0] * x[1] + 4; };
-	eqSys fr(nullptr, 2);
-	fr[0] = [](double t, mymath::dynamic_vector<double> x) -> double {return 0; };
-	fr[1] = fr[0];
-
-	mymath::dynamic_vector<double> st_p = { -3, 1.5 };
-
-
-	auto x =  mymath::eq_system_solve(0.0, st_p, fl);
-
-	std::cout << x[0] << " " << x[1] << '\n';
-}*/

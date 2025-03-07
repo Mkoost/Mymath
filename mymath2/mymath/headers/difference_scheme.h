@@ -27,7 +27,7 @@ namespace mymath {
 			__difference_scheme_bc_approx bbc_approx,
 			__difference_scheme_bc_approx ebc_approx,
 			dynamic_vector<T>* nl,
-			dynamic_vector<T>* prev_layer;
+			dynamic_vector<T>* prev_layer
 			); // end boundary condition
 
 		__difference_scheme_bc_func begin_bc = nullptr;
@@ -41,14 +41,14 @@ namespace mymath {
 		dynamic_vector<T> prev_layer;
 		
 
-		bool next();
+		/*bool next();
 		void log(std::string out = "");
 		void out_layer(std::string out = "");
 		
 		void gen_grid(T h_, T tau_) {
 			
 		};
-		void set_begin_time(T begin_time);
+		void set_begin_time(T begin_time);*/
 	};
 
 }
