@@ -33,9 +33,9 @@ namespace mymath {
 		template<class U>
 		dynamic_vector<T>& copy(const dynamic_vector<U>&);
 
-		dynamic_vector<T>& move(dynamic_vector<T>&) noexcept;
+		dynamic_vector<T>& move(dynamic_vector<T>&) ;
 
-		dynamic_vector<T>& move(T*, size_t) noexcept;
+		dynamic_vector<T>& move(T*, size_t);
 
 		size_t columns() const;
 		size_t rows() const;

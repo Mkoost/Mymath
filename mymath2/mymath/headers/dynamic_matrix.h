@@ -50,8 +50,8 @@ namespace mymath {
 		template<class U>
 		dynamic_matrix<T>& copy(const dynamic_matrix<U>&);
 
-		dynamic_matrix<T>& move(dynamic_matrix<T>&) noexcept;
-		dynamic_matrix<T>& move(T*, size_t n, size_t m) noexcept;
+		dynamic_matrix<T>& move(dynamic_matrix<T>&) ;
+		dynamic_matrix<T>& move(T*, size_t n, size_t m) ;
 
 		size_t columns() const;
 		size_t rows() const;

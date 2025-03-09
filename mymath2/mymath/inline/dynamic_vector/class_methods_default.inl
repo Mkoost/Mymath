@@ -2,6 +2,7 @@
 #include "./../../headers/dynamic_vector.h"
 #include "./../../details/__expr.inl"
 #include <stdexcept>
+#include<iostream>
 
 
 namespace mymath {
@@ -52,7 +53,8 @@ namespace mymath {
 	}
 
 	template<class T>
-	dynamic_vector<T>& dynamic_vector<T>::move(T* A, size_t n) noexcept {
+	dynamic_vector<T>& dynamic_vector<T>::move(T* A, size_t n)  {
+		if (values != nullptr)  delete[] values;
 		values = A;
 		n_ = n;
 		return *this;
@@ -65,7 +67,7 @@ namespace mymath {
 
 	template<class T>
 	dynamic_vector<T>::~dynamic_vector() {
-		if (values) delete[] values;
+		if (values != nullptr) delete[] values;
 	}
 
 	// ------------------ METHODS ------------------
@@ -93,14 +95,14 @@ namespace mymath {
 	};
 
 	template<class T>
-	dynamic_vector<T>& dynamic_vector<T>::move(dynamic_vector<T>& A) noexcept {
-		if (values) delete[] values;
-
+	dynamic_vector<T>& dynamic_vector<T>::move(dynamic_vector<T>& A)  {
+		if (values != nullptr) delete[] values;
 		values = A.values;
 		n_ = A.size();
 
 		A.values = nullptr;
 		A.n_ = 0;
+
 		return *this;
 	}
 

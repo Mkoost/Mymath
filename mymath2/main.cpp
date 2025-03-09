@@ -393,7 +393,7 @@ std::list<pddvec> explicit_Euler(pddvec grid, pddvec y0, pddvec (*func)(double t
 
 	size_t n = grid.size();
 	for (int i = 1; i < n; ++i) {
-		res.push_back(res.back() + (grid[i] - grid[i-1]) * func(grid[i], res.back()));
+		res.push_back(res.back() + (grid[i] - grid[i - 1]) * func(grid[i], res.back()));
 	}
 
 	return res;
@@ -414,8 +414,18 @@ int main() {
 	//}
 
 	//file1.close();
+	mymath::difference_scheme<double>::difference_scheme_bc_approx 
+		bbc = [](mymath::difference_scheme<double>* ds, mymath::dynamic_vector<double>& vec) -> void {for (int i = 0; i < 4; ++i) vec[i] = 0; vec[1] = 1; },
+		ebc = [](mymath::difference_scheme<double>* ds, mymath::dynamic_vector<double>& vec) -> void {for (int i = 0; i < 4; ++i) vec[i] = 0; vec[1] = 1; vec[3] = 1; };
+	mymath::difference_scheme<double>::difference_scheme_K_coef_func 
+		K = [](double u, double x) -> double { return 1.0; };
 
-	mymath::difference_scheme<double> ds;
+	size_t n = 11;
+	mymath::dynamic_vector<double> u0(0, n + 2);
 
+	mymath::difference_scheme<double> ds(0.01, 0.0, n, u0, 1.0, bbc, ebc, K, mymath::difference_scheme<double>::mixed_algo);
+	ds.next(1000);
+	
+	mymath::utilities::print(ds.prev_layer);
 	return 0; 
 }

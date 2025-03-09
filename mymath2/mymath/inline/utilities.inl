@@ -8,7 +8,7 @@
 #include "dynamic_matrix.inl.h"
 #include "dynamic_vector.inl.h"
 #include "../headers/data_structs.h"
-
+#include "quaternion.inl.h"
 
 namespace mymath {
 	namespace utilities {
