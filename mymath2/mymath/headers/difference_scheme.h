@@ -104,8 +104,6 @@ namespace mymath {
 			T sigma = __mixed_difference_scheme_sigma;
 
 			// left cond
-			for (size_t i = 0; i < 2; ++i)
-				line[i] = ds->prev_layer[i];
 
 			ds->bbc_approx(ds, line);
 
@@ -115,8 +113,7 @@ namespace mymath {
 			ds->next_layer[0] = line[3];
 
 			// right cond
-			for (size_t i = 0; i < 2; ++i)
-				line[i] = ds->prev_layer[ds->prev_layer.size() - 2 + i];
+
 
 			ds->ebc_approx(ds, line);
 
@@ -140,6 +137,7 @@ namespace mymath {
 
 			}
 
+			
 			diag3_solver(ds->progonka_buff, ds->next_layer);
 
 		}

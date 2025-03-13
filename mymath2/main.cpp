@@ -19,80 +19,7 @@ struct kaganvec {
 	std::list<point> ps;	// points?
 };
 
-void add_point(kaganvec& vec, point p) {
-	if (vec.ps.size()) {
-		vec.ps.push_back(p);
-		test_T f = 0;
-		auto psb = vec.ps.begin();
-		auto psi = vec.ps.begin();
-		++psi;
-		auto scnd = psi;
-		auto pse = vec.ps.end();
-		for (size_t i = 0; i != vec.ps.size() - 1; ++i) {
-			test_T tmp = 1;
-			++psb;
-			while (psi != pse) {
-				if (psi != psb)
-					tmp *= (*psb)[0] - (*psi)[0];
-				++psi;
-			}
-			f += (*psb)[1] / tmp;
-			psi = scnd;
-		}
-		f -= (*vec.fs.rbegin());
-		f /= p[0] - (*vec.ps.begin())[0];
-		vec.fs.push_back(f);
-	}
-	else {
-		vec.fs.push_back(p[1]);
-		vec.ps.push_back(p);
-	}
-};
 
-test_T evaluate(kaganvec& vec, test_T x) {
-	auto ps = vec.ps.begin();
-
-	test_T res = (*ps)[1];
-	test_T tmp = 1;
-	auto f = vec.fs.begin();
-	++f;
-	for (auto endf = vec.fs.end(); f != endf; ++f) {
-		tmp *= (x - (*ps)[0]);
-		res += tmp * (*f);
-		++ps;
-	}
-	return res;
-
-}
-
-
-test_T ex_f1(test_T x) {
-	return (x - 0.1) * (x - 0.22) * (x - 0.55) * (x - 0.7) * (x - 0.75);
-}
-
-test_T ex_f2(test_T x) {
-	return std::sqrt(x + 1) - 1;
-}
-
-test_T ex_f3(test_T x) {
-	return  35 * x * x * x - 67 * x * x - 3 * x + 3;
-}
-
-test_T ex_f4(test_T x) {
-	return std::pow((4 * x * x * x + 2 * x * x - 4 * x + 2), std::sqrt(2))
-		+ std::sin(1 / (5 + x - x * x)) - 5;
-}
-
-test_T ex_f5(test_T x) {
-	return (x - 1) * (x - 1) * (x - 1);
-}
-test_T ex_f6(test_T x) {
-	return x * x - 1;
-}
-
-test_T func(test_T x) {
-	return  ex_f3(x);
-}
 /*
 test_T func1(test_T x, test_T y) {
 	return  x * x - y * y - 15;
@@ -109,27 +36,7 @@ test_T func2(test_T x, test_T y) {
 	return sqrt(x)+sqrt(y)-4;
 }
 */
-test_T func1(test_T x, test_T y) {
-	return pow(pow(x, 2) + 2 * pow(y, 2), 2) - 7 * (pow(x, 2) - 2 * pow(y, 2));
-}
-test_T func2(test_T x, test_T y) {
-	return 3 * pow(x, 2) + 4 * pow(y, 2) - 14;
-}
-void poly_fit_uniform(kaganvec& vec, size_t n, double l, double r) {
-	auto labs = r - l;
-	for (size_t i = 0; i != n - 1; ++i) {
-		add_point(vec, { l + i * labs / n, func(l + i * labs / n) });
-	}
-	add_point(vec, { r, func(r) });
-}
 
-void poly_fit_chebi(kaganvec& vec, size_t n, double l, double r) {
-	for (size_t i = 1; i != n + 1; ++i) {
-		test_T x = (l + r) / 2 + ((r - l) / 2) * std::cos((2 * i - 1) * PI / (2 * (n)));
-		add_point(vec, { x, func(x) });
-	}
-
-}
 
 // spline related starts here
 dvec progonka(const dvec& a, const dvec& b, const dvec& c, const dvec& d)
@@ -302,14 +209,6 @@ dvec spline(const dvec& mesh, const dvec& F, const dvec& x) {
 	return spline_eval(x, n, mesh, a, b, c, d);
 }
 
-test_T err_norm(kaganvec& j, size_t n, double l, double r) {
-	test_T mx = 0;
-	test_T labs = r - l;
-	for (size_t i = 0; i < n + 1; ++i) {
-		mx = std::max(mx, std::fabs(func(l + i * labs / n) - evaluate(j, l + i * labs / n)));
-	}
-	return mx;
-}
 
 
 
@@ -371,21 +270,6 @@ std::list<mymath::dvec2> roots_location(double a, double b, size_t n, double (*f
 
 };
 
-pddvec f22(double tn, pddvec yn) {
-	double b = -1;
-	double delta = 0.02;
-	double a = 2.5;
-	double F = 0.5;
-	double nu = std::sqrt(a) + 0.15; 
-	double dy1 = yn[1];
-	double dy2 = -2 * delta * yn[1] - a * yn[0] - b * std::pow(yn[0], 3) + F * std::cos(nu * tn);
-
-	mymath::dynamic_vector<double> res = {0, 0};
-	res[0] = dy1;
-	res[1] = dy2;
-	return res;
-}
-
 // tau -- шаг разностной сетки, с начального приближения в левом конце считаем все точки на области
 std::list<pddvec> explicit_Euler(pddvec grid, pddvec y0, pddvec (*func)(double tn, pddvec yn)) {
 	std::list<pddvec> res;
@@ -398,33 +282,59 @@ std::list<pddvec> explicit_Euler(pddvec grid, pddvec y0, pddvec (*func)(double t
 
 	return res;
 }
-
+double Pr(double pr) {
+	return 1;
+}
+double Pl(double pr) {
+	return -1;
+}
 
 int main() {
-	//eqSys a(nullptr, 2); // equation system, functions from right parts
-	//a[0] = [](double t, mymath::dynamic_vector<double> x) -> double {return x[1]; }; // lambda function, in round paranthesis args
-	//a[1] = [](double t, mymath::dynamic_vector<double> x) -> double {return -20./0.3 * x[0]; };
-	//mymath::dynamic_vector<double> init = { 1.0, 0.0 };
-	//auto res1 = mymath::runge_kutta_4_autostep_fast(0.0, 10.0, init, a, 1e-6, 1e-13, 1e-6, 5000);
-	//std::cout << res1.size() << '\n';
-	//
-	//std::ofstream file1("shod1.txt", std::ios::trunc);
-	//for (const auto& yn : res1) {
-	//	file1 << (yn.second)[0] << " " << (yn.second)[1] << " " << yn.first << "\n";
-	//}
 
-	//file1.close();
-	mymath::difference_scheme<double>::difference_scheme_bc_approx 
-		bbc = [](mymath::difference_scheme<double>* ds, mymath::dynamic_vector<double>& vec) -> void {for (int i = 0; i < 4; ++i) vec[i] = 0; vec[1] = 1; },
-		ebc = [](mymath::difference_scheme<double>* ds, mymath::dynamic_vector<double>& vec) -> void {for (int i = 0; i < 4; ++i) vec[i] = 0; vec[1] = 1; vec[3] = 1; };
+	mymath::difference_scheme<double>::difference_scheme_bc_approx
+		bbc_1type = [](mymath::difference_scheme<double>* ds, mymath::dynamic_vector<double>& vec) -> void {for (int i = 0; i < 4; ++i) vec[i] = 0; vec[1] = 1; vec[3] = 1; },
+		ebc_1type = [](mymath::difference_scheme<double>* ds, mymath::dynamic_vector<double>& vec) -> void {for (int i = 0; i < 4; ++i) vec[i] = 0; vec[1] = 1; vec[3] = 1; },
+		ebc_2type = [](mymath::difference_scheme<double>* ds, mymath::dynamic_vector<double>& vec) -> void {
+			for (int i = 0; i < 4; ++i) vec[i] = 0; 
+			 
+			double h  = 1. / ds->next_layer.size();
+			double an = 1. / ds->K(0, h * (ds->next_layer.size() - 0.5));
+			double sig_an_h = mymath::__mixed_difference_scheme_sigma * an / h;
+			double cp_h_2tau = ds->cp_coef * h / (2 * ds->tau);
+			double w = an * (ds->prev_layer[ds->prev_layer.size() - 1] - ds->prev_layer[ds->prev_layer.size() - 1]) / h;;
+			double kappa = sig_an_h / (cp_h_2tau + sig_an_h);
+			double mu = (cp_h_2tau * ds->prev_layer[ds->prev_layer.size() - 1] +
+						mymath::__mixed_difference_scheme_sigma * Pr(ds->begin_time + ds->tau)
+						+ (1 - mymath::__mixed_difference_scheme_sigma) * (Pr(ds->begin_time) - w)) / (cp_h_2tau + sig_an_h);
+			vec[1] = 1;
+			vec[0] = -kappa;
+			vec[3] = mu; 
+		},
+		bbc_2type = [](mymath::difference_scheme<double>* ds, mymath::dynamic_vector<double>& vec) -> void {
+		for (int i = 0; i < 4; ++i) vec[i] = 0;
+
+		double h = 1. / ds->next_layer.size();
+		double an = 1. / ds->K(0, h * 0.5);
+		double sig_an_h = mymath::__mixed_difference_scheme_sigma * an / h;
+		double cp_h_2tau = ds->cp_coef * h / (2 * ds->tau);
+		double w = an * (ds->prev_layer[1] - ds->prev_layer[0]) / h;;
+		double kappa = sig_an_h / (cp_h_2tau + sig_an_h);
+		double mu = (cp_h_2tau * ds->prev_layer[0] +
+			mymath::__mixed_difference_scheme_sigma * Pl(ds->begin_time + ds->tau)
+			+ (1 - mymath::__mixed_difference_scheme_sigma) * (Pl(ds->begin_time) - w)) / (cp_h_2tau + sig_an_h);
+		vec[1] = 1;
+		vec[2] = -kappa;
+		vec[3] = mu;
+		};
 	mymath::difference_scheme<double>::difference_scheme_K_coef_func 
 		K = [](double u, double x) -> double { return 1.0; };
 
-	size_t n = 11;
+	size_t n = 100;
 	mymath::dynamic_vector<double> u0(0, n + 2);
+	u0[0] = 0;
 
-	mymath::difference_scheme<double> ds(0.01, 0.0, n, u0, 1.0, bbc, ebc, K, mymath::difference_scheme<double>::mixed_algo);
-	ds.next(1000);
+	mymath::difference_scheme<double> ds(0.01, 0.0, n, u0, 1.0, bbc_2type, ebc_1type, K, mymath::difference_scheme<double>::mixed_algo);
+	ds.next(30000);
 	
 	mymath::utilities::print(ds.prev_layer);
 	return 0; 
