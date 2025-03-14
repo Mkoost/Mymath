@@ -124,7 +124,7 @@ namespace mymath {
 
 			T h = 1.0 / (ds->prev_layer.size());
 			T tau = ds->tau;
-			
+
 			for (size_t i = 1; i < ds->prev_layer.size() - 1; ++i) {
 				T a1 = 1 / ds->K(0, h * (i - 0.5));
 				T a2 = 1 / ds->K(0, h * (i + 0.5));
@@ -137,11 +137,55 @@ namespace mymath {
 
 			}
 
-			
 			diag3_solver(ds->progonka_buff, ds->next_layer);
 
-		}
+		};
 		
+		static void semi_explicit_algo(difference_scheme* ds) {
+			dynamic_vector<T> line(0, 4);
+			// left cond
+
+			ds->bbc_approx(ds, line);
+
+			for (size_t i = 0; i < 3; ++i)
+				ds->progonka_buff[0][i] = line[i];
+
+			ds->next_layer[0] = line[3];
+
+			// right cond
+
+
+			ds->ebc_approx(ds, line);
+
+			for (size_t i = 0; i < 3; ++i)
+				ds->progonka_buff[ds->progonka_buff.rows() - 1][i] = line[i];
+
+			ds->next_layer[ds->next_layer.size() - 1] = line[3];
+
+			T h = 1.0 / (ds->prev_layer.size());
+			T tau = ds->tau;
+
+			for (size_t i = 1; i < ds->prev_layer.size() - 1; ++i) {
+				/*T dk1 = (ds->K((ds->prev_layer[i] + ds->prev_layer[i - 1]) / 2 + 1e-8, 0) - ds->K((ds->prev_layer[i] + ds->prev_layer[i - 1]) / 2, 0)) / 1e-8;
+				T dk2 = (ds->K((ds->prev_layer[i + 1] + ds->prev_layer[i]) / 2 + 1e-8, 0) - ds->K((ds->prev_layer[i + 1] + ds->prev_layer[i]) / 2, 0)) / 1e-8;
+				T a1 = ds->K((ds->prev_layer[i] + ds->prev_layer[i - 1]) / 2, 0) + tau * dk1;
+				T a2 = ds->K((ds->prev_layer[i + 1] + ds->prev_layer[i]) / 2, 0) + tau * dk2;*/
+
+				T a1 = 0.5 * (ds->k(ds->prev_layer[i - 1], h * (i - 1)) + ds->k(ds->prev_layer[i], h * i));
+				T a2 = 0.5 * (ds->k(ds->prev_layer[i], h * i) + ds->k(ds->prev_layer[i + 1], h * (i + 1)));
+
+
+				ds->progonka_buff[i][0] = -tau * a1;
+				ds->progonka_buff[i][1] = h * h + tau * (a1 + a2);
+				ds->progonka_buff[i][2] = -tau * a2;
+				ds->next_layer[i] = h * h * ds->prev_layer[i];
+
+			}
+
+			diag3_solver(ds->progonka_buff, ds->next_layer);
+
+		};
+
 		dynamic_vector<T> next_layer;
 		dynamic_vector<T> prev_layer;
 		dynamic_matrix<T> progonka_buff;
