@@ -55,6 +55,7 @@ namespace mymath {
 		T tau;
 		T begin_time;
 		T cp_coef;
+		T step;
 		difference_scheme_bc_approx bbc_approx;
 		difference_scheme_bc_approx ebc_approx;
 		difference_scheme_K_coef_func K;
@@ -162,17 +163,17 @@ namespace mymath {
 
 			ds->next_layer[ds->next_layer.size() - 1] = line[3];
 
-			T h = 1.0 / (ds->prev_layer.size());
+			T h = ds->step;
 			T tau = ds->tau;
 
 			for (size_t i = 1; i < ds->prev_layer.size() - 1; ++i) {
-				/*T dk1 = (ds->K((ds->prev_layer[i] + ds->prev_layer[i - 1]) / 2 + 1e-8, 0) - ds->K((ds->prev_layer[i] + ds->prev_layer[i - 1]) / 2, 0)) / 1e-8;
-				T dk2 = (ds->K((ds->prev_layer[i + 1] + ds->prev_layer[i]) / 2 + 1e-8, 0) - ds->K((ds->prev_layer[i + 1] + ds->prev_layer[i]) / 2, 0)) / 1e-8;
+				T dk1 = (ds->K((ds->prev_layer[i] + ds->prev_layer[i - 1]) / 2 + 1e-10, 0) - ds->K((ds->prev_layer[i] + ds->prev_layer[i - 1]) / 2, 0)) / 1e-10;
+				T dk2 = (ds->K((ds->prev_layer[i + 1] + ds->prev_layer[i]) / 2 + 1e-10, 0) - ds->K((ds->prev_layer[i + 1] + ds->prev_layer[i]) / 2, 0)) / 1e-10;
 				T a1 = ds->K((ds->prev_layer[i] + ds->prev_layer[i - 1]) / 2, 0) + tau * dk1;
-				T a2 = ds->K((ds->prev_layer[i + 1] + ds->prev_layer[i]) / 2, 0) + tau * dk2;*/
+				T a2 = ds->K((ds->prev_layer[i + 1] + ds->prev_layer[i]) / 2, 0) + tau * dk2;
 
-				T a1 = 0.5 * (ds->k(ds->prev_layer[i - 1], h * (i - 1)) + ds->k(ds->prev_layer[i], h * i));
-				T a2 = 0.5 * (ds->k(ds->prev_layer[i], h * i) + ds->k(ds->prev_layer[i + 1], h * (i + 1)));
+				/*T a1 = 0.5 * (ds->K(ds->prev_layer[i - 1], h * (i - 1)) + ds->K(ds->prev_layer[i], h * i));
+				T a2 = 0.5 * (ds->K(ds->prev_layer[i], h * i) + ds->K(ds->prev_layer[i + 1], h * (i + 1)));*/
 
 
 				ds->progonka_buff[i][0] = -tau * a1;
@@ -182,6 +183,8 @@ namespace mymath {
 
 			}
 
+			/*utilities::print(ds->progonka_buff);
+			utilities::print(ds->next_layer);*/
 			diag3_solver(ds->progonka_buff, ds->next_layer);
 
 		};

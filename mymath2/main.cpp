@@ -292,8 +292,8 @@ double Pl(double pr) {
 int main() {
 
 	mymath::difference_scheme<double>::difference_scheme_bc_approx
-		bbc_1type = [](mymath::difference_scheme<double>* ds, mymath::dynamic_vector<double>& vec) -> void {for (int i = 0; i < 4; ++i) vec[i] = 0; vec[1] = 1; vec[3] = 1; },
-		ebc_1type = [](mymath::difference_scheme<double>* ds, mymath::dynamic_vector<double>& vec) -> void {for (int i = 0; i < 4; ++i) vec[i] = 0; vec[1] = 1; vec[3] = 1; },
+		bbc_1type = [](mymath::difference_scheme<double>* ds, mymath::dynamic_vector<double>& vec) -> void {double u0 = std::pow(2. * 5. * 5. / 0.5, 0.5);  for (int i = 0; i < 4; ++i) vec[i] = 0; vec[1] = 1; vec[3] = u0 * std::pow(ds->begin_time, 0.5); },
+		ebc_1type = [](mymath::difference_scheme<double>* ds, mymath::dynamic_vector<double>& vec) -> void {for (int i = 0; i < 4; ++i) vec[i] = 0; vec[1] = 1; vec[3] = 0; },
 		ebc_2type = [](mymath::difference_scheme<double>* ds, mymath::dynamic_vector<double>& vec) -> void {
 			for (int i = 0; i < 4; ++i) vec[i] = 0; 
 			 
@@ -327,15 +327,21 @@ int main() {
 		vec[3] = mu;
 		};
 	mymath::difference_scheme<double>::difference_scheme_K_coef_func 
-		K = [](double u, double x) -> double { return 1.0; };
+		K = [](double u, double x) -> double { return 0.5 * std::pow(u,2); };
 
-	size_t n = 100;
+	size_t n = 48;
 	mymath::dynamic_vector<double> u0(0, n + 2);
-	u0[0] = 0;
+	double ttau = 0.0001;
+	mymath::difference_scheme<double> ds(ttau, ttau, n, u0, 1.0, bbc_1type, ebc_1type, K, mymath::difference_scheme<double>::semi_explicit_algo);
+	ds.step = 0.2;
+	size_t k = 15000;
+	ds.next(k);
 
-	mymath::difference_scheme<double> ds(0.01, 0.0, n, u0, 1.0, bbc_2type, ebc_1type, K, mymath::difference_scheme<double>::mixed_algo);
-	ds.next(30000);
-	
+	for (size_t i = 0; i < n; ++i) u0[i] = std::sqrt(2. * 5. * 2. * (5. * k * ttau - i * 0.2));
 	mymath::utilities::print(ds.prev_layer);
+	std::cout << "\n";
+	mymath::utilities::print(u0);
+	std::cout << "\n";
+	mymath::utilities::print(ds.prev_layer - u0);
 	return 0; 
 }

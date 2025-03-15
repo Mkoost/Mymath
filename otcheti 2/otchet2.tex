@@ -290,12 +290,26 @@
 	\section-{Дополнительные вопросы}
 	
 	\begin{enumerate}
-		\item \textbf{Вопрос 6}
+		\item \textbf{Приведите пример неконсервативной схемы.}
 		\vspace*{0.2cm}
 		
 		\textit{\textbf{Ответ:}}
 		
-		
+		Рассмотрим задачу: 
+		\begin{gather}
+			(K(x) u_x)_x = 0 \notag \\
+			k = \begin{dcases}
+				2, \qquad 0 \le x < 1/2 \\
+				1 , \qquad 1/2 \le x < 1 \\
+			 \end{dcases}
+		\end{gather}
+		Для нее справедлива, кроме точки $0.5$, следующая форма записи:
+		\[K(x)u_{xx} = 0\]
+		В этом случае схема:
+		\[
+		K(x)u_{\overline{x}x}
+		\]
+		будет неконсервативной.
 	\end{enumerate}
 	
 \end{document}
