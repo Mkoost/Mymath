@@ -329,15 +329,15 @@ int main() {
 	mymath::difference_scheme<double>::difference_scheme_K_coef_func 
 		K = [](double u, double x) -> double { return 0.5 * std::pow(u,2); };
 
-	size_t n = 48;
+	size_t n = 798;
 	mymath::dynamic_vector<double> u0(0, n + 2);
 	double ttau = 0.0001;
 	mymath::difference_scheme<double> ds(ttau, ttau, n, u0, 1.0, bbc_1type, ebc_1type, K, mymath::difference_scheme<double>::semi_explicit_algo);
-	ds.step = 0.2;
+	ds.step = 0.0125;
 	size_t k = 15000;
 	ds.next(k);
 
-	for (size_t i = 0; i < n; ++i) u0[i] = std::sqrt(2. * 5. * 2. * (5. * k * ttau - i * 0.2));
+	for (size_t i = 0; i < n; ++i) u0[i] = std::sqrt(2. * 5. * 2. * (5. * k * ttau - i * ds.step));
 	mymath::utilities::print(ds.prev_layer);
 	std::cout << "\n";
 	mymath::utilities::print(u0);
