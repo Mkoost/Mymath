@@ -5,7 +5,7 @@
 #include "../inline/vector.inl.h"
 #include "../inline/utilities.inl"
 namespace mymath {
-	namespace { constexpr const double __mixed_difference_scheme_sigma = 1;
+	namespace { constexpr const double __mixed_difference_scheme_sigma = 1.;
 	
 	template<class T>
 	void diag3_solver(dynamic_matrix<T>& buff, dynamic_vector<T> & X)
@@ -193,8 +193,6 @@ namespace mymath {
 		dynamic_vector<T> prev_layer;
 		dynamic_matrix<T> progonka_buff;
 		
-		
-
 	};
 
 	
