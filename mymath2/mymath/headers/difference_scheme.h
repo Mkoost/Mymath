@@ -5,7 +5,7 @@
 #include "../inline/vector.inl.h"
 #include "../inline/utilities.inl"
 namespace mymath {
-	namespace { constexpr const double __mixed_difference_scheme_sigma = 1;
+	namespace { constexpr const double __mixed_difference_scheme_sigma = 1.;
 	
 	template<class T>
 	void diag3_solver(dynamic_matrix<T>& buff, dynamic_vector<T> & X)
@@ -127,8 +127,8 @@ namespace mymath {
 			T tau = ds->tau;
 
 			for (size_t i = 1; i < ds->prev_layer.size() - 1; ++i) {
-				T a1 = 1 / ds->K(0, h * (i - 0.5));
-				T a2 = 1 / ds->K(0, h * (i + 0.5));
+				T a1 = ds->K(0, h * (i - 0.5));
+				T a2 = ds->K(0, h * (i + 0.5));
 				T w1 = a1 * (ds->prev_layer[i] - ds->prev_layer[i - 1]) / h;
 				T w2 = a2 * (ds->prev_layer[i + 1] - ds->prev_layer[i]) / h;
 				ds->progonka_buff[i][0] = sigma / h * a1;
@@ -193,8 +193,6 @@ namespace mymath {
 		dynamic_vector<T> prev_layer;
 		dynamic_matrix<T> progonka_buff;
 		
-		
-
 	};
 
 	
