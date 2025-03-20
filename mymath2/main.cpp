@@ -307,74 +307,81 @@ int main() {
 		bbc_1type = [](mymath::difference_scheme<double>* ds, mymath::dynamic_vector<double>& vec) -> void {for (int i = 0; i < 4; ++i) vec[i] = 0; vec[1] = 1; vec[3] = 5; },
 		ebc_1type = [](mymath::difference_scheme<double>* ds, mymath::dynamic_vector<double>& vec) -> void {for (int i = 0; i < 4; ++i) vec[i] = 0; vec[1] = 1; vec[3] = 100; },
 		ebc_2type = [](mymath::difference_scheme<double>* ds, mymath::dynamic_vector<double>& vec) -> void {
-			for (int i = 0; i < 4; ++i) vec[i] = 0; 
-			 
-			double h  = 1. / ds->next_layer.size();
-			double an = ds->K(0, h * (ds->next_layer.size() - 0.5));
-			double sig_an_h = mymath::__mixed_difference_scheme_sigma * an / h;
-			double cp_h_2tau = ds->cp_coef * h / (2 * ds->tau);
-			double w = an * (ds->prev_layer[ds->prev_layer.size() - 1] - ds->prev_layer[ds->prev_layer.size() - 1]) / h;;
-			double kappa = sig_an_h / (cp_h_2tau + sig_an_h);
-			double mu = (cp_h_2tau * ds->prev_layer[ds->prev_layer.size() - 1] +
-						mymath::__mixed_difference_scheme_sigma * Pr(ds->begin_time + ds->tau)
-						+ (1 - mymath::__mixed_difference_scheme_sigma) * (Pr(ds->begin_time) - w)) / (cp_h_2tau + sig_an_h);
-			vec[1] = 1;
-			vec[0] = -kappa;
-			vec[3] = mu; 
+		for (int i = 0; i < 4; ++i) vec[i] = 0;
+
+		double h = 1. / ds->next_layer.size();
+		double an = 1. / ds->K(0, h * (ds->next_layer.size() - 0.5));
+		double sig_an_h = mymath::__mixed_difference_scheme_sigma * an / h;
+		double cp_h_2tau = ds->cp_coef * h / (2 * ds->tau);
+		double w = an * (ds->prev_layer[ds->prev_layer.size() - 1] - ds->prev_layer[ds->prev_layer.size() - 1]) / h;;
+		double kappa = sig_an_h / (cp_h_2tau + sig_an_h);
+		double mu = (cp_h_2tau * ds->prev_layer[ds->prev_layer.size() - 1] +
+			mymath::__mixed_difference_scheme_sigma * Pr(ds->begin_time + ds->tau)
+			+ (1 - mymath::__mixed_difference_scheme_sigma) * (Pr(ds->begin_time) - w)) / (cp_h_2tau + sig_an_h);
+		vec[1] = 1;
+		vec[0] = -kappa;
+		vec[3] = mu;
 		},
 
 		bbc_2type = [](mymath::difference_scheme<double>* ds, mymath::dynamic_vector<double>& vec) -> void {
-			for (int i = 0; i < 4; ++i) vec[i] = 0;
-			double h = 1. / ds->next_layer.size();
-			double an =  ds->K(0, h * 0.5);
-			double sig_an_h = mymath::__mixed_difference_scheme_sigma * an / h;
-			double cp_h_2tau = ds->cp_coef * h / (2 * ds->tau);
-			double w = an * (ds->prev_layer[1] - ds->prev_layer[0]) / h;;
-			double kappa = sig_an_h / (cp_h_2tau + sig_an_h);
-			double mu = (cp_h_2tau * ds->prev_layer[0] +
-				mymath::__mixed_difference_scheme_sigma * Pl(ds->begin_time + ds->tau)
-				+ (1 - mymath::__mixed_difference_scheme_sigma) * (Pl(ds->begin_time) - w)) / (cp_h_2tau + sig_an_h);
-			vec[1] = 1;
-			vec[2] = -kappa;
-			vec[3] = mu;
+		for (int i = 0; i < 4; ++i) vec[i] = 0;
+		double h = 1. / ds->next_layer.size();
+		double an = 1. / ds->K(0, h * 0.5);
+		double sig_an_h = mymath::__mixed_difference_scheme_sigma * an / h;
+		double cp_h_2tau = ds->cp_coef * h / (2 * ds->tau);
+		double w = an * (ds->prev_layer[1] - ds->prev_layer[0]) / h;;
+		double kappa = sig_an_h / (cp_h_2tau + sig_an_h);
+		double mu = (cp_h_2tau * ds->prev_layer[0] +
+			mymath::__mixed_difference_scheme_sigma * Pl(ds->begin_time + ds->tau)
+			+ (1 - mymath::__mixed_difference_scheme_sigma) * (Pl(ds->begin_time) - w)) / (cp_h_2tau + sig_an_h);
+		vec[1] = 1;
+		vec[2] = -kappa;
+		vec[3] = mu;
 		};
-	mymath::difference_scheme<double>::difference_scheme_K_coef_func 
-		K = [](double u, double x) -> double { return 0.1; };
+	mymath::difference_scheme<double>::difference_scheme_K_coef_func
+		K = [](double u, double x) -> double { return 1000.; };
 
-	size_t n = 198;
-	double ttau = 0.25e-2;
-	double h1 = 1./(n+2);
+	int q = 2;
+	size_t n = 50 * q - 2;
+	double h1 = 1. / (n + 1);
+	double ttau = 1. / (q * q) * 1e-2;
+
 	mymath::dynamic_vector<double> u0(0, n + 2);
-	for (int i = 0; i < n+2; ++i) {
-		u0[i] = 5 + 95 * i* h1 + 100 * std::sin(PI * i*h1);
+	for (int i = 0; i < n + 2; ++i) {
+		u0[i] = 5 + 95 * i * h1 + 100 * std::sin(PI * i * h1);
 	}
-	mymath::difference_scheme<double> ds(ttau, 0.0, n, u0, 1.0, bbc_1type, ebc_1type, K, mymath::difference_scheme<double>::mixed_algo);
-	
-	auto filename1 = "lab2_shod_h.txt";
+	mymath::difference_scheme<double> ds(ttau, 0.0, n, u0, 1., bbc_1type, ebc_1type, K, mymath::difference_scheme<double>::mixed_algo);
+
+	auto filename1 = "lab2_shod_h8.txt";
 	auto filename2 = "lab2_points.txt";
 	auto filename3 = "lab2_points_err.txt";
 	std::ofstream file1(filename1, std::ios::trunc);
 	std::ofstream file2(filename2, std::ios::trunc);
 	std::ofstream file3(filename3, std::ios::trunc);
-	file1.precision(16);
-	for (int k = 1; k*ttau < 2.0; ++k) {
-		ds.next();
-		
-		for (size_t i = 0; i < n + 2; ++i) {
-			u0[i] = 5 + 95 * i* h1 + 100 * std::pow(E, - (PI*PI * k * ttau)/10.) * std::sin(PI * i*h1);
-		}
-		file1 << k*ttau << " " << pddvec_max(ds.prev_layer - u0) << "\n";
 
-		for (size_t i = 0; i < n+2; ++i) {
-			file3 << k*ttau << " " << i*h1 << " " << std::abs(ds.prev_layer[i] - u0[i]) << "\n";
+	file1.precision(16);
+	for (int k = 1; k * ttau < 5.0; ++k) {
+		ds.next();
+
+		for (size_t i = 0; i < n + 2; ++i) {
+			u0[i] = 5 + 95 * i * h1 + 100 * std::pow(E, -(PI * PI * k * ttau) / 10.) * std::sin(PI * i * h1);
+		}
+		//file1 << k*ttau << " " << pddvec_max(ds.prev_layer - u0) << "\n";
+
+		for (size_t i = 0; i < n + 2; ++i) {
+			file3 << k * ttau << " " << i * h1 << " " << std::abs(ds.prev_layer[i] - u0[i]) << "\n";
+		}
+		// points out
+		for (size_t i = 0; i < n + 2; ++i) {
+			file2 << k * ttau << " " << i * h1 << " " << ds.prev_layer[i] << "\n";
 		}
 	}
 	mymath::utilities::print(u0);
-	mymath::utilities::print(ds.prev_layer);
+	
 	// mymath::utilities::print(u0 - ds.prev_layer);
 	// std::cout << pddvec_max(u0 - ds.prev_layer) << "\n";
-	
-	return 0; 
+
+	return 0;
 }
 
 /*

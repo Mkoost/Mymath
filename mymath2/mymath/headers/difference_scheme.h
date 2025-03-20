@@ -5,7 +5,7 @@
 #include "../inline/vector.inl.h"
 #include "../inline/utilities.inl"
 namespace mymath {
-	namespace { constexpr const double __mixed_difference_scheme_sigma = 1.;
+	namespace { constexpr const double __mixed_difference_scheme_sigma = 0.;
 	
 	template<class T>
 	void diag3_solver(dynamic_matrix<T>& buff, dynamic_vector<T> & X)
@@ -94,7 +94,7 @@ namespace mymath {
 				tmp.move(prev_layer);
 				prev_layer.move(next_layer);
 				next_layer.move(tmp);
-				
+				mymath::utilities::print(prev_layer);
 				begin_time += tau;
 			}
 		}
@@ -144,6 +144,7 @@ namespace mymath {
 		
 		static void semi_explicit_algo(difference_scheme* ds) {
 			dynamic_vector<T> line(0, 4);
+			
 			// left cond
 
 			ds->bbc_approx(ds, line);
@@ -189,12 +190,71 @@ namespace mymath {
 
 		};
 
+		static void semi_explicit_algo_simple_iter(difference_scheme* ds) {
+			dynamic_vector<T> prev_layer(ds->prev_layer);
+			dynamic_vector<T> line(0, 4);
+
+			double norm = 0;
+			size_t iter = 0;
+			do{
+				++iter;
+
+				// left cond
+
+				ds->bbc_approx(ds, line);
+
+				for (size_t i = 0; i < 3; ++i)
+					ds->progonka_buff[0][i] = line[i];
+
+				ds->next_layer[0] = line[3];
+
+				// right cond
+
+
+				ds->ebc_approx(ds, line);
+
+				for (size_t i = 0; i < 3; ++i)
+					ds->progonka_buff[ds->progonka_buff.rows() - 1][i] = line[i];
+
+				ds->next_layer[ds->next_layer.size() - 1] = line[3];
+
+				T h = ds->step;
+				T tau = ds->tau;
+
+				for (size_t i = 1; i < ds->prev_layer.size() - 1; ++i) {
+
+
+					T a1 = 0.5 * (ds->K(prev_layer[i - 1], h * (i - 1)) + ds->K(ds->prev_layer[i], h * i));
+					T a2 = 0.5 * (ds->K(prev_layer[i], h * i) + ds->K(prev_layer[i + 1], h * (i + 1)));
+
+
+					ds->progonka_buff[i][0] = -tau * a1;
+					ds->progonka_buff[i][1] = h * h + tau * (a1 + a2);
+					ds->progonka_buff[i][2] = -tau * a2;
+					ds->next_layer[i] = h * h * ds->prev_layer[i];
+
+				}
+
+				/*utilities::print(ds->progonka_buff);
+				utilities::print(ds->next_layer);*/
+				diag3_solver(ds->progonka_buff, ds->next_layer);
+				
+				norm = 0;
+				for (size_t i = 0; i < ds->next_layer.size(); ++i)
+					norm = std::max(norm, std::abs(ds->next_layer[i] - prev_layer[i]));
+				
+				
+			} while (norm > 1e-10);
+			std::cout << iter << "\n";
+		};
+
 		dynamic_vector<T> next_layer;
 		dynamic_vector<T> prev_layer;
 		dynamic_matrix<T> progonka_buff;
 		
 	};
 
+	
 	
 
 

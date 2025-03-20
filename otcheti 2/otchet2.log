@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2024.2.17)  14 MAR 2025 15:58
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2024.2.17)  20 MAR 2025 19:38
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -948,7 +948,7 @@ Overfull \hbox (5.48598pt too wide) in paragraph at lines 48--50
 ��/���������),
  []
 
-[3] [4] [5] [6] [7] [8] (otchet2.aux)
+[3] [4] [5] [6] [7] [8] [9] (otchet2.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
@@ -960,39 +960,41 @@ LaTeX Font Warning: Size substitutions with differences
 
  ) 
 Here is how much of TeX's memory you used:
- 16702 strings out of 474542
- 267296 string characters out of 5743030
+ 16754 strings out of 474542
+ 267984 string characters out of 5743030
  1938978 words of memory out of 5000000
- 38582 multiletter control sequences out of 15000+600000
- 578206 words of font info for 79 fonts, out of 8000000 for 9000
+ 38601 multiletter control sequences out of 15000+600000
+ 582662 words of font info for 96 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 78i,11n,81p,599b,578s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 78i,13n,81p,599b,578s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/Миша/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/
 cm/cmex10.pfb><C:/Users/Миша/AppData/Local/Programs/MiKTeX/fonts/type1/publ
-ic/amsfonts/cm/cmmi12.pfb><C:/Users/Миша/AppData/Local/Programs/MiKTeX/font
-s/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/Миша/AppData/Local/Programs/
-MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/Миша/AppData/Loca
-l/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/Миша/A
-ppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/
-Миша/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb>
-<C:/Users/Миша/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm
-/cmsy10.pfb><C:/Users/Миша/AppData/Local/Programs/MiKTeX/fonts/type1/public
-/amsfonts/cm/cmsy6.pfb><C:/Users/Миша/AppData/Local/Programs/MiKTeX/fonts/t
-ype1/public/amsfonts/cm/cmsy8.pfb><C:/Users/Миша/AppData/Local/Programs/MiK
-TeX/fonts/type1/public/amsfonts/symbols/msam10.pfb><C:/Users/Миша/AppData/L
-ocal/Programs/MiKTeX/fonts/type1/public/cm-super/sfbi1200.pfb><C:/Users/Миш�
-�/AppData/Local/Programs/MiKTeX/fonts/type1/public/cm-super/sfbi1728.pfb><C:/Us
-ers/Миша/AppData/Local/Programs/MiKTeX/fonts/type1/public/cm-super/sfbx0900
-.pfb><C:/Users/Миша/AppData/Local/Programs/MiKTeX/fonts/type1/public/cm-sup
-er/sfbx1200.pfb><C:/Users/Миша/AppData/Local/Programs/MiKTeX/fonts/type1/pu
-blic/cm-super/sfbx1728.pfb><C:/Users/Миша/AppData/Local/Programs/MiKTeX/fon
-ts/type1/public/cm-super/sfrm1000.pfb><C:/Users/Миша/AppData/Local/Programs
-/MiKTeX/fonts/type1/public/cm-super/sfrm1095.pfb><C:/Users/Миша/AppData/Loc
-al/Programs/MiKTeX/fonts/type1/public/cm-super/sfrm1200.pfb><C:/Users/Миша/
-AppData/Local/Programs/MiKTeX/fonts/type1/public/cm-super/sfrm1440.pfb>
-Output written on otchet2.pdf (8 pages, 459282 bytes).
+ic/amsfonts/cm/cmmi10.pfb><C:/Users/Миша/AppData/Local/Programs/MiKTeX/font
+s/type1/public/amsfonts/cm/cmmi12.pfb><C:/Users/Миша/AppData/Local/Programs
+/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/Миша/AppData/Loc
+al/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/Миша/
+AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/User
+s/Миша/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pf
+b><C:/Users/Миша/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/
+cm/cmr8.pfb><C:/Users/Миша/AppData/Local/Programs/MiKTeX/fonts/type1/public
+/amsfonts/cm/cmsy10.pfb><C:/Users/Миша/AppData/Local/Programs/MiKTeX/fonts/
+type1/public/amsfonts/cm/cmsy6.pfb><C:/Users/Миша/AppData/Local/Programs/Mi
+KTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/Миша/AppData/Local/
+Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msam10.pfb><C:/Users/Миш
+а/AppData/Local/Programs/MiKTeX/fonts/type1/public/cm-super/sfbi1200.pfb><C:/U
+sers/Миша/AppData/Local/Programs/MiKTeX/fonts/type1/public/cm-super/sfbi172
+8.pfb><C:/Users/Миша/AppData/Local/Programs/MiKTeX/fonts/type1/public/cm-su
+per/sfbx0900.pfb><C:/Users/Миша/AppData/Local/Programs/MiKTeX/fonts/type1/p
+ublic/cm-super/sfbx1200.pfb><C:/Users/Миша/AppData/Local/Programs/MiKTeX/fo
+nts/type1/public/cm-super/sfbx1728.pfb><C:/Users/Миша/AppData/Local/Program
+s/MiKTeX/fonts/type1/public/cm-super/sfrm1000.pfb><C:/Users/Миша/AppData/Lo
+cal/Programs/MiKTeX/fonts/type1/public/cm-super/sfrm1095.pfb><C:/Users/Миша
+/AppData/Local/Programs/MiKTeX/fonts/type1/public/cm-super/sfrm1200.pfb><C:/Use
+rs/Миша/AppData/Local/Programs/MiKTeX/fonts/type1/public/cm-super/sfrm1440.
+pfb>
+Output written on otchet2.pdf (9 pages, 472115 bytes).
 PDF statistics:
- 171 PDF objects out of 1000 (max. 8388607)
- 31 named destinations out of 1000 (max. 500000)
+ 182 PDF objects out of 1000 (max. 8388607)
+ 35 named destinations out of 1000 (max. 500000)
  42 words of extra memory for PDF output out of 10000 (max. 10000000)
 
