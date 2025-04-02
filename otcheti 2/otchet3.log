@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2024.2.17)  28 MAR 2025 16:21
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2024.2.17)  2 APR 2025 11:10
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**./otchet2.tex
-(otchet2.tex
+**./otchet3.tex
+(otchet3.tex
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
 (C:\Users\Миша\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
@@ -786,14 +786,14 @@ pdftex.def
 File: l3backend-pdftex.def 2024-01-04 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count307
 \l__pdf_internal_box=\box58
-) (otchet2.aux
+) (otchet3.aux
 LaTeX Font Info:    Trying to load font information for T2A+cmr on input line 1
 0.
 
 (C:\Users\Миша\AppData\Local\Programs\MiKTeX\tex/latex/cyrillic\t2acmr.fd
 File: t2acmr.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
 )<<t2a.cmap>>)
-\openout1 = `otchet2.aux'.
+\openout1 = `otchet3.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 37.
 LaTeX Font Info:    ... okay on input line 37.
@@ -938,22 +938,11 @@ LaTeX Font Warning: Font shape `T2A/cmr/bx/it' in size <18> not available
 
 {C:/Users/Миша/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/�
 �иша/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/cm-super/cm-super-t2a.enc
-} <./emblema.pdf>] (otchet2.toc)
+} <./emblema.pdf>] (otchet3.toc)
 \tf@toc=\write3
-\openout3 = `otchet2.toc'.
+\openout3 = `otchet3.toc'.
 
- [2]
-Overfull \hbox (5.48598pt too wide) in paragraph at lines 48--50
-\T2A/cmr/bx/n/12 ��-��-���-��� ���-��, �����-��-��� ���-����-��� ���-�� (�����-
-��/���������),
- []
-
-[3] [4] [5] [6] [7] [8]
-Overfull \hbox (6.69656pt too wide) detected at line 354
-[]
- []
-
-[9] [10] (otchet2.aux)
+ [2] [3] (otchet3.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
@@ -965,41 +954,32 @@ LaTeX Font Warning: Size substitutions with differences
 
  ) 
 Here is how much of TeX's memory you used:
- 16756 strings out of 474542
- 268003 string characters out of 5743030
- 1938978 words of memory out of 5000000
- 38601 multiletter control sequences out of 15000+600000
- 582662 words of font info for 96 fonts, out of 8000000 for 9000
+ 16667 strings out of 474542
+ 266880 string characters out of 5743030
+ 1932978 words of memory out of 5000000
+ 38571 multiletter control sequences out of 15000+600000
+ 576600 words of font info for 77 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 78i,13n,81p,599b,578s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 78i,8n,81p,428b,459s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/Миша/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/
-cm/cmex10.pfb><C:/Users/Миша/AppData/Local/Programs/MiKTeX/fonts/type1/publ
-ic/amsfonts/cm/cmmi10.pfb><C:/Users/Миша/AppData/Local/Programs/MiKTeX/font
-s/type1/public/amsfonts/cm/cmmi12.pfb><C:/Users/Миша/AppData/Local/Programs
-/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/Миша/AppData/Loc
-al/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/Миша/
-AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/User
-s/Миша/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pf
-b><C:/Users/Миша/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/
-cm/cmr8.pfb><C:/Users/Миша/AppData/Local/Programs/MiKTeX/fonts/type1/public
-/amsfonts/cm/cmsy10.pfb><C:/Users/Миша/AppData/Local/Programs/MiKTeX/fonts/
-type1/public/amsfonts/cm/cmsy6.pfb><C:/Users/Миша/AppData/Local/Programs/Mi
-KTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/Миша/AppData/Local/
-Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msam10.pfb><C:/Users/Миш
-а/AppData/Local/Programs/MiKTeX/fonts/type1/public/cm-super/sfbi1200.pfb><C:/U
-sers/Миша/AppData/Local/Programs/MiKTeX/fonts/type1/public/cm-super/sfbi172
-8.pfb><C:/Users/Миша/AppData/Local/Programs/MiKTeX/fonts/type1/public/cm-su
-per/sfbx0900.pfb><C:/Users/Миша/AppData/Local/Programs/MiKTeX/fonts/type1/p
-ublic/cm-super/sfbx1200.pfb><C:/Users/Миша/AppData/Local/Programs/MiKTeX/fo
-nts/type1/public/cm-super/sfbx1728.pfb><C:/Users/Миша/AppData/Local/Program
-s/MiKTeX/fonts/type1/public/cm-super/sfrm1000.pfb><C:/Users/Миша/AppData/Lo
-cal/Programs/MiKTeX/fonts/type1/public/cm-super/sfrm1095.pfb><C:/Users/Миша
-/AppData/Local/Programs/MiKTeX/fonts/type1/public/cm-super/sfrm1200.pfb><C:/Use
-rs/Миша/AppData/Local/Programs/MiKTeX/fonts/type1/public/cm-super/sfrm1440.
-pfb>
-Output written on otchet2.pdf (10 pages, 476916 bytes).
+cm/cmmi12.pfb><C:/Users/Миша/AppData/Local/Programs/MiKTeX/fonts/type1/publ
+ic/amsfonts/cm/cmr12.pfb><C:/Users/Миша/AppData/Local/Programs/MiKTeX/fonts
+/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/Миша/AppData/Local/Programs/Mi
+KTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/Миша/AppData/Local
+/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/Миша/Ap
+pData/Local/Programs/MiKTeX/fonts/type1/public/cm-super/sfbi1200.pfb><C:/Users/
+Миша/AppData/Local/Programs/MiKTeX/fonts/type1/public/cm-super/sfbi1728.pfb
+><C:/Users/Миша/AppData/Local/Programs/MiKTeX/fonts/type1/public/cm-super/s
+fbx0900.pfb><C:/Users/Миша/AppData/Local/Programs/MiKTeX/fonts/type1/public
+/cm-super/sfbx1200.pfb><C:/Users/Миша/AppData/Local/Programs/MiKTeX/fonts/t
+ype1/public/cm-super/sfbx1728.pfb><C:/Users/Миша/AppData/Local/Programs/MiK
+TeX/fonts/type1/public/cm-super/sfrm1000.pfb><C:/Users/Миша/AppData/Local/P
+rograms/MiKTeX/fonts/type1/public/cm-super/sfrm1095.pfb><C:/Users/Миша/AppD
+ata/Local/Programs/MiKTeX/fonts/type1/public/cm-super/sfrm1200.pfb><C:/Users/М
+иша/AppData/Local/Programs/MiKTeX/fonts/type1/public/cm-super/sfrm1440.pfb>
+Output written on otchet3.pdf (3 pages, 360387 bytes).
 PDF statistics:
- 190 PDF objects out of 1000 (max. 8388607)
- 37 named destinations out of 1000 (max. 500000)
- 42 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 100 PDF objects out of 1000 (max. 8388607)
+ 11 named destinations out of 1000 (max. 500000)
+ 34 words of extra memory for PDF output out of 10000 (max. 10000000)
 

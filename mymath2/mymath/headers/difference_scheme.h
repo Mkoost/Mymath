@@ -5,7 +5,8 @@
 #include "../inline/vector.inl.h"
 #include "../inline/utilities.inl"
 namespace mymath {
-	namespace { constexpr const double __mixed_difference_scheme_sigma = 0.;
+	namespace { 
+		constexpr const double __mixed_difference_scheme_sigma = 0.;
 	
 	template<class T>
 	void diag3_solver(dynamic_matrix<T>& buff, dynamic_vector<T> & X)
@@ -123,7 +124,7 @@ namespace mymath {
 
 			ds->next_layer[ds->next_layer.size() - 1] = line[3];
 
-			T h = 1.0 / (ds->prev_layer.size());
+			T h = 1.0 / (ds->prev_layer.size() - 1);
 			T tau = ds->tau;
 
 			for (size_t i = 1; i < ds->prev_layer.size() - 1; ++i) {
@@ -257,6 +258,77 @@ namespace mymath {
 	
 	
 
+	template<class Type_, class BeginCond_, class EndCond_, class F_>
+	class wave_scheme {
+	public:
+		dynamic_vector<Type_> next_layer;
+		dynamic_vector<Type_> prev_layer;
+		dynamic_vector<Type_> pprev_layer;
+		dynamic_matrix<Type_> progonka_buff;
+
+		Type_ tau;
+		Type_ begin_time;
+		Type_ step;
+		size_t n;
+
+		Type_ a;
+		F_ f;
+		BeginCond_ bc;
+		EndCond_ ec;
+
+
+
+		wave_scheme(Type_ begin_time_, Type_ tau_, size_t n_, Type_ step_, Type_ a_, BeginCond_ bc_, EndCond_ ec_, F_ f_) {
+			begin_time = begin_time_;
+			tau = tau_;
+			n = n_;
+			step = step_;
+			a = a_;
+			bc = bc_; ec = ec_; 
+			f = f_;
+			next_layer(0, n_);
+			prev_layer(0, n_);
+			pprev_layer(0, n_);
+		};
+
+		void next(size_t k = 1) {
+			for (size_t i = 0; i < k; ++i) {
+				cross_scheme(*this);
+			}
+		
+		
+		};
+
+		static cross_scheme(wave_scheme& ws){
+			dynamic_vector<T> line(0, 4);
+
+			// left cond
+
+			ws.bc(ws, line);
+
+			for (size_t i = 0; i < 3; ++i)
+				ws.progonka_buff[0][i] = line[i];
+
+			ws.next_layer[0] = line[3];
+
+			ws.ec(ws, line);
+
+			for (size_t i = 0; i < 3; ++i)
+				ws.progonka_buff[n - 1][i] = line[i];
+
+			ws.next_layer[n - 1] = line[3];
+
+			Type_ h = ws.step;
+			Type_ tau = ws.tau;
+
+			for (size_t i = 1; i < n - 1; ++i) {
+				ws.progonka_buff[i][1] = 1.;
+				ws.next_layer[i] = 2 * ws.prev_layer[i] - ws.pprev_layer[i] + std::pow((ws.a * tau) / h, 2) * (ws.prev_layer[i + 1] - 2 * ws.prev_layer[i] + ws.prev_layer[i - 1]) + f(i * h, ws.begin_time);
+			}
+
+			diag3_solver(ws.progonka_buff, ws.next_layer);
+		}
+	};
 
 }
 

@@ -1,0 +1,79 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{geometry}
+\usepackage{mathtools}
+\usepackage{verbatim}
+\usepackage{indentfirst}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{import}
+\usepackage{xifthen}
+\usepackage{pdfpages}
+\usepackage{transparent}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{hyperref}
+\usepackage{float}
+
+\newcommand{\norm}[1]{\lVert #1 \rVert}
+\newcommand{\abs}[1]{\lvert #1 \rvert}
+\newcommand{\prt}[2]{\frac{\partial#1}{\partial #2}}
+\usepackage[oglav,spisok,boldsect,eqwhole,figwhole,hyperref,hyperprint,remarks,greekit]{./style/fn2kursstyle}
+
+\graphicspath{{./style/}{./figures/}}
+
+\frenchspacing
+
+\title{ Численное решение краевых задач для одномерного волнового уравнения}
+\lab{3}
+\author{М.\,А.~Каган}
+\creator{И.\,А.~Яковлев}
+\supervisor{А. О. Гусев}
+\group{ФН2-61Б}
+\date{2025}
+
+\begin{document}
+	\maketitle
+	\tableofcontents
+	
+	\newpage
+	
+	
+	
+	\section-{Контрольные вопросы}
+	
+	\begin{enumerate}
+		\item \textbf{Предложите разностные схемы, отличные от схемы «крест»,
+			для численного решения волнового уравнения с граничными условиями.}
+		\vspace*{0.2cm}
+		
+		\textit{\textbf{Ответ:}}
+		
+		\begin{enumerate}
+			\item Неявная схема:
+			\[
+			\dfrac{\hat{y} - 2y + \check{y}}{\tau^2} = \dfrac{\hat y_{+1} -2 \hat y + \hat y_{-1}}{h ^ 2}
+			\]
+			\item Экстраполяционная схема:
+			\[
+			\dfrac{\hat{y} - 2y + \check{y}}{\tau^2} = \dfrac{\check y_{+1} -2 \check y + \check y_{-1}}{h ^ 2}
+			\]
+			\item Экстраполяционная схема:
+			\[
+			\dfrac{\hat{y} - 2y + \check{y}}{\tau^2} = \dfrac{\check y_{+1} -2 \check y + \check y_{-1}}{h ^ 2}
+			\]
+			
+		\end{enumerate}
+		
+		\item \textbf{Предложите способ контроля точности полученного решения.}
+		\vspace*{0.2cm}
+		
+		\textit{\textbf{Ответ:}}		
+		
+		Зная порядок аппроксимации схемы, по правилу Рунге каждые два шага можно оценивать погрешность решения и при, необходимости, уменьшать шаг интегрирования по времени.  
+		
+	\end{enumerate}
+	
+\end{document}

@@ -111,7 +111,7 @@ namespace mymath {
 	template<class T>
 	constexpr auto operator*(const dynamic_vector<T>& A, const dynamic_vector<T>& B) -> decltype(A[0] * B[0]) {
 		auto tmp = A[0] * B[0];
-		for (size_t i = 0, k = min(A.size(), B.size()); i != k; ++i)
+		for (size_t i = 1, k = min(A.size(), B.size()); i != k; ++i)
 			tmp += A[i] * B[i];
 		return tmp;
 	}

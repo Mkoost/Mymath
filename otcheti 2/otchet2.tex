@@ -320,16 +320,38 @@
 		При начальной температуре $100$.
 		
 	
-		\item \textbf{Как получить аппроксимацию граничного условия с порядком $O(t^2+h)$ в случае постоянного коэффициента K.}
+		\item \textbf{Как получить аппроксимацию граничного условия с порядком $O(\tau^2+h)$ в случае постоянного коэффициента K.}
 		\vspace*{0.2cm}
 		
 		\textit{\textbf{Ответ:}}
-		Поскольку коэффициент $K(x, t)=const$, то граничное условие можно представить как $\sfrac{\partial u}{\partial x} = p(t) / K = A(t)$. Аппроксимируем на прямую, по формуле правой производной:
+		Поскольку коэффициент $K(x, t)=const$, то граничное условие можно представить как $\sfrac{\partial u}{\partial x} = p(t) / K = A(t)$. Аппроксимируем на прямую:
 		
 		\[
-		\dfrac{y_1 - y_0}{h} = A(t)
+		\int\limits_{x_0}^{x_1}\int\limits_{t_{i}}^{t_{i+1}} \sfrac{\partial u}{\partial x}\, dt\,dx =  \int\limits_{x_0}^{x_1}\int\limits_{t_{i}}^{t_{i+1}} A(t) \, dt \, dx
 		\]
+		\[
+		0.5\tau ((y_1 - y_0) + (\hat{y}_1 - \hat{y}_0) ) + O(h) + O(\tau^2) = 0.5 h \tau (A(t_i) + A(t_{i+1})) + O(\tau^2)
+		\]
+		\[
+		\dfrac{y_1 - y_0}{h} + \dfrac{\hat{y}_1 - \hat{y}_0}{h} =  A(t_i) + A(t_{i+1}) + O(\tau^2 + h)
+		\]
+		
 		Полученная формула имеет первый порядок точности. При ее использовании, исходная схема, если обладала высшего порядка аппроксимации, так же становится первого порядка по $h$.
+		
+		
+		Доказательство:
+		
+		Будем раскладывать $u$ в точке $P = P(x_0, t_{i})$:
+		\begin{gather}
+			y_0 = u(x_0, t_i) = u\bigg|_P \notag \\
+			y_1 = u(x_{1}, t_{i}) = u\bigg|_P + h u_x\bigg|_P + \dfrac{h^2}{2} u_{xx}\bigg|_P + O(h^3) \notag \\
+			\hat{y}_0 = u(x_{0}, t_{i+1}) = u\bigg|_P + \tau u_t\bigg|_P + \dfrac{\tau^2}{2} u_{tt}\bigg|_P + O(\tau^3) \notag \\
+			\hat{y}_1 = u(x_{1}, t_{i+1}) = u\bigg|_P + \tau u_t\bigg|_P + h u_x\bigg|_P + \dfrac{\tau^2}{2} u_{tt}\bigg|_P + \dfrac{h^2}{2} u_{xx}\bigg|_P + h\tau u_{xt}\bigg|_P + O(\tau^3 + h^3) \notag\\
+			\dfrac{y_1 - y_0}{h} + \dfrac{\hat{y}_1 - \hat{y}_0}{h} =   2u_x\bigg|_P + h u_{xx} + \tau u_{xt} + O(h^2 + \tau^3 / h) \notag
+			A(t_i) = u_x\bigg|_P \notag\\
+			A(t_{i+1}) = u_x\bigg|_P + \tau u_{xt} + O(\tau^2) \notag\\
+			\dfrac{y_1 - y_0}{h} + \dfrac{\hat{y}_1 - \hat{y}_0}{h} - A(t_i) - A(t_{i+1}) = O(\tau^2 + h)
+		\end{gather}
 	\end{enumerate}
 	
 \end{document}
