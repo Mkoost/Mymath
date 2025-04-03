@@ -291,27 +291,22 @@ namespace mymath {
 			prev_layer(0, n_),
 			pprev_layer(0, n_) {};
 
-		void next(size_t k = 1) {
-			for (size_t i = 0; i < k; ++i) {
-				cross_scheme(*this);
-			}
 		
-		
-		};
 
 		static void cross_scheme(wave_scheme<Type_, BeginCond_, EndCond_, F_>& ws){
 			dynamic_vector<Type_> line(0, 4);
 
 			// left cond
+			auto n = ws.n;
 
-			ws.bc(ws, line);
+			ws.bc(line);
 
 			for (size_t i = 0; i < 3; ++i)
 				ws.progonka_buff[0][i] = line[i];
 
 			ws.next_layer[0] = line[3];
 
-			ws.ec(ws, line);
+			ws.ec(line);
 
 			for (size_t i = 0; i < 3; ++i)
 				ws.progonka_buff[n - 1][i] = line[i];
@@ -323,11 +318,17 @@ namespace mymath {
 
 			for (size_t i = 1; i < n - 1; ++i) {
 				ws.progonka_buff[i][1] = 1.;
-				ws.next_layer[i] = 2 * ws.prev_layer[i] - ws.pprev_layer[i] + std::pow((ws.a * tau) / h, 2) * (ws.prev_layer[i + 1] - 2 * ws.prev_layer[i] + ws.prev_layer[i - 1]) + f(i * h, ws.begin_time);
+				ws.next_layer[i] = 2 * ws.prev_layer[i] - ws.pprev_layer[i] + std::pow((ws.a * tau) / h, 2) * (ws.prev_layer[i + 1] - 2 * ws.prev_layer[i] + ws.prev_layer[i - 1]) + ws.f(i * h, ws.begin_time);
 			}
 
 			diag3_solver(ws.progonka_buff, ws.next_layer);
 		}
+
+		void next(size_t k = 1) {
+			for (size_t i = 0; i < k; ++i) {
+				cross_scheme(*this);
+			}
+		};
 	};
 
 }

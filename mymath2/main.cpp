@@ -30,8 +30,9 @@ int main() {
 	double bt = 0, tau = 0.1, step = PI / n,  a = 1.;
 	
 
-	mymath::wave_scheme ws(bt, tau, n, step, a, bc, bc, f);
+	mymath::wave_scheme<double, decltype(bc), decltype(bc), decltype(f)> ws(bt, tau, n, step, a, bc, bc, f);
 	for (int i = 0; i < n; ++i) ws.pprev_layer[i] = std::sin(step * i * PI);
+	ws.next(0);
 
 	return 0;
 }
