@@ -278,18 +278,18 @@ namespace mymath {
 
 
 
-		wave_scheme(Type_ begin_time_, Type_ tau_, size_t n_, Type_ step_, Type_ a_, BeginCond_ bc_, EndCond_ ec_, F_ f_) {
-			begin_time = begin_time_;
-			tau = tau_;
-			n = n_;
-			step = step_;
-			a = a_;
-			bc = bc_; ec = ec_; 
-			f = f_;
-			next_layer(0, n_);
-			prev_layer(0, n_);
-			pprev_layer(0, n_);
-		};
+		wave_scheme(Type_ begin_time_, Type_ tau_, size_t n_, Type_ step_, Type_ a_, BeginCond_ bc_, EndCond_ ec_, F_ f_) : 
+			begin_time(begin_time_),
+			tau(tau_),
+			n(n_),
+			step(step_),
+			a(a_),
+			bc(bc_),
+			ec(ec_),
+			f(f),
+			next_layer(0, n_),
+			prev_layer(0, n_),
+			pprev_layer(0, n_) {};
 
 		void next(size_t k = 1) {
 			for (size_t i = 0; i < k; ++i) {
@@ -299,8 +299,8 @@ namespace mymath {
 		
 		};
 
-		static cross_scheme(wave_scheme& ws){
-			dynamic_vector<T> line(0, 4);
+		static void cross_scheme(wave_scheme<Type_, BeginCond_, EndCond_, F_>& ws){
+			dynamic_vector<Type_> line(0, 4);
 
 			// left cond
 
