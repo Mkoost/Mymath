@@ -321,7 +321,7 @@ namespace mymath {
 
 			for (size_t i = 1; i < n - 1; ++i) {
 				ws.progonka_buff[i][1] = 1.;
-				ws.next_layer[i] = 2 * ws.prev_layer[i] - ws.pprev_layer[i] + std::pow((ws.a * tau) / h, 2) * (ws.prev_layer[i + 1] - 2 * ws.prev_layer[i] + ws.prev_layer[i - 1]) + ws.f(start_point + i * h, ws.begin_time);
+				ws.next_layer[i] = 2 * ws.prev_layer[i] - ws.pprev_layer[i] + std::pow((ws.a * tau) / h, 2) * (ws.prev_layer[i + 1] - 2 * ws.prev_layer[i] + ws.prev_layer[i - 1]) + ws.f(ws.start_point + i * h, ws.begin_time);
 			}
 
 			diag3_solver(ws.progonka_buff, ws.next_layer);
