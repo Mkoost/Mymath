@@ -267,6 +267,7 @@ namespace mymath {
 		dynamic_matrix<Type_> progonka_buff;
 
 		Type_ tau;
+		size_t k_tau = 1;
 		Type_ begin_time;
 		Type_ step;
 		size_t n;
@@ -328,6 +329,7 @@ namespace mymath {
 		}
 
 		void next(size_t k = 1) {
+			k_tau += k;
 			std::cout << progonka_buff.columns() << " " << progonka_buff.rows() << "\n";
 			for (size_t i = 0; i < k; ++i) {
 				cross_scheme(*this);
@@ -344,6 +346,15 @@ namespace mymath {
 		void init(f1 u, f2 ut, f3 uxx) {
 			for (int i = 0; i < n; ++i) pprev_layer[i] = u(start_point + step * i);
 			for (int i = 0; i < n; ++i) prev_layer[i] = pprev_layer[i] + tau * ut(start_point + step * i) + uxx(start_point + step * i) * a * a * tau * tau / 2;
+		}
+
+		void points_out(std::string filename) {
+			std::ofstream file1(filename, std::ios::app);
+			for (size_t i = 0; i < n; ++i) {
+				file1 << k_tau * tau << " " << start_point + i*step << " " << next_layer[i] << "\n";
+			}
+
+			file1.close();
 		}
 	};
 
