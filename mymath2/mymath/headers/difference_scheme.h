@@ -270,6 +270,7 @@ namespace mymath {
 		Type_ begin_time;
 		Type_ step;
 		size_t n;
+		Type_ start_point;
 
 		Type_ a;
 		F_ f;
@@ -289,24 +290,26 @@ namespace mymath {
 			f(f),
 			next_layer(0, n_),
 			prev_layer(0, n_),
-			pprev_layer(0, n_) {};
+			pprev_layer(0, n_),
+			progonka_buff(0, n_, 3),
+			start_point(0.0){};
 
 		
 
 		static void cross_scheme(wave_scheme<Type_, BeginCond_, EndCond_, F_>& ws){
 			dynamic_vector<Type_> line(0, 4);
-
+			
 			// left cond
 			auto n = ws.n;
 
-			ws.bc(line);
+			ws.bc(line, ws.begin_time);
 
 			for (size_t i = 0; i < 3; ++i)
 				ws.progonka_buff[0][i] = line[i];
 
 			ws.next_layer[0] = line[3];
 
-			ws.ec(line);
+			ws.ec(line, ws.begin_time);
 
 			for (size_t i = 0; i < 3; ++i)
 				ws.progonka_buff[n - 1][i] = line[i];
@@ -318,17 +321,30 @@ namespace mymath {
 
 			for (size_t i = 1; i < n - 1; ++i) {
 				ws.progonka_buff[i][1] = 1.;
-				ws.next_layer[i] = 2 * ws.prev_layer[i] - ws.pprev_layer[i] + std::pow((ws.a * tau) / h, 2) * (ws.prev_layer[i + 1] - 2 * ws.prev_layer[i] + ws.prev_layer[i - 1]) + ws.f(i * h, ws.begin_time);
+				ws.next_layer[i] = 2 * ws.prev_layer[i] - ws.pprev_layer[i] + std::pow((ws.a * tau) / h, 2) * (ws.prev_layer[i + 1] - 2 * ws.prev_layer[i] + ws.prev_layer[i - 1]) + ws.f(start_point + i * h, ws.begin_time);
 			}
 
 			diag3_solver(ws.progonka_buff, ws.next_layer);
 		}
 
 		void next(size_t k = 1) {
+			std::cout << progonka_buff.columns() << " " << progonka_buff.rows() << "\n";
 			for (size_t i = 0; i < k; ++i) {
 				cross_scheme(*this);
+				dynamic_vector<Type_> tmp;
+				tmp.move(pprev_layer);
+				pprev_layer.move(prev_layer);
+				prev_layer.move(next_layer);
+				next_layer.move(tmp);
+				begin_time += tau;
 			}
 		};
+
+		template<class f1, class f2, class f3>
+		void init(f1 u, f2 ut, f3 uxx) {
+			for (int i = 0; i < n; ++i) pprev_layer[i] = u(start_point + step * i);
+			for (int i = 0; i < n; ++i) prev_layer[i] = pprev_layer[i] + tau * ut(start_point + step * i) + uxx(start_point + step * i) * a * a * tau * tau / 2;
+		}
 	};
 
 }
