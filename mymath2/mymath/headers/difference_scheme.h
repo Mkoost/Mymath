@@ -345,7 +345,120 @@ namespace mymath {
 			for (int i = 0; i < n; ++i) pprev_layer[i] = u(start_point + step * i);
 			for (int i = 0; i < n; ++i) prev_layer[i] = pprev_layer[i] + tau * ut(start_point + step * i) + uxx(start_point + step * i) * a * a * tau * tau / 2;
 		}
+
+		template<class StrClass_, class OutputClass_>
+		void save_state(StrClass_ path, OutputClass_ state = std::ios::trunc){
+			std::ofstream outFile(path, state);
+			for (size_t i = 0; i < n; ++i) outFile << prev_layer[i] << " ";
+			outFile << "\n";
+			outFile.close();
+		}
 	};
+
+
+
+
+
+
+	template<class Type_, class BeginCondHor_, class EndCondHor_, class BeginCondVert_, class EndCondVert_, class F_>
+	class lapl2d_scheme {
+	public:
+		dynamic_matrix<Type_> next_layer;
+
+		dynamic_matrix<Type_> prev_layer;
+		dynamic_matrix<Type_> progonka_buff;
+
+		Type_ tau;
+		Type_ begin_time;
+
+		Type_ step_x;
+		Type_ step_y;
+
+		size_t n, m;
+
+		Type_ st_x;
+		Type_ st_y;
+
+		F_ f;
+		BeginCondHor_ bch;
+		EndCondHor_ ech;
+		BeginCondVert_ bcv;
+		EndCondVert_ ecv;
+
+
+		wave_scheme(Type_ begin_time_, Type_ tau_, size_t n_, size_t m_, Type_ step_x_, Type_ step_y_, BeginCondHor_ bch_, EndCondHor_ ech_, BeginCondVert_ bcv_, EndCondVert_ ecv_,  F_ f_) :
+			begin_time(begin_time_),
+			tau(tau_),
+			n(n_),
+			m(m_),
+			step_x(step_x_),
+			step_y(step_y_),
+			bcv(bcv_),
+			ecv(ecv_),
+			bch(bch_),
+			ech(ech_),
+			f(f),
+			next_layer(0, n_, m),
+			prev_layer(0, n_, m),
+			pprev_layer(0, n_, m),
+			progonka_buff(0, n_, 3),
+			st_x(0.0), 
+			st_y(0.0) {};
+
+
+
+		static void alt_dir_scheam(wave_scheme<Type_, BeginCondHor_,  EndCondHor_, BeginCondVert_, EndCondVert_, F_>& ws) {
+			for (size_t i = 0; i < n; ++i){
+				for (size_t j = 0; j < m; ++j) {
+
+				}
+			}
+
+			for (size_t i = 0; i < n; ++i) {
+				for (size_t j = 0; j < m; ++j) {
+
+				}
+			}
+		}
+
+		void next(size_t k = 1) {
+			std::cout << progonka_buff.columns() << " " << progonka_buff.rows() << "\n";
+			for (size_t i = 0; i < k; ++i) {
+				cross_scheme(*this);
+				dynamic_vector<Type_> tmp;
+				tmp.move(pprev_layer);
+				pprev_layer.move(prev_layer);
+				prev_layer.move(next_layer);
+				next_layer.move(tmp);
+				begin_time += tau;
+			}
+		};
+
+		template<class f1, class f2, class f3>
+		void init(f1 u, f2 ut, f3 uxx) {
+			for (int i = 0; i < n; ++i) pprev_layer[i] = u(start_point + step * i);
+			for (int i = 0; i < n; ++i) prev_layer[i] = pprev_layer[i] + tau * ut(start_point + step * i) + uxx(start_point + step * i) * a * a * tau * tau / 2;
+		}
+
+		template<class StrClass_, class OutputClass_>
+		void save_state(StrClass_ path, OutputClass_ state = std::ios::trunc) {
+			std::ofstream outFile(path, state);
+			for (size_t i = 0; i < n; ++i) outFile << prev_layer[i] << " ";
+			outFile << "\n";
+			outFile.close();
+		}
+	};
+
+
+
+
+
+
+
+
+
+
+
 
 }
 
