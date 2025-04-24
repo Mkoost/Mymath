@@ -1,0 +1,78 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{geometry}
+\usepackage{mathtools}
+\usepackage{verbatim}
+\usepackage{indentfirst}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{import}
+\usepackage{xifthen}
+\usepackage{pdfpages}
+\usepackage{transparent}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{hyperref}
+\usepackage{float}
+
+\newcommand{\norm}[1]{\lVert #1 \rVert}
+\newcommand{\abs}[1]{\lvert #1 \rvert}
+\newcommand{\prt}[2]{\frac{\partial#1}{\partial #2}}
+\usepackage[oglav,spisok,boldsect,eqwhole,figwhole,hyperref,hyperprint,remarks,greekit]{./style/fn2kursstyle}
+
+\graphicspath{{./style/}{./figures/}}
+
+\frenchspacing
+
+\title{ Численное решение краевых задач для двумерного уравнения Пуассона}
+\lab{3}
+\author{М.\,А.~Каган}
+\creator{И.\,А.~Яковлев}
+\supervisor{А. О. Гусев}
+\group{ФН2-61Б}
+\date{2025}
+
+\begin{document}
+	\maketitle
+	\tableofcontents
+	
+	\newpage
+	
+	
+	
+	\section-{Контрольные вопросы}
+	
+	\begin{enumerate}
+		\item \textbf{Оцените число действий, необходимое для перехода на следующий слой по времени методом переменных направлений.}
+		\vspace*{0.2cm}
+		
+		\textit{\textbf{Ответ:}}
+		
+		% Л1 и Л2 --- разностные операторы второй производной по соответствующей переменной пространства 
+		Запишем схему переменных направлений. Примем
+		\begin{gather*}
+			F(y) = \frac 2 \tau y + \Lambda_2 y + \phi, \quad F^k_{ij} = F(y^k_{ij}), \\
+			\hat F(y) = \frac 2 \tau y + \Lambda_1 y + \phi, \quad \hat F^{k+ 1/2}_{ij} = \hat F(y^{k+ 1/2}_{ij}),
+		\end{gather*}
+		преобразовав уравнения с помощью введенных величин, получим
+		\begin{gather*}
+			\dfrac1{h_1^2} y^{k+1/2}_{i-1,j} - 2 \left(\dfrac1{h_1^2} + \dfrac1\tau\right) y^{k+1/2}_{ij} + \dfrac1{h_1^2} y^{k+1/2}_{i+1,j} = -F^k_{ij},\\
+			u_{0,j} = \Omega_{0,j}, \quad u_{N_1,j} = \Omega_{N_1,j}, \quad j = 1, 2, \dots, N_2 -1,
+		\end{gather*}
+		где $\Omega_{i, j} = \xi(x_{i,1}, \, x_{2,j})$ --- значения искомой функции в граничых узлах области. Для вычисления $F^k_{ij}$ требуется порядка $3 N_1 N_2$ умножений. 2 и 3 строки представляет собой $N_2-1$ трехдиагональных СЛАУ размерности $N_1 - 1$. Для их решения требуется примерно $5 N_1 N_2$ операций. Такой же порядок операций получается и для остальных этапов:
+		\begin{eqnarray*}
+			\dfrac1{h_2^2} y^{k+1}_{i,j-1} - 2 \left(\dfrac1{h_2^2} + \dfrac1\tau\right) y^{k+1}_{ij} + \dfrac1{h_2^2} y^{k+1}_{i,j+1} = -\hat{F}^{k+1/2}_{ij},\\
+			u_{i,0} = \Omega_{i,0}, \quad u_{i,N_2} = \Omega_{i,N_2}, \quad i = 1, 2, \dots, N_1 -1.
+		\end{eqnarray*}
+		Таким образом, для перехода на следующий слой по времени требуется порядка $16 N_1 N_2$ операций.
+		
+		\item \textbf{ Почему при увеличении числа измерений резко возрастает количество операций для решения неявных схем (по сравнению с одномерной схемой)?}
+		\vspace*{0.2cm}
+		 
+		 При решении одномерной задачи аппроксимирующие уравнения зависят только от количества узлов на одной оси. Для $n$-мерных случаев количество неизвестных кратно количеству узлов на оси. Таким образом, если, например, СЛАУ решается методом Гаусса, то сложность алгоритма $O(N_1^3)$ для одномерного случая, а для n-мерного $O((N_1 N_2 \ldots N_n)^3)$ 
+		\textit{\textbf{Ответ:}}
+	\end{enumerate}
+	
+\end{document}

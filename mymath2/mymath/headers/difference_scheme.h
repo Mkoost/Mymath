@@ -8,10 +8,10 @@ namespace mymath {
 	namespace { 
 		constexpr const double __mixed_difference_scheme_sigma = 0.;
 	
-	template<class T>
-	void diag3_solver(dynamic_matrix<T>& buff, dynamic_vector<T> & X)
+	template<class T, class U >
+	void diag3_solver(dynamic_matrix<T>& buff, dynamic_vector<T>& X)
 	{
-		size_t n = X.size();
+		size_t n = buff.rows();
 
 
 		dynamic_vector<T> alpha(0.0, n);
@@ -35,7 +35,60 @@ namespace mymath {
 
 	}
 	
-	
+
+	template<class T, class U >
+	void diag3_solver_hor(dynamic_matrix<T>& buff, dynamic_matrix<T>& X, size_t ii)
+	{
+		size_t n = X.columns();
+
+
+		dynamic_vector<T> alpha(0.0, n);
+		dynamic_vector<T> beta(0.0, n);
+
+		alpha[1] = -buff[0][2] / buff[0][1];
+		beta[1] = X[ii][0] / buff[0][1];
+
+		T denom;
+		for (size_t i = 1; i < n - 1; i++) {
+			denom = buff[i][1] + buff[i][0] * alpha[i];
+			alpha[i + 1] = -buff[i][2] / denom;
+			beta[i + 1] = (X[ii][i] - buff[i][0] * beta[i]) / denom;
+		}
+
+		X[ii][n - 1] = (X[ii][n - 1] - buff[n - 1][0] * beta[n - 1]) / (buff[n - 1][1] + buff[n - 1][0] * alpha[n - 1]);
+
+		for (int i = n - 2; i >= 0; i--) {
+			X[ii][i] = alpha[i + 1] * X[ii][i + 1] + beta[i + 1];
+		}
+
+	}
+
+	template<class T, class U >
+	void diag3_solver_vert(dynamic_matrix<T>& buff, dynamic_matrix<T>& X, size_t jj)
+	{
+		size_t n = X.rows();
+
+
+		dynamic_vector<T> alpha(0.0, n);
+		dynamic_vector<T> beta(0.0, n);
+
+		alpha[1] = -buff[0][2] / buff[0][1];
+		beta[1] = X[0][jj] / buff[0][1];
+
+		T denom;
+		for (size_t i = 1; i < n - 1; i++) {
+			denom = buff[i][1] + buff[i][0] * alpha[i];
+			alpha[i + 1] = -buff[i][2] / denom;
+			beta[i + 1] = (X[i][jj] - buff[i][0] * beta[i]) / denom;
+		}
+
+		X[n - 1][jj] = (X[n - 1][jj] - buff[n - 1][0] * beta[n - 1]) / (buff[n - 1][1] + buff[n - 1][0] * alpha[n - 1]);
+
+		for (int i = n - 2; i >= 0; i--) {
+			X[i][jj] = alpha[i + 1] * X[i + 1][jj] + beta[i + 1];
+		}
+
+	}
 	}
 
 
@@ -267,6 +320,7 @@ namespace mymath {
 		dynamic_matrix<Type_> progonka_buff;
 
 		Type_ tau;
+		size_t k_tau = 1;
 		Type_ begin_time;
 		Type_ step;
 		size_t n;
@@ -279,7 +333,7 @@ namespace mymath {
 
 
 
-		wave_scheme(Type_ begin_time_, Type_ tau_, size_t n_, Type_ step_, Type_ a_, BeginCond_ bc_, EndCond_ ec_, F_ f_) : 
+		wave_scheme(Type_ begin_time_, Type_ tau_, size_t n_, Type_ step_, Type_ a_, BeginCond_ bc_, EndCond_ ec_, F_ f_) :
 			begin_time(begin_time_),
 			tau(tau_),
 			n(n_),
@@ -292,13 +346,13 @@ namespace mymath {
 			prev_layer(0, n_),
 			pprev_layer(0, n_),
 			progonka_buff(0, n_, 3),
-			start_point(0.0){};
+			start_point(0.0) {};
 
-		
 
-		static void cross_scheme(wave_scheme<Type_, BeginCond_, EndCond_, F_>& ws){
+
+		static void cross_scheme(wave_scheme<Type_, BeginCond_, EndCond_, F_>& ws) {
 			dynamic_vector<Type_> line(0, 4);
-			
+
 			// left cond
 			auto n = ws.n;
 
@@ -328,6 +382,7 @@ namespace mymath {
 		}
 
 		void next(size_t k = 1) {
+			k_tau += k;
 			std::cout << progonka_buff.columns() << " " << progonka_buff.rows() << "\n";
 			for (size_t i = 0; i < k; ++i) {
 				cross_scheme(*this);
@@ -347,12 +402,20 @@ namespace mymath {
 		}
 
 		template<class StrClass_, class OutputClass_>
-		void save_state(StrClass_ path, OutputClass_ state = std::ios::trunc){
+		void save_state(StrClass_ path, OutputClass_ state = std::ios::trunc) {
 			std::ofstream outFile(path, state);
 			for (size_t i = 0; i < n; ++i) outFile << prev_layer[i] << " ";
 			outFile << "\n";
 			outFile.close();
-		}
+		};
+		void points_out(std::string filename) {
+			std::ofstream file1(filename, std::ios::app);
+			for (size_t i = 0; i < n; ++i) {
+				file1 << k_tau * tau << " " << start_point + i * step << " " << next_layer[i] << "\n";
+			}
+
+			file1.close();
+		};
 	};
 
 
@@ -386,7 +449,7 @@ namespace mymath {
 		EndCondVert_ ecv;
 
 
-		wave_scheme(Type_ begin_time_, Type_ tau_, size_t n_, size_t m_, Type_ step_x_, Type_ step_y_, BeginCondHor_ bch_, EndCondHor_ ech_, BeginCondVert_ bcv_, EndCondVert_ ecv_,  F_ f_) :
+		lapl2d_scheme(Type_ begin_time_, Type_ tau_, size_t n_, size_t m_, Type_ step_x_, Type_ step_y_, BeginCondHor_ bch_, EndCondHor_ ech_, BeginCondVert_ bcv_, EndCondVert_ ecv_,  F_ f_) :
 			begin_time(begin_time_),
 			tau(tau_),
 			n(n_),
@@ -397,54 +460,97 @@ namespace mymath {
 			ecv(ecv_),
 			bch(bch_),
 			ech(ech_),
-			f(f),
-			next_layer(0, n_, m),
-			prev_layer(0, n_, m),
-			pprev_layer(0, n_, m),
-			progonka_buff(0, n_, 3),
+			f(f_),
+			next_layer(0, n_, m_),
+			prev_layer(0, n_, m_),
+			progonka_buff(0, std::max(n_, m_), 3),
 			st_x(0.0), 
 			st_y(0.0) {};
 
+		Type_ Fij(size_t i, size_t j) {
+			return 2 * prev_layer[i][j] / tau + (prev_layer[i][j - 1] - 2 * prev_layer[i][j] + prev_layer[i][j + 1]) / (step_y * step_y) + f(st_x + i * step_x, st_y  + j * step_y);
+		}
+		Type_ hatFij(size_t i, size_t j) {
+			return 2 * next_layer[i][j] / tau + (next_layer[i - 1][j] - 2 * next_layer[i][j] + next_layer[i + 1][j]) / (step_x * step_x) + f(st_x + i * step_x, st_y + j * step_y);
+		}
 
+		static void alt_dir_scheam(lapl2d_scheme<Type_, BeginCondHor_,  EndCondHor_, BeginCondVert_, EndCondVert_, F_>& ws) {
+			Type_ h1 = step_x, h2 = step_y, tau = ws.tau;
 
-		static void alt_dir_scheam(wave_scheme<Type_, BeginCondHor_,  EndCondHor_, BeginCondVert_, EndCondVert_, F_>& ws) {
-			for (size_t i = 0; i < n; ++i){
-				for (size_t j = 0; j < m; ++j) {
+			for (size_t i = 1; i < n - 1; ++i) 
+				for (size_t j = 1; j < m -1; ++j) 
+					next_layer[i][j] = -Fij(i, j);	
+				
+			for (size_t j = 1; j < m - 1; ++j){
+				for (size_t i = 1; i < n - 1; ++i) {
+					ws.progonka_buff[i][0] = 1 / (h1 * h1);
+					ws.progonka_buff[i][1] = -2 * (1 / (h1 * h1) + 1 / tau);
+					ws.progonka_buff[i][2] = 1 / (h1 * h1);
 
 				}
+				dynamic_vector<Type_> line(0, 3);
+				ws.bch(ws, line);
+				ws.progonka_buff[0][0] = line[0];
+				ws.progonka_buff[0][1] = line[1];
+				ws.progonka_buff[0][2] = line[2];
+				ws.next_layer[j][0] = line[3];
+				
+				dynamic_vector<Type_> line(0, 3);
+				ws.ech(ws, line);
+				ws.progonka_buff[n - 1][0] = line[0];
+				ws.progonka_buff[n - 1][1] = line[1];
+				ws.progonka_buff[n - 1][2] = line[2];
+				ws.next_layer[j][n - 1] = line[3];
+
+				diag3_solver_vert(ws.progonka_buff, ws.next_layer, j);
 			}
 
-			for (size_t i = 0; i < n; ++i) {
-				for (size_t j = 0; j < m; ++j) {
+			for (size_t i = 1; i < n - 1; ++i)
+				for (size_t j = 1; j < m - 1; ++j)
+					prev_layer[i][j] = -hatFij(i, j);
+
+			for (size_t i = 1; i < n - 1; ++i) {
+				for (size_t j = 1; j < m - 1; ++j) {
+					ws.progonka_buff[j][0] = 1 / (h2 * h2);
+					ws.progonka_buff[j][1] = -2 * (1 / (h2 * h2) + 1 / tau);
+					ws.progonka_buff[j][2] = 1 / (h2 * h2);
 
 				}
+				dynamic_vector<Type_> line(0, 3);
+				ws.bcv(ws, line);
+				ws.progonka_buff[0][0] = line[0];
+				ws.progonka_buff[0][1] = line[1];
+				ws.progonka_buff[0][2] = line[2];
+				ws.prev_layer[i][0] = line[3];
+
+				dynamic_vector<Type_> line(0, 3);
+				ws.ecv(ws, line);
+				ws.progonka_buff[m - 1][0] = line[0];
+				ws.progonka_buff[m - 1][1] = line[1];
+				ws.progonka_buff[m - 1][2] = line[2];
+				ws.prev_layer[i][m - 1] = line[3];
+
+				diag3_solver_hor(ws.progonka_buff, ws.prev_layer, i);
 			}
 		}
 
 		void next(size_t k = 1) {
 			std::cout << progonka_buff.columns() << " " << progonka_buff.rows() << "\n";
 			for (size_t i = 0; i < k; ++i) {
-				cross_scheme(*this);
-				dynamic_vector<Type_> tmp;
-				tmp.move(pprev_layer);
-				pprev_layer.move(prev_layer);
-				prev_layer.move(next_layer);
-				next_layer.move(tmp);
+				alt_dir_scheam(*this);
 				begin_time += tau;
 			}
 		};
 
-		template<class f1, class f2, class f3>
-		void init(f1 u, f2 ut, f3 uxx) {
-			for (int i = 0; i < n; ++i) pprev_layer[i] = u(start_point + step * i);
-			for (int i = 0; i < n; ++i) prev_layer[i] = pprev_layer[i] + tau * ut(start_point + step * i) + uxx(start_point + step * i) * a * a * tau * tau / 2;
-		}
+
 
 		template<class StrClass_, class OutputClass_>
 		void save_state(StrClass_ path, OutputClass_ state = std::ios::trunc) {
 			std::ofstream outFile(path, state);
-			for (size_t i = 0; i < n; ++i) outFile << prev_layer[i] << " ";
-			outFile << "\n";
+			for (size_t i = 0; i < n; ++i){
+				for (size_t j = 0; j < m; ++j) outFile << prev_layer[i][j] << " ";
+				outFile << "\n";
+			}
 			outFile.close();
 		}
 	};
