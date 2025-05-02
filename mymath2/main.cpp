@@ -21,284 +21,91 @@ struct kaganvec {
 	std::list<point> ps;	// points?
 };
 
-
-template<class BeginCond, class EndCond, class Func, class U0, class Ut0, class Uxx0, class StrClass>
-struct conditions {
-    BeginCond bc;
-    EndCond ec;
+// разделить bc и ec на horizontal и vert
+template<class BeginCond_hor, class EndCond_hor, class BeginCond_vert, class EndCond_vert, class Func, class U0, class StrClass>
+struct conditions_2D {
+    BeginCond_hor bc_h;
+    EndCond_hor ec_h;
+	BeginCond_vert bc_v;
+    EndCond_vert ec_v;
     Func f;
     U0 u0;
-    Ut0 ut0;
-    Uxx0 uxx0;
 	StrClass filename;
 };
 
 // each lambda has unique type so
-template<class B, class E, class F, class U0, class Ut0, class Uxx0, class StrClass>
-conditions<B, E, F, U0, Ut0, Uxx0, StrClass> make_conditions(B bc, E ec, F f, U0 u0, Ut0 ut0, Uxx0 uxx0, StrClass filename) {
-    return conditions<B, E, F, U0, Ut0, Uxx0, StrClass>{ bc, ec, f, u0, ut0, uxx0, filename };
+template<class Bh, class Eh, class Bv, class Ev, class F, class U0, class StrClass>
+conditions_2D<Bh, Eh, Bv, Ev, F, U0, StrClass> make_conditions(Bh bc_h, Eh ec_h, Bv bc_v, Ev ec_v, F f, U0 u0, StrClass filename) {
+    return conditions_2D<Bh, Eh, Bv, Ev, F, U0, StrClass>{ bc_h, ec_h, bc_v, ec_v, f, u0, filename };
 }
-#if 0
+
+// (edit line[3] to set boundary conditions in both cases)
 auto pr1 = make_conditions(
-	[](pddvec& line, double t =0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 0; },                       				  					 // bc
-	[](pddvec& line, double t =0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 0; },                 		    			  					 // ec
-	[](double x, double t) {return 0; },         	  				// f
-	[](double x) -> double {return std::sin(x * PI); },             // u0
-	[](double x) { return 0; },             						// ut0
-	[](double x) -> double {return -PI * PI * std::sin(x * PI); },  // uxx0
-	"lab3_points1.txt"												// filename
+	[](pddvec& line, double t =0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 1; },                       				  					 // bc_h
+	[](pddvec& line, double t =0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 1; },                 		    			  					 // ec_h
+	
+	[](pddvec& line, double t =0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 1; },                       				  					 // bc_v
+	[](pddvec& line, double t =0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 
+	1; },                 		    			  					// ec_v
+	
+	[](double x, double y) {return 0; },         	  		// f
+	[](double x, double y) -> double {return 0; },             		// u0
+	"lab4_points1.txt"												// filename
 );
 
-auto pr2 = make_conditions(
-	[](pddvec& line, double t =0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 0; },                       				  					 // bc
-	[](pddvec& line, double t =0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 0; },                 		    			  					 // ec
-	[](double x, double t) {return 0; },         	  				// f
-	[](double x) -> double {return x * (x - 1); },          	    // u0
-	[](double x) { return 0; },             						// ut0
-	[](double x) -> double {return 2; },  							// uxx0
-	"lab3_points_pr2.txt"											// filename
-);
-
-auto var10 = make_conditions(
-	[](mymath::dynamic_vector<double>& line, double t = 0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 0; },        				  					 // bc
-	[](mymath::dynamic_vector<double>& line, double t) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 0.5 *t; },     			  					 	   // ec
-	[](double x, double t) {return 0; },	  						  // f
-	[](double x) -> double {return (x + 1) * std::sin(x * PI); },     // u0
-	[](double x) -> double {return x * (x + 1) ; },					  // ut0
-	[](double x) -> double {return - PI * PI * (1 + x) * std::sin(PI * x) - 2 * PI * std::cos(PI * x); },  													   // uxx0
-	"lab3_points_var10.txt"											  // filename
-);
-
-auto var22 = make_conditions(
-	[](mymath::dynamic_vector<double>& line, double t = 0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 0.5 *t; },										// bc
-	[](mymath::dynamic_vector<double>& line, double t) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 0; },													// ec
-	[](double x, double t) {return 0; },								// f
-	[](double x) -> double {return (2 - x) * std::sin(x * PI); },		// u0
-	[](double x) -> double {return std::pow((x + 0.6), 2) ; },			// ut0
-	[](double x) -> double {return -PI*PI * (2 - x) * std::sin(PI * x) - (PI + 1) * std::cos(PI * x); },  														// uxx0
-	"lab3_points_var22.txt"												// filename
-);
-
-double f1(double x) {
-	if ((x > -1./3.) && (x < 1./3.)) return 1;
-	return 0;
-}
-double g2(double x) {
-	if ((-1./2. < x) && (x < 1./2.)) return 1 - 2 * std::abs(x);
-	return 0;
-}
-
-auto task1_pure = make_conditions(
-	[](pddvec& line, double t =0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 0; },                       				  					 // bc
-	[](pddvec& line, double t =0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 0; },                 		    			  					 // ec
-	[](double x, double t) {return 0; },         	  				// f
-	[](double x) -> double {return f1(x); },          	    		// u0
-	[](double x) { return 0; },             						// ut0
-	[](double x) -> double {return 0; },  							// uxx0
-	"lab3_points_task1_pure.txt"									// filename
-);
-
-auto task2_pure = make_conditions(
-	[](pddvec& line, double t =0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 0; },                       				  					 // bc
-	[](pddvec& line, double t =0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 0; },                 		    			  					 // ec
-	[](double x, double t) {return 0; },         	  				// f
-	[](double x) -> double {return 0; },          	    			// u0
-	[](double x) { return g2(x); },             					// ut0
-	[](double x) -> double {return 0; },  							// uxx0
-	"lab3_points_task2_pure.txt"									// filename
-);
-
-auto task3_pure = make_conditions(
-	[](pddvec& line, double t =0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = std::sin(t); },                       				  					 // bc
-	[](pddvec& line, double t =0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 0; },                 		    			  					 // ec
-	[](double x, double t) {return 0; },         	  				// f
-	[](double x) -> double {return 0; },          	    			// u0
-	[](double x) { return 0; },             						// ut0
-	[](double x) -> double {return 0; },  							// uxx0
-	"lab3_points_task3_pure.txt"									// filename
-);
-
+// здесь будем передавать названия файла
+// будет генериться три файла с таким названием:
+// <name>_t.txt, <name>_x.txt, <name>yt.txt, 
+// step_x = L / (n-1), step_x = L / (n-1)
+// tau = min(step_{x, y}) / 10, bt = tau
 template<class Type>
 struct parameters {
 	size_t n;
+	size_t m;
 	Type L;
-	Type a;
-	Type step;
+	Type step_x;
+	Type step_y;
 	Type tau;
 	Type bt; // begin time
-	Type start_point;
+	Type start_point_x;
+	Type start_point_y;
 	std::string filename;
 };
 
 auto standard_param = parameters<double>{
 	100,			// n
-	2.,				// L
-	1.,				// a
-	2./(100-1),		// step
-	2./(100-1)/10,	// tau
-	2./(100-1)/10,	// bt
-	0
-};
-
-auto pr2_param = parameters<double>{
-	100,			// n
+	100,			// m
 	1.,				// L
-	1.,				// a
-	1./(100-1),		// step
+	1./(100-1),		// step_x
+	1./(100-1),		// step_y
 	1./(100-1)/10,	// tau
 	1./(100-1)/10,	// bt
-	0
+	0,				// start_point_x
+	0,				// start_point_y
+	"lab4_pr1"
 };
 
-auto task1_1 = parameters<double>{
-	100,			// n
-	4,				// L
-	1.,				// a
-	4./(100-1),		// step
-	4./(100-1)/10,	// tau
-	4./(100-1)/10,	// bt
-	-2.,			// start point
-	"lab3_points_task1_pure1.txt"
-};
-
-auto task1_2 = parameters<double>{
-	100,			// n
-	4,				// L
-	5.,				// a
-	4./(100-1),		// step
-	4./(100-1)/10,	// tau
-	4./(100-1)/10,	// bt
-	-2.,			// start point
-	"lab3_points_task1_pure2.txt"
-};
-
-auto task1_3 = parameters<double>{
-	100,			// n
-	4,				// L
-	7.5,			// a
-	4./(100-1),		// step
-	4./(100-1)/10,	// tau
-	4./(100-1)/10,	// bt
-	-2.,			// start point
-	"lab3_points_task1_pure3.txt"
-};
-
-auto task1_4 = parameters<double>{
-	100,			// n
-	4,				// L
-	10.,			// a
-	4./(100-1),		// step
-	4./(100-1)/10,	// tau
-	4./(100-1)/10,	// bt
-	-2.,			// start point
-	"lab3_points_task1_pure4.txt"
-};
-
-auto task2_1 = parameters<double>{
-	100,			// n
-	2,				// L
-	1.,				// a
-	2./(100-1),		// step
-	2./(100-1)/10,	// tau
-	2./(100-1)/10,	// bt
-	-1.,			// start point
-	"lab3_points_task2_pure1.txt"
-};
-
-auto task2_2 = parameters<double>{
-	100,			// n
-	2,				// L
-	5.,				// a
-	2./(100-1),		// step
-	2./(100-1)/10,	// tau
-	2./(100-1)/10,	// bt
-	-1.,			// start point
-	"lab3_points_task2_pure2.txt"
-};
-
-auto task2_3 = parameters<double>{
-	100,			// n
-	2,				// L
-	7.5,			// a
-	2./(100-1),		// step
-	2./(100-1)/10,	// tau
-	2./(100-1)/10,	// bt
-	-1.,			// start point
-	"lab3_points_task2_pure3.txt"
-};
-
-auto task2_4 = parameters<double>{
-	100,			// n
-	2,				// L
-	10.,			// a
-	2./(100-1),		// step
-	2./(100-1)/10,	// tau
-	2./(100-1)/10,	// bt
-	-1.,			// start point
-	"lab3_points_task2_pure4.txt"
-};
-
-auto task3_1 = parameters<double>{
-	100,					// n
-	4. * PI,				// L
-	1.,						// a
-	4. * PI/(100-1),		// step
-	4. * PI/(100-1)/10,		// tau
-	4. * PI/(100-1)/10,		// bt
-	0.,						// start point
-	"lab3_points_task3_pure1.txt"
-};
-
-auto task3_2 = parameters<double>{
-	100,					// n
-	4. * PI,				// L
-	5.,						// a
-	4. * PI/(100-1),		// step
-	4. * PI/(100-1)/10,		// tau
-	4. * PI/(100-1)/10,		// bt
-	0.,						// start point
-	"lab3_points_task3_pure2.txt"
-};
-
-auto task3_3 = parameters<double>{
-	100,					// n
-	4. * PI,				// L
-	7.5,					// a
-	4. * PI/(100-1),		// step
-	4. * PI/(100-1)/10,		// tau
-	4. * PI/(100-1)/10,		// bt
-	0.,						// start point
-	"lab3_points_task3_pure3.txt"
-};
-
-auto task3_4 = parameters<double>{
-	100,					// n
-	4. * PI,				// L
-	10.,					// a
-	4. * PI/(100-1),		// step
-	4. * PI/(100-1)/10,		// tau
-	4. * PI/(100-1)/10,		// bt
-	0.,						// start point
-	"lab3_points_task3_pure4.txt"
-};
-
-auto test_param = parameters<double>{
-	100,				// n
-	1./2.,				// L
-	1.,					// a
-	1./2./(100-1),		// step
-	1./2./(100-1)/10,	// tau
-	1./2./(100-1)/10,	// bt
-	-2.
-};
-#endif
 
 int main() {
+	auto conds1 = pr1;
+	auto params1 = standard_param;
 
-
+	std::ofstream file1(params1.filename + "_t.txt", std::ios::trunc);
+	std::ofstream file2(params1.filename + "_points.txt", std::ios::trunc);
+	file1.close();
+	file2.close(); // clear file
 	
-
+	mymath::lapl2d_scheme<double, decltype(conds1.bc_h), decltype(conds1.ec_h), decltype(conds1.bc_v), decltype(conds1.ec_v), decltype(conds1.f)> ws(params1.bt, params1.tau, params1.n, params1.m, params1.step_x, params1.step_y, conds1.bc_h, conds1.ec_h, conds1.bc_v, conds1.ec_v, conds1.f);
 	
+	ws.st_x = params1.start_point_x;
+	ws.st_y = params1.start_point_y;
+	ws.init(conds1.u0);
+
+	for (int k = 0; k < 1000; ++k) {
+		ws.next();
+		ws.state_out(params1.filename);
+	}
+
 
 	std::cout << "\nyo motherfucker\n";
 
