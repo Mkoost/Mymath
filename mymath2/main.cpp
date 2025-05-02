@@ -85,7 +85,7 @@ auto standard_param = parameters<double>{
 	"lab4_pr1"
 };
 
-
+/////////////////////////////////////////////
 int main() {
 	auto conds1 = pr1;
 	auto params1 = standard_param;
@@ -101,7 +101,7 @@ int main() {
 	ws.st_y = params1.start_point_y;
 	ws.init(conds1.u0);
 
-	for (int k = 0; k < 1000; ++k) {
+	for (int k = 0; k < 1; ++k) {
 		ws.next();
 		ws.state_out(params1.filename);
 	}

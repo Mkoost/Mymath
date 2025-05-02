@@ -36,7 +36,7 @@ namespace mymath {
 	}
 	
 
-	template<class T, class U >
+	template<class T>
 	void diag3_solver_hor(dynamic_matrix<T>& buff, dynamic_matrix<T>& X, size_t ii)
 	{
 		size_t n = X.columns();
@@ -63,7 +63,7 @@ namespace mymath {
 
 	}
 
-	template<class T, class U >
+	template<class T >
 	void diag3_solver_vert(dynamic_matrix<T>& buff, dynamic_matrix<T>& X, size_t jj)
 	{
 		size_t n = X.rows();
@@ -490,19 +490,19 @@ namespace mymath {
 					ws.progonka_buff[i][2] = 1 / (h1 * h1);
 
 				}
-				dynamic_vector<Type_> line(0, 3);
+				dynamic_vector<Type_> line(0, 4);
 				ws.bch(line);
 				ws.progonka_buff[0][0] = line[0];
 				ws.progonka_buff[0][1] = line[1];
 				ws.progonka_buff[0][2] = line[2];
 				ws.next_layer[j][0] = line[3];
 				
-				dynamic_vector<Type_> line1(0, 3);
+				dynamic_vector<Type_> line1(0, 4);
 				ws.ech(line1);
 				ws.progonka_buff[n - 1][0] = line1[0];
 				ws.progonka_buff[n - 1][1] = line1[1];
 				ws.progonka_buff[n - 1][2] = line1[2];
-				ws.next_layer[j][n - 1] = line1[3];
+				ws.next_layer[n - 1][j] = line1[3];
 
 				diag3_solver_vert(ws.progonka_buff, ws.next_layer, j);
 			}
@@ -518,14 +518,14 @@ namespace mymath {
 					ws.progonka_buff[j][2] = 1 / (h2 * h2);
 
 				}
-				dynamic_vector<Type_> line(0, 3);
+				dynamic_vector<Type_> line(0, 4);
 				ws.bcv(line);
 				ws.progonka_buff[0][0] = line[0];
 				ws.progonka_buff[0][1] = line[1];
 				ws.progonka_buff[0][2] = line[2];
 				ws.prev_layer[i][0] = line[3];
 
-				dynamic_vector<Type_> line1(0, 3);
+				dynamic_vector<Type_> line1(0, 4);
 				ws.ecv(line1);
 				ws.progonka_buff[m - 1][0] = line1[0];
 				ws.progonka_buff[m - 1][1] = line1[1];
