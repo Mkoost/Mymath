@@ -475,8 +475,8 @@ namespace mymath {
 		}
 
 		static void alt_dir_scheam(lapl2d_scheme<Type_, BeginCondHor_,  EndCondHor_, BeginCondVert_, EndCondVert_, F_>& ws) {
-			Type_ h1 = step_x, h2 = step_y, tau = ws.tau;
-
+			Type_ h1 = ws.step_x, h2 = ws.step_y, tau = ws.tau;
+			size_t n = ws.n, m = ws.m;
 			for (size_t i = 1; i < n - 1; ++i) 
 				for (size_t j = 1; j < m -1; ++j) 
 					next_layer[i][j] = -Fij(i, j);	
@@ -507,7 +507,7 @@ namespace mymath {
 
 			for (size_t i = 1; i < n - 1; ++i)
 				for (size_t j = 1; j < m - 1; ++j)
-					prev_layer[i][j] = -hatFij(i, j);
+					ws.prev_layer[i][j] = -hatFij(i, j);
 
 			for (size_t i = 1; i < n - 1; ++i) {
 				for (size_t j = 1; j < m - 1; ++j) {
