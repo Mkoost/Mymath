@@ -438,6 +438,7 @@ namespace mymath {
 		Type_ step_y;
 
 		size_t n, m;
+		size_t k_tau = 1;
 
 		Type_ st_x;
 		Type_ st_y;
@@ -475,11 +476,12 @@ namespace mymath {
 		}
 
 		static void alt_dir_scheam(lapl2d_scheme<Type_, BeginCondHor_,  EndCondHor_, BeginCondVert_, EndCondVert_, F_>& ws) {
-			Type_ h1 = step_x, h2 = step_y, tau = ws.tau;
+			Type_ h1 = ws.step_x, h2 = ws.step_y, tau = ws.tau;
+			size_t n = ws.n, m = ws.m;
 
 			for (size_t i = 1; i < n - 1; ++i) 
 				for (size_t j = 1; j < m -1; ++j) 
-					next_layer[i][j] = -Fij(i, j);	
+					ws.next_layer[i][j] = -ws.Fij(i, j);	
 				
 			for (size_t j = 1; j < m - 1; ++j){
 				for (size_t i = 1; i < n - 1; ++i) {
@@ -489,25 +491,25 @@ namespace mymath {
 
 				}
 				dynamic_vector<Type_> line(0, 3);
-				ws.bch(ws, line);
+				ws.bch(line);
 				ws.progonka_buff[0][0] = line[0];
 				ws.progonka_buff[0][1] = line[1];
 				ws.progonka_buff[0][2] = line[2];
 				ws.next_layer[j][0] = line[3];
 				
-				dynamic_vector<Type_> line(0, 3);
-				ws.ech(ws, line);
-				ws.progonka_buff[n - 1][0] = line[0];
-				ws.progonka_buff[n - 1][1] = line[1];
-				ws.progonka_buff[n - 1][2] = line[2];
-				ws.next_layer[j][n - 1] = line[3];
+				dynamic_vector<Type_> line1(0, 3);
+				ws.ech(line1);
+				ws.progonka_buff[n - 1][0] = line1[0];
+				ws.progonka_buff[n - 1][1] = line1[1];
+				ws.progonka_buff[n - 1][2] = line1[2];
+				ws.next_layer[j][n - 1] = line1[3];
 
 				diag3_solver_vert(ws.progonka_buff, ws.next_layer, j);
 			}
 
 			for (size_t i = 1; i < n - 1; ++i)
 				for (size_t j = 1; j < m - 1; ++j)
-					prev_layer[i][j] = -hatFij(i, j);
+					ws.prev_layer[i][j] = -ws.hatFij(i, j);
 
 			for (size_t i = 1; i < n - 1; ++i) {
 				for (size_t j = 1; j < m - 1; ++j) {
@@ -517,21 +519,28 @@ namespace mymath {
 
 				}
 				dynamic_vector<Type_> line(0, 3);
-				ws.bcv(ws, line);
+				ws.bcv(line);
 				ws.progonka_buff[0][0] = line[0];
 				ws.progonka_buff[0][1] = line[1];
 				ws.progonka_buff[0][2] = line[2];
 				ws.prev_layer[i][0] = line[3];
 
-				dynamic_vector<Type_> line(0, 3);
-				ws.ecv(ws, line);
-				ws.progonka_buff[m - 1][0] = line[0];
-				ws.progonka_buff[m - 1][1] = line[1];
-				ws.progonka_buff[m - 1][2] = line[2];
-				ws.prev_layer[i][m - 1] = line[3];
+				dynamic_vector<Type_> line1(0, 3);
+				ws.ecv(line1);
+				ws.progonka_buff[m - 1][0] = line1[0];
+				ws.progonka_buff[m - 1][1] = line1[1];
+				ws.progonka_buff[m - 1][2] = line1[2];
+				ws.prev_layer[i][m - 1] = line1[3];
 
 				diag3_solver_hor(ws.progonka_buff, ws.prev_layer, i);
 			}
+		}
+
+		template<class f1>
+		void init(f1 u) {
+			for (int i = 0; i < n; ++i) 
+				for (int j = 0; j < m; ++j) 
+					prev_layer[i][j] = u(st_x + step_x * i, st_y + step_y * j);
 		}
 
 		void next(size_t k = 1) {
@@ -539,11 +548,12 @@ namespace mymath {
 			for (size_t i = 0; i < k; ++i) {
 				alt_dir_scheam(*this);
 				begin_time += tau;
+				k_tau += 1;
 			}
 		};
 
 
-
+		// lame.
 		template<class StrClass_, class OutputClass_>
 		void save_state(StrClass_ path, OutputClass_ state = std::ios::trunc) {
 			std::ofstream outFile(path, state);
@@ -552,6 +562,18 @@ namespace mymath {
 				outFile << "\n";
 			}
 			outFile.close();
+		}
+
+		template<class StrClass_>
+		void state_out(StrClass_ filename) {
+			std::ofstream file_t(filename + "_t.txt", std::ios::app);
+			std::ofstream file_points(filename + "_points.txt", std::ios::app);
+
+			file_t << k_tau * tau << "\n";
+			for (size_t i = 0; i < n; ++i){
+				for (size_t j = 0; j < m; ++j) 
+					file_points << step_x*i << " " << step_y*j << " " << prev_layer[i][j] << "\n";
+			}
 		}
 	};
 
