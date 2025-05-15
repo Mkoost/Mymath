@@ -491,14 +491,14 @@ namespace mymath {
 
 				}
 				dynamic_vector<Type_> line(0, 4);
-				ws.bch(line, ws.begin_time, ws.prev_layer[0][j - 1], ws.prev_layer[0][j], ws.prev_layer[0][j + 1], h1, h2, ws.f(0, j * h2);
+				ws.bch(line, ws.begin_time, ws.prev_layer[0][j - 1], ws.prev_layer[0][j], ws.prev_layer[0][j + 1], h1, h2, ws.f(0, j * h2), j * h2);
 				ws.progonka_buff[0][0] = line[0];
 				ws.progonka_buff[0][1] = line[1];
 				ws.progonka_buff[0][2] = line[2];
 				ws.next_layer[0][j] = line[3];
 				
 				dynamic_vector<Type_> line1(0, 4);
-				ws.ech(line, ws.begin_time, ws.prev_layer[n - 1][j - 1], ws.prev_layer[n - 1][j], ws.prev_layer[n - 1][j + 1], h1, h2, ws.f(n, j * h2));
+				ws.ech(line, ws.begin_time, ws.prev_layer[n - 1][j - 1], ws.prev_layer[n - 1][j], ws.prev_layer[n - 1][j + 1], h1, h2, ws.f(n, j * h2), j * h2);
 				ws.progonka_buff[n - 1][0] = line1[0];
 				ws.progonka_buff[n - 1][1] = line1[1];
 				ws.progonka_buff[n - 1][2] = line1[2];
@@ -519,14 +519,14 @@ namespace mymath {
 
 				}
 				dynamic_vector<Type_> line(0, 4);
-				ws.bcv(line, ws.begin_time, ws.next_layer[i-1][0], ws.next_layer[i][0], ws.next_layer[i + 1][0], h1, h2, ws.f(i * h1, 0));
+				ws.bcv(line, ws.begin_time, ws.next_layer[i-1][0], ws.next_layer[i][0], ws.next_layer[i + 1][0], h1, h2, ws.f(i * h1, 0), i * h1);
 				ws.progonka_buff[0][0] = line[0];
 				ws.progonka_buff[0][1] = line[1];
 				ws.progonka_buff[0][2] = line[2];
 				ws.prev_layer[i][0] = line[3];
 
 				dynamic_vector<Type_> line1(0, 4);
-				ws.ecv(line, ws.begin_time, ws.next_layer[i - 1][m - 1], ws.next_layer[i][m - 1], ws.next_layer[i + 1][m - 1], h1, h2, ws.f(i * h1, m * h2));
+				ws.ecv(line, ws.begin_time, ws.next_layer[i - 1][m - 1], ws.next_layer[i][m - 1], ws.next_layer[i + 1][m - 1], h1, h2, ws.f(i * h1, m * h2), i * h1);
 				ws.progonka_buff[m - 1][0] = line1[0];
 				ws.progonka_buff[m - 1][1] = line1[1];
 				ws.progonka_buff[m - 1][2] = line1[2];
