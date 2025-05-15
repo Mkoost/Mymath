@@ -41,12 +41,11 @@ conditions_2D<Bh, Eh, Bv, Ev, F, U0, StrClass> make_conditions(Bh bc_h, Eh ec_h,
 
 // (edit line[3] to set boundary conditions in both cases)
 auto pr1 = make_conditions(
-	[](pddvec& line, double t =0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 1; },                       				  					 // bc_h
-	[](pddvec& line, double t =0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 1; },                 		    			  					 // ec_h
+	[](pddvec& line, double t = 0, double ui = 0, double ui_min_1 = 0, double u_i = 0, double ui_pl_1 = 0, double h1 = 0, double h2 = 0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 1; },                       				  					 // bc_h
+	[](pddvec& line, double t = 0, double ui_min_1 = 0, double u_i = 0, double ui_pl_1 = 0, double h1 = 0, double h2 = 0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 1; },                 		    			  					 // ec_h
 	
-	[](pddvec& line, double t =0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 1; },                       				  					 // bc_v
-	[](pddvec& line, double t =0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 
-	1; },                 		    			  					// ec_v
+	[](pddvec& line, double t = 0, double ui_min_1 = 0, double u_i = 0, double ui_pl_1 = 0, double h1 = 0, double h2 = 0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 1; },                       				  					 // bc_v
+	[](pddvec& line, double t = 0, double ui_min_1 = 0, double u_i = 0, double ui_pl_1 = 0, double h1 = 0, double h2 = 0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 1; },                 		    			  					// ec_v
 	
 	[](double x, double y) {return 0; },         	  		// f
 	[](double x, double y) -> double {return 0; },             		// u0
@@ -95,7 +94,23 @@ int main() {
 	file1.close();
 	file2.close(); // clear file
 	
-	mymath::lapl2d_scheme<double, decltype(conds1.bc_h), decltype(conds1.ec_h), decltype(conds1.bc_v), decltype(conds1.ec_v), decltype(conds1.f)> ws(params1.bt, params1.tau, params1.n, params1.m, params1.step_x, params1.step_y, conds1.bc_h, conds1.ec_h, conds1.bc_v, conds1.ec_v, conds1.f);
+	mymath::lapl2d_scheme<double, 
+						  decltype(conds1.bc_h), 
+						  decltype(conds1.ec_h),
+		                  decltype(conds1.bc_v),
+		                  decltype(conds1.ec_v),
+		                  decltype(conds1.f)> 
+				ws(params1.bt,
+					params1.tau,
+					params1.n,
+					params1.m,
+					params1.step_x,
+					params1.step_y,
+					conds1.bc_h,
+					conds1.ec_h,
+					conds1.bc_v,
+					conds1.ec_v,
+					conds1.f);
 	
 	ws.st_x = params1.start_point_x;
 	ws.st_y = params1.start_point_y;

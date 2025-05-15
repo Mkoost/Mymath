@@ -479,7 +479,7 @@ namespace mymath {
 			Type_ h1 = ws.step_x, h2 = ws.step_y, tau = ws.tau;
 			size_t n = ws.n, m = ws.m;
 
-			for (size_t i = 1; i < n - 1; ++i) 
+			for (size_t i = 0; i < n; ++i) 
 				for (size_t j = 1; j < m -1; ++j) 
 					ws.next_layer[i][j] = -ws.Fij(i, j);	
 				
@@ -491,14 +491,14 @@ namespace mymath {
 
 				}
 				dynamic_vector<Type_> line(0, 4);
-				ws.bch(line);
+				ws.bch(line, ws.begin_time, ws.prev_layer[0][j - 1], ws.prev_layer[0][j], ws.prev_layer[0][j + 1], h1, h2);
 				ws.progonka_buff[0][0] = line[0];
 				ws.progonka_buff[0][1] = line[1];
 				ws.progonka_buff[0][2] = line[2];
-				ws.next_layer[j][0] = line[3];
+				ws.next_layer[0][j] = line[3];
 				
 				dynamic_vector<Type_> line1(0, 4);
-				ws.ech(line1);
+				ws.ech(line, ws.begin_time, ws.prev_layer[n - 1][j - 1], ws.prev_layer[n - 1][j], ws.prev_layer[n - 1][j + 1], h1, h2);
 				ws.progonka_buff[n - 1][0] = line1[0];
 				ws.progonka_buff[n - 1][1] = line1[1];
 				ws.progonka_buff[n - 1][2] = line1[2];
@@ -519,14 +519,14 @@ namespace mymath {
 
 				}
 				dynamic_vector<Type_> line(0, 4);
-				ws.bcv(line);
+				ws.bcv(line, ws.begin_time, ws.next_layer[i-1][0], ws.next_layer[i][0], ws.next_layer[i + 1][0], h1, h2);
 				ws.progonka_buff[0][0] = line[0];
 				ws.progonka_buff[0][1] = line[1];
 				ws.progonka_buff[0][2] = line[2];
 				ws.prev_layer[i][0] = line[3];
 
 				dynamic_vector<Type_> line1(0, 4);
-				ws.ecv(line1);
+				ws.ecv(line, ws.begin_time, ws.next_layer[i - 1][m - 1], ws.next_layer[i][m - 1], ws.next_layer[i + 1][m - 1], h1, h2);
 				ws.progonka_buff[m - 1][0] = line1[0];
 				ws.progonka_buff[m - 1][1] = line1[1];
 				ws.progonka_buff[m - 1][2] = line1[2];
