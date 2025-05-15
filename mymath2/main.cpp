@@ -41,11 +41,11 @@ conditions_2D<Bh, Eh, Bv, Ev, F, U0, StrClass> make_conditions(Bh bc_h, Eh ec_h,
 
 // (edit line[3] to set boundary conditions in both cases)
 auto pr1 = make_conditions(
-	[](pddvec& line, double t = 0, double ui = 0, double ui_min_1 = 0, double u_i = 0, double ui_pl_1 = 0, double h1 = 0, double h2 = 0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 1; },                       				  					 // bc_h
-	[](pddvec& line, double t = 0, double ui_min_1 = 0, double u_i = 0, double ui_pl_1 = 0, double h1 = 0, double h2 = 0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 1; },                 		    			  					 // ec_h
+	[](pddvec& line, double t = 0, double ui_min_1 = 0, double u_i = 0, double ui_pl_1 = 0, double h1 = 0, double h2 = 0, double f_ij = 0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 1; },                       				  					 // bc_h
+	[](pddvec& line, double t = 0, double ui_min_1 = 0, double u_i = 0, double ui_pl_1 = 0, double h1 = 0, double h2 = 0, double f_ij = 0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 1; },                 		    			  					 // ec_h
 	
-	[](pddvec& line, double t = 0, double ui_min_1 = 0, double u_i = 0, double ui_pl_1 = 0, double h1 = 0, double h2 = 0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 1; },                       				  					 // bc_v
-	[](pddvec& line, double t = 0, double ui_min_1 = 0, double u_i = 0, double ui_pl_1 = 0, double h1 = 0, double h2 = 0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 1; },                 		    			  					// ec_v
+	[](pddvec& line, double t = 0, double ui_min_1 = 0, double u_i = 0, double ui_pl_1 = 0, double h1 = 0, double h2 = 0, double f_ij = 0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 1; },                       				  					 // bc_v
+	[](pddvec& line, double t = 0, double ui_min_1 = 0, double u_i = 0, double ui_pl_1 = 0, double h1 = 0, double h2 = 0, double f_ij = 0) { line[0] = 0; line[1] = 1; line[2] = 0; line[3] = 1; },                 		    			  					// ec_v
 	
 	[](double x, double y) {return 0; },         	  		// f
 	[](double x, double y) -> double {return 0; },             		// u0
