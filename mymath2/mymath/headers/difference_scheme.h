@@ -419,10 +419,6 @@ namespace mymath {
 	};
 
 
-
-
-
-
 	template<class Type_, class BeginCondHor_, class EndCondHor_, class BeginCondVert_, class EndCondVert_, class F_>
 	class lapl2d_scheme {
 	public:

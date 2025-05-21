@@ -85,45 +85,179 @@ auto standard_param = parameters<double>{
 };
 
 /////////////////////////////////////////////
-int main() {
-	auto conds1 = pr1;
-	auto params1 = standard_param;
+/***************************************************/
+// ЛАБА 5 ---------------------------------------
 
-	std::ofstream file1(params1.filename + "_t.txt", std::ios::trunc);
-	std::ofstream file2(params1.filename + "_points.txt", std::ios::trunc);
-	file1.close();
-	file2.close(); // clear file
-	
-	mymath::lapl2d_scheme<double, 
-						  decltype(conds1.bc_h), 
-						  decltype(conds1.ec_h),
-		                  decltype(conds1.bc_v),
-		                  decltype(conds1.ec_v),
-		                  decltype(conds1.f)> 
-				ws(params1.bt,
-					params1.tau,
-					params1.n,
-					params1.m,
-					params1.step_x,
-					params1.step_y,
-					conds1.bc_h,
-					conds1.ec_h,
-					conds1.bc_v,
-					conds1.ec_v,
-					conds1.f);
-	
-	ws.st_x = params1.start_point_x;
-	ws.st_y = params1.start_point_y;
-	ws.init(conds1.u0);
+// ЧЕТНОЕ КОЛИЧЕСТВО УЗЛОВ n!!!!
+template<class Ker_>
+void fredgolm_quadrature_matrix(double a, double b, size_t n, double lambda, Ker_ K, mymath::dynamic_matrix<double>& A) {
+	size_t N = n + 1;
+	double h = (b - a) / n;
+	mymath::dynamic_matrix<double> mat(0, N, N);
+	mymath::dynamic_matrix<double>::diag(mat);
 
-	for (int k = 0; k < 1; ++k) {
-		ws.next();
-		ws.state_out(params1.filename);
+	for (size_t i = 0; i < N; ++i){
+
+		mat[i][0] -= lambda * h / 2.0 * K(a + i * h, a );
+		mat[i][N - 1] -= lambda * h / 2.0 * K(a + i * h, a + (N - 1) * h);
+		for (size_t j = 1; j + 1 < N ; j += 1) { // 1/3 4/3 1/3
+			mat[i][j] -= lambda * h  * K(a + i * h, a + j * h);
+		}
+		
 	}
 
+	A.move(mat);
+}
 
-	std::cout << "\nyo motherfucker\n";
 
+// ЧЕТНОЕ КОЛИЧЕСТВО УЗЛОВ n!!!!
+template<class Ker_, class Func_>
+void  fredgolm_quadrature_solve(double a,
+								double b,
+								size_t n,
+								double lambda,
+								Ker_ K,
+								Func_ f,
+								mymath::dynamic_vector<double>& u) {
+	size_t N = n + 1;
+	double h = (b - a) / n;
+	
+	mymath::dynamic_matrix<double> mat;
+	mymath::dynamic_vector<double> fs(0, n+1);
+	fredgolm_quadrature_matrix(a, b, n, lambda, K, mat);
+	
+
+	for (size_t i = 0; i < N; ++i)
+		fs[i] = f(a + i*h);
+	mymath::data_structs::base_data_dynamic_vector_matrix<double, 1, 1> res = mymath::qr_solve(mat, fs);
+	u.move(res.vec[0]);
+	/*auto res = mymath::relax_iteration(mat, fs, 1e-8);
+	u.move(res);*/
+}
+
+
+template<class Ker_, class Func_>
+void fredgolm_simple_iter_estim(mymath::dynamic_vector<double>& u, 
+								  double a, double b, size_t n,
+								  double lambda,
+								  Ker_ K,
+								  Func_ f,
+								  mymath::dynamic_vector<double>& ans,
+								  double eps = 1e-6) {
+	
+
+	double h = (b - a) / double(n);
+	int N = n + 1;
+	double norm = 0;
+	mymath::dynamic_vector<double> fx(0, N);
+
+	for (size_t i = 0; i < N; ++i)
+		fx[i] = f(a + i * h);
+
+	mymath::dynamic_vector<double> u_res = u;
+	mymath::dynamic_vector<double> u_new = fx;
+	 do{
+		 norm = 0;
+		for (int i = 0; i < N; ++i){
+			double tmp = 0;
+			for (int j = 0; j + 1 < N; ++j)
+				tmp += h * (u_res[j] * K(a + i * h, a + j * h) + u_res[j + 1] * K(a + i * h, a + (j + 1) * h)) / 2.0;
+			u_new[i] += lambda * tmp;
+			norm = std::max(norm,std::abs(u_new[i] - u_res[i]));
+		}
+		std::swap(u_new, u_res);
+		u_new = fx;
+	 } while (norm > eps);
+	ans.move(u_res);
+}
+
+
+template<class Func_>
+void contour_solve(
+	size_t n,
+	Func_ f,
+	mymath::dynamic_vector<double>& u) {
+
+	auto Qx = [](double x, double y, double xi, double eta) { return -(y - eta) / ((x - xi) * (x - xi) + (y - eta) * (y - eta)) / (2.0 * PI); };
+	auto Qy = [](double x, double y, double xi, double eta) { return (x - xi) / ((x - xi) * (x - xi) + (y - eta) * (y - eta)) / (2.0 * PI); };
+	mymath::dynamic_matrix<double> mat(0, n + 1, n + 1);
+	mymath::dynamic_vector<double> fs(0, n + 1);
+	double lj = 2.0 * PI / n;
+
+	for (int i = 0; i < n; ++i) {
+		
+		double kxi = std::cos(2.0 * PI * (i - 0.5) / n);
+		double kyi = std::sin(2.0 * PI * (i - 0.5) / n);
+
+		double nxi = kxi;
+		double nyi = kyi;
+
+		double lj = 2.0 * PI / n;
+		
+		fs[i] = f(kxi, kyi);
+
+		for (int j = 0; j < n; ++j) {
+			double cxj = std::cos(2.0 * PI * (i - 1.0) / n);
+			double cyj = std::sin(2.0 * PI * (i - 1.0) / n);
+
+			mat[i][j] = (nxi * Qx(kxi, kyi, cxj, cxj) + nyi * Qy(kxi, kyi, cxj, cxj)) * lj;
+		}
+		mat[i][n] = 1.0;
+	}
+
+	for (int i = 0; i < n; ++i) mat[n][i] = lj;
+	
+	mymath::data_structs::base_data_dynamic_vector_matrix<double, 1, 1> res = mymath::qr_solve(mat, fs);
+	u.move(res.vec[0]);
+};
+
+
+
+int main() {
+	int n = 1000;
+	mymath::dynamic_vector<double> uinit(0, n + 1);
+	mymath::dynamic_vector<double> u;
+
+	auto K1 = [](double x, double s) {return 1.0; };
+	auto f1 = [](double x) {return 1.0; };
+	auto lambda1 = 0.25;
+	auto u1 = [](double x) -> double {return 2.; };
+
+	auto K2 = [](double x, double s) {return 1 - x * std::cos(x * s); };
+	auto f2 = [](double x) {return (1.0 + std::sin(x)) / 2.0; };
+	auto lambda2 = 0.5;
+
+	auto K3 = [](double x, double s) {return 1 - x * std::cos(x * s); };
+	auto f3 = [](double x) {return x * x + std::sqrt(x); };
+	auto lambda3 = 0.5;
+
+	auto K4 = [](double x, double s) {return std::exp(s + x); };
+	auto f4 = [](double x) {return x; };
+	auto res4 = [](double x) {return (-2 * std::exp(x) - 3 * x + std::exp(2)*x) / (-3 + std::exp(2)); };
+	auto lambda4 = 1.0;
+	double a4 = 0.0, b4 = 1.0;
+
+	double a2 = 0, b2 = 1.0;
+	double a3 = 0.1, b3 = 2.0;
+
+	fredgolm_quadrature_solve(a2, b2, n, lambda2, K2, f2, u); // 2
+	
+	for (int i = 0; i < n + 1; ++i)
+		uinit[i] = res4(a4 + i * (b4 - a4) / n);
+
+	double err = std::abs(1.0 - u[0]);
+	for (int i = 1; i < n + 1; ++i) err = std::max(err, std::abs(1.0 - u[i]));
+	
+	std::cout << err;
+
+
+	// Пример 1 из методички
+	//5: 0.0014739
+	//10: 0.000367309
+	//20: 9.17545e-05
+	//50: 1.46775e-05
+	//100: 3.66925e-06
+	//1000: 3.66921e-08
 	return 0;
 }
 
